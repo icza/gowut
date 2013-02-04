@@ -254,7 +254,7 @@ func (s *serverImpl) newSession(e *eventImpl) Session {
 	s.sessions[sess.Id()] = sess
 
 	if s.logger != nil {
-		s.logger.Println("SESSION created:", s.Id())
+		s.logger.Println("SESSION created:", sess.Id())
 	}
 
 	// Notify session handlers
@@ -282,7 +282,7 @@ func (s *serverImpl) removeSess(e *eventImpl) {
 func (s *serverImpl) removeSess2(sess Session) {
 	if sess.Private() {
 		if s.logger != nil {
-			s.logger.Println("SESSION removed:", s.Id())
+			s.logger.Println("SESSION removed:", sess.Id())
 		}
 
 		// Notify session handlers
