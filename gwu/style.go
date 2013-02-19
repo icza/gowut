@@ -466,10 +466,6 @@ func (s *styleImpl) RemoveClass(class string) Style {
 }
 
 func (s *styleImpl) Get(name string) string {
-	if s.attrs == nil {
-		s.attrs = make(map[string]string)
-	}
-
 	return s.attrs[name]
 }
 
@@ -811,12 +807,10 @@ func (s *styleImpl) renderClasses(w writer) {
 }
 
 func (s *styleImpl) renderAttrs(w writer) {
-	if s.attrs != nil {
-		for name, value := range s.attrs {
-			w.Writes(name)
-			w.Write(_STR_COLON)
-			w.Writes(value)
-			w.Write(_STR_SEMICOL)
-		}
+	for name, value := range s.attrs {
+		w.Writes(name)
+		w.Write(_STR_COLON)
+		w.Writes(value)
+		w.Write(_STR_SEMICOL)
 	}
 }

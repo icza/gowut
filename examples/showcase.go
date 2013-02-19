@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 )
 
 // plural returns an empty string if i is equal to 1,
@@ -33,7 +34,7 @@ func plural(i int) string {
 	return "s"
 }
 
-func buildHomeDemo() gwu.Comp {
+func buildHomeDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
 	p.Add(gwu.NewLabel("This app is written in and showcases Gowut version " + gwu.GOWUT_VERSION + "."))
@@ -43,186 +44,25 @@ func buildHomeDemo() gwu.Comp {
 	return p
 }
 
-func buildCheckBoxDemo() gwu.Comp {
+func buildExpanderDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
-	suml := gwu.NewLabel("")
-
-	p.Add(gwu.NewLabel("Check the days you want to work on:"))
-
-	cbs := []gwu.CheckBox{gwu.NewCheckBox("Monday"), gwu.NewCheckBox("Tuesday"), gwu.NewCheckBox("Wednesday"),
-		gwu.NewCheckBox("Thursday"), gwu.NewCheckBox("Friday"), gwu.NewCheckBox("Saturday"), gwu.NewCheckBox("Sunday")}
-	cbs[5].SetEnabled(false)
-	cbs[6].SetEnabled(false)
-
-	for _, cb := range cbs {
-		p.Add(cb)
-		cb.AddEHandlerFunc(func(e gwu.Event) {
-			sum := 0
-			for _, cb2 := range cbs {
-				if cb2.State() {
-					sum++
-				}
-			}
-			suml.SetText(fmt.Sprintf("%d day%s is a total of %d hours a week.", sum, plural(sum), sum*8))
-			e.MarkDirty(suml)
-		}, gwu.ETYPE_CLICK)
-	}
-
-	p.Add(suml)
-
-	return p
-}
-
-func buildListBoxDemo() gwu.Comp {
-	p := gwu.NewPanel()
-
-	row := gwu.NewHorizontalPanel()
-	l := gwu.NewLabel("Select a background color:")
-	row.Add(l)
-	lb := gwu.NewListBox([]string{"", "Black", "Red", "Green", "Blue", "White"})
-	lb.AddEHandlerFunc(func(e gwu.Event) {
-		l.Style().SetBackground(lb.SelectedValue())
-		e.MarkDirty(l)
-	}, gwu.ETYPE_CHANGE)
-	row.Add(lb)
-	p.Add(row)
-
-	p.AddVSpace(10)
-	p.Add(gwu.NewLabel("Select numbers that add up to 89:"))
-	sumLabel := gwu.NewLabel("")
-	lb2 := gwu.NewListBox([]string{"1", "2", "4", "8", "16", "32", "64", "128"})
-	lb2.SetMulti(true)
-	lb2.SetRows(10)
-	lb2.AddEHandlerFunc(func(e gwu.Event) {
-		sum := 0
-		for _, idx := range lb2.SelectedIndices() {
-			sum += 1 << uint(idx)
-		}
-		if sum == 89 {
-			sumLabel.SetText("Hooray! You did it!")
-		} else {
-			sumLabel.SetText(fmt.Sprintf("Now quite there... (sum = %d)", sum))
-		}
-		e.MarkDirty(sumLabel)
-	}, gwu.ETYPE_CHANGE)
-	p.Add(lb2)
-	p.Add(sumLabel)
-
-	return p
-}
-
-func buildTextBoxDemo() gwu.Comp {
-	p := gwu.NewPanel()
-
-	p.Add(gwu.NewLabel("Enter your name (max 15 characters):"))
-	row := gwu.NewHorizontalPanel()
-	tb := gwu.NewTextBox("")
-	tb.SetMaxLength(15)
-	tb.AddSyncOnETypes(gwu.ETYPE_KEY_UP)
-	length := gwu.NewLabel("")
-	length.Style().SetFontSize("80%").SetFontStyle(gwu.FONT_STYLE_ITALIC)
-	tb.AddEHandlerFunc(func(e gwu.Event) {
-		rem := 15 - len(tb.Text())
-		length.SetText(fmt.Sprintf("(%d character%s left...)", rem, plural(rem)))
-		e.MarkDirty(length)
-	}, gwu.ETYPE_CHANGE, gwu.ETYPE_KEY_UP)
-	row.Add(tb)
-	row.Add(length)
-	p.Add(row)
-
-	p.AddVSpace(10)
-	p.Add(gwu.NewLabel("Short biography:"))
-	bio := gwu.NewTextBox("")
-	bio.SetRows(5)
-	bio.SetCols(40)
-	p.Add(bio)
-
-	p.AddVSpace(10)
-	rtb := gwu.NewTextBox("This is just a read-only text box...")
-	rtb.SetReadOnly(true)
-	p.Add(rtb)
-
-	p.AddVSpace(10)
-	dtb := gwu.NewTextBox("...and a disabled one.")
-	dtb.SetEnabled(false)
-	p.Add(dtb)
-
-	return p
-}
-
-func buildPasswBoxDemo() gwu.Comp {
-	p := gwu.NewPanel()
-
-	p.Add(gwu.NewLabel("Enter your password:"))
-	p.Add(gwu.NewPasswBox(""))
-
-	return p
-}
-
-func buildRadioButtonDemo() gwu.Comp {
-	p := gwu.NewPanel()
-
-	p.Add(gwu.NewLabel("Select your favorite programming language:"))
-
-	group := gwu.NewRadioGroup("lang")
-	rbs := []gwu.RadioButton{gwu.NewRadioButton("Go", group), gwu.NewRadioButton("Java", group), gwu.NewRadioButton("C / C++", group),
-		gwu.NewRadioButton("Python", group), gwu.NewRadioButton("QBasic (nah this can't be your favorite)", group)}
-	rbs[4].SetEnabled(false)
-
-	for _, rb := range rbs {
-		p.Add(rb)
-	}
-
-	p.AddVSpace(20)
-	p.Add(gwu.NewLabel("Select your favorite computer game:"))
-
-	group = gwu.NewRadioGroup("game")
-	rbs = []gwu.RadioButton{gwu.NewRadioButton("StarCraft II", group), gwu.NewRadioButton("Minecraft", group),
-		gwu.NewRadioButton("Other", group)}
-
-	for _, rb := range rbs {
-		p.Add(rb)
-	}
-
-	return p
-}
-
-func buildSwitchButtonDemo() gwu.Comp {
-	p := gwu.NewPanel()
-	p.SetCellPadding(1)
-
-	row := gwu.NewHorizontalPanel()
-	row.Add(gwu.NewLabel("Here's an ON/OFF switch which enables/disables the other one:"))
-	sw := gwu.NewSwitchButton()
-	sw.SetOnOff("ENB", "DISB")
-	sw.SetState(true)
-	row.Add(sw)
-	p.Add(row)
-
-	p.AddVSpace(10)
-	row = gwu.NewHorizontalPanel()
-	row.Add(gwu.NewLabel("And the other one:"))
-	sw2 := gwu.NewSwitchButton()
-	sw2.SetEnabled(true)
-	sw2.Style().SetWidthPx(100)
-	row.Add(sw2)
-	sw.AddEHandlerFunc(func(e gwu.Event) {
-		sw2.SetEnabled(sw.State())
-		e.MarkDirty(sw2)
-	}, gwu.ETYPE_CLICK)
-	p.Add(row)
-
-	return p
-}
-
-func buildExpanderDemo() gwu.Comp {
-	p := gwu.NewPanel()
-
+	l := gwu.NewLabel("Click on the Expander's header.")
+	l.Style().SetColor(gwu.CLR_GREEN)
+	p.Add(l)
+	p.AddVSpace(5)
 	e := gwu.NewExpander()
-	e.SetHeader(gwu.NewLabel("I'm an Expander. Click on me to expand."))
+	e.SetHeader(gwu.NewLabel("I'm an Expander."))
 	e.SetContent(gwu.NewLabel("I'm the content of the Expander."))
 	p.Add(e)
+	e.AddEHandlerFunc(func(ev gwu.Event) {
+		if e.Expanded() {
+			l.SetText("You expanded it.")
+		} else {
+			l.SetText("You collapsed it.")
+		}
+		ev.MarkDirty(l)
+	}, gwu.ETYPE_STATE_CHANGE)
 
 	p.AddVSpace(20)
 	var ee gwu.Expander
@@ -241,7 +81,7 @@ func buildExpanderDemo() gwu.Comp {
 	return p
 }
 
-func buildLinkContainerDemo() gwu.Comp {
+func buildLinkContainerDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
 	link := gwu.NewLink("An obvious link, to Google Home", "https://google.com/")
@@ -255,7 +95,7 @@ func buildLinkContainerDemo() gwu.Comp {
 	return p
 }
 
-func buildPanelDemo() gwu.Comp {
+func buildPanelDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
 	p.Add(gwu.NewLabel("Panel with horizontal layout:"))
@@ -284,7 +124,7 @@ func buildPanelDemo() gwu.Comp {
 	return p
 }
 
-func buildTableDemo() gwu.Comp {
+func buildTableDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
 	l := gwu.NewLabel("Tip: Switch to the 'debug' theme (top right) to see cell borders.")
@@ -341,7 +181,7 @@ func buildTableDemo() gwu.Comp {
 	return p
 }
 
-func buildTabPanelDemo() gwu.Comp {
+func buildTabPanelDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
 	t := gwu.NewTabPanel()
@@ -394,7 +234,15 @@ func buildTabPanelDemo() gwu.Comp {
 	}, gwu.ETYPE_CLICK)
 	p.Add(fix)
 
-	p.AddVSpace(15)
+	p.AddVSpace(10)
+	l := gwu.NewLabel("Click on tabs...")
+	l.Style().SetColor(gwu.CLR_GREEN)
+	p.Add(l)
+	t.AddEHandlerFunc(func(e gwu.Event) {
+		l.SetText("Clicked on tab: " + strconv.Itoa(t.Selected()))
+		e.MarkDirty(l)
+	}, gwu.ETYPE_STATE_CHANGE)
+	p.AddVSpace(10)
 	c := gwu.NewPanel()
 	c.Add(gwu.NewLabel("This is a TabPanel."))
 	c.Add(gwu.NewLabel("Click on other tabs to see their content."))
@@ -427,15 +275,190 @@ func buildTabPanelDemo() gwu.Comp {
 	return p
 }
 
-func buildWindowDemo() gwu.Comp {
+func buildWindowDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
 	p.Add(gwu.NewLabel("The Window represents the whole window, the page inside the browser."))
+	p.AddVSpace(5)
+	p.Add(gwu.NewLabel("The Window is the top of the component hierarchy. It is an extension of the Panel."))
 
 	return p
 }
 
-func buildButtonDemo() gwu.Comp {
+func buildCheckBoxDemo(event gwu.Event) gwu.Comp {
+	p := gwu.NewPanel()
+
+	suml := gwu.NewLabel("")
+
+	p.Add(gwu.NewLabel("Check the days you want to work on:"))
+
+	cbs := []gwu.CheckBox{gwu.NewCheckBox("Monday"), gwu.NewCheckBox("Tuesday"), gwu.NewCheckBox("Wednesday"),
+		gwu.NewCheckBox("Thursday"), gwu.NewCheckBox("Friday"), gwu.NewCheckBox("Saturday"), gwu.NewCheckBox("Sunday")}
+	cbs[5].SetEnabled(false)
+	cbs[6].SetEnabled(false)
+
+	for _, cb := range cbs {
+		p.Add(cb)
+		cb.AddEHandlerFunc(func(e gwu.Event) {
+			sum := 0
+			for _, cb2 := range cbs {
+				if cb2.State() {
+					sum++
+				}
+			}
+			suml.SetText(fmt.Sprintf("%d day%s is a total of %d hours a week.", sum, plural(sum), sum*8))
+			e.MarkDirty(suml)
+		}, gwu.ETYPE_CLICK)
+	}
+
+	p.Add(suml)
+
+	return p
+}
+
+func buildListBoxDemo(event gwu.Event) gwu.Comp {
+	p := gwu.NewPanel()
+
+	row := gwu.NewHorizontalPanel()
+	l := gwu.NewLabel("Select a background color:")
+	row.Add(l)
+	lb := gwu.NewListBox([]string{"", "Black", "Red", "Green", "Blue", "White"})
+	lb.AddEHandlerFunc(func(e gwu.Event) {
+		l.Style().SetBackground(lb.SelectedValue())
+		e.MarkDirty(l)
+	}, gwu.ETYPE_CHANGE)
+	row.Add(lb)
+	p.Add(row)
+
+	p.AddVSpace(10)
+	p.Add(gwu.NewLabel("Select numbers that add up to 89:"))
+	sumLabel := gwu.NewLabel("")
+	lb2 := gwu.NewListBox([]string{"1", "2", "4", "8", "16", "32", "64", "128"})
+	lb2.SetMulti(true)
+	lb2.SetRows(10)
+	lb2.AddEHandlerFunc(func(e gwu.Event) {
+		sum := 0
+		for _, idx := range lb2.SelectedIndices() {
+			sum += 1 << uint(idx)
+		}
+		if sum == 89 {
+			sumLabel.SetText("Hooray! You did it!")
+		} else {
+			sumLabel.SetText(fmt.Sprintf("Now quite there... (sum = %d)", sum))
+		}
+		e.MarkDirty(sumLabel)
+	}, gwu.ETYPE_CHANGE)
+	p.Add(lb2)
+	p.Add(sumLabel)
+
+	return p
+}
+
+func buildTextBoxDemo(event gwu.Event) gwu.Comp {
+	p := gwu.NewPanel()
+
+	p.Add(gwu.NewLabel("Enter your name (max 15 characters):"))
+	row := gwu.NewHorizontalPanel()
+	tb := gwu.NewTextBox("")
+	tb.SetMaxLength(15)
+	tb.AddSyncOnETypes(gwu.ETYPE_KEY_UP)
+	length := gwu.NewLabel("")
+	length.Style().SetFontSize("80%").SetFontStyle(gwu.FONT_STYLE_ITALIC)
+	tb.AddEHandlerFunc(func(e gwu.Event) {
+		rem := 15 - len(tb.Text())
+		length.SetText(fmt.Sprintf("(%d character%s left...)", rem, plural(rem)))
+		e.MarkDirty(length)
+	}, gwu.ETYPE_CHANGE, gwu.ETYPE_KEY_UP)
+	row.Add(tb)
+	row.Add(length)
+	p.Add(row)
+
+	p.AddVSpace(10)
+	p.Add(gwu.NewLabel("Short biography:"))
+	bio := gwu.NewTextBox("")
+	bio.SetRows(5)
+	bio.SetCols(40)
+	p.Add(bio)
+
+	p.AddVSpace(10)
+	rtb := gwu.NewTextBox("This is just a read-only text box...")
+	rtb.SetReadOnly(true)
+	p.Add(rtb)
+
+	p.AddVSpace(10)
+	dtb := gwu.NewTextBox("...and a disabled one.")
+	dtb.SetEnabled(false)
+	p.Add(dtb)
+
+	return p
+}
+
+func buildPasswBoxDemo(event gwu.Event) gwu.Comp {
+	p := gwu.NewPanel()
+
+	p.Add(gwu.NewLabel("Enter your password:"))
+	p.Add(gwu.NewPasswBox(""))
+
+	return p
+}
+
+func buildRadioButtonDemo(event gwu.Event) gwu.Comp {
+	p := gwu.NewPanel()
+
+	p.Add(gwu.NewLabel("Select your favorite programming language:"))
+
+	group := gwu.NewRadioGroup("lang")
+	rbs := []gwu.RadioButton{gwu.NewRadioButton("Go", group), gwu.NewRadioButton("Java", group), gwu.NewRadioButton("C / C++", group),
+		gwu.NewRadioButton("Python", group), gwu.NewRadioButton("QBasic (nah this can't be your favorite)", group)}
+	rbs[4].SetEnabled(false)
+
+	for _, rb := range rbs {
+		p.Add(rb)
+	}
+
+	p.AddVSpace(20)
+	p.Add(gwu.NewLabel("Select your favorite computer game:"))
+
+	group = gwu.NewRadioGroup("game")
+	rbs = []gwu.RadioButton{gwu.NewRadioButton("StarCraft II", group), gwu.NewRadioButton("Minecraft", group),
+		gwu.NewRadioButton("Other", group)}
+
+	for _, rb := range rbs {
+		p.Add(rb)
+	}
+
+	return p
+}
+
+func buildSwitchButtonDemo(event gwu.Event) gwu.Comp {
+	p := gwu.NewPanel()
+	p.SetCellPadding(1)
+
+	row := gwu.NewHorizontalPanel()
+	row.Add(gwu.NewLabel("Here's an ON/OFF switch which enables/disables the other one:"))
+	sw := gwu.NewSwitchButton()
+	sw.SetOnOff("ENB", "DISB")
+	sw.SetState(true)
+	row.Add(sw)
+	p.Add(row)
+
+	p.AddVSpace(10)
+	row = gwu.NewHorizontalPanel()
+	row.Add(gwu.NewLabel("And the other one:"))
+	sw2 := gwu.NewSwitchButton()
+	sw2.SetEnabled(true)
+	sw2.Style().SetWidthPx(100)
+	row.Add(sw2)
+	sw.AddEHandlerFunc(func(e gwu.Event) {
+		sw2.SetEnabled(sw.State())
+		e.MarkDirty(sw2)
+	}, gwu.ETYPE_CLICK)
+	p.Add(row)
+
+	return p
+}
+
+func buildButtonDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
 	l := gwu.NewLabel("")
@@ -467,7 +490,7 @@ func buildButtonDemo() gwu.Comp {
 	return p
 }
 
-func buildHtmlDemo() gwu.Comp {
+func buildHtmlDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
 	html := "<span onclick=\"alert('Hi from Html!');\">Hi! I'm inserted as HTML. Click on me!</span>"
@@ -486,7 +509,7 @@ func buildHtmlDemo() gwu.Comp {
 	return p
 }
 
-func buildImageDemo() gwu.Comp {
+func buildImageDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
 	p.Add(gwu.NewLabel("Google's logo:"))
@@ -503,7 +526,7 @@ func buildImageDemo() gwu.Comp {
 	return p
 }
 
-func buildLabelDemo() gwu.Comp {
+func buildLabelDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
 	p.Add(gwu.NewLabel("This is a Label."))
@@ -530,7 +553,7 @@ func buildLabelDemo() gwu.Comp {
 	return p
 }
 
-func buildLinkDemo() gwu.Comp {
+func buildLinkDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 	p.SetCellPadding(3)
 
@@ -553,9 +576,83 @@ func buildLinkDemo() gwu.Comp {
 	return p
 }
 
+func buildTimerDemo(event gwu.Event) gwu.Comp {
+	p := gwu.NewPanel()
+	p.SetCellPadding(3)
+
+	// Add timers to a panel which is always attached instead of our panel
+	// because the user can switch to another component demo causing this panel to be removed
+	// and that way timer events would address components that are not part of the window (returning error).
+	hiddenPan := event.Session().Attr("hiddenPan").(gwu.Panel)
+
+	p.Add(gwu.NewLabel("A Timer is used to detonate a bomb after 3 seconds."))
+	p.AddVSpace(10)
+	defText := "You can defuse the bomb with the button below. Tick... Tack..."
+	l := gwu.NewLabel(defText)
+	p.Add(l)
+	t := gwu.NewTimer(3 * time.Second)
+	b := gwu.NewButton("Defuse!")
+	t.AddEHandlerFunc(func(e gwu.Event) {
+		l.SetText("BOOOOM! You were too slow!")
+		l.Style().SetColor(gwu.CLR_RED)
+		b.SetEnabled(false)
+		e.MarkDirty(l, b)
+	}, gwu.ETYPE_STATE_CHANGE)
+	hiddenPan.Add(t)
+	row := gwu.NewHorizontalPanel()
+	b.AddEHandlerFunc(func(e gwu.Event) {
+		t.SetActive(false)
+		l.SetText("Bomb defused! Phew! Good Job!")
+		l.Style().SetColor(gwu.CLR_GREEN)
+		b.SetEnabled(false)
+		e.MarkDirty(t, l, b)
+	}, gwu.ETYPE_CLICK)
+	row.Add(b)
+	b2 := gwu.NewButton("Plant a new Bomb!")
+	b2.AddEHandlerFunc(func(e gwu.Event) {
+		t.SetActive(true)
+		t.Reset()
+		l.SetText(defText)
+		l.Style().SetColor("")
+		b.SetEnabled(true)
+		e.MarkDirty(t, l, b)
+	}, gwu.ETYPE_CLICK)
+	row.Add(b2)
+	p.Add(row)
+
+	p.AddVSpace(20)
+	p.Add(gwu.NewLabel("A Timer is used to refresh the time below repeatedly in every second for half a minute."))
+	tl := gwu.NewLabel("")
+	p.Add(tl)
+	t2 := gwu.NewTimer(time.Second)
+	t2.SetRepeat(true)
+	counter := 30
+	t2.AddEHandlerFunc(func(e gwu.Event) {
+		counter--
+		tl.SetText(fmt.Sprintf("%s (%d remaining)", time.Now().Format("2006-01-02 15:04:05"), counter))
+		e.MarkDirty(tl)
+		if counter <= 0 {
+			t2.SetActive(false)
+			e.MarkDirty(t2)
+		}
+	}, gwu.ETYPE_STATE_CHANGE)
+	hiddenPan.Add(t2)
+	b3 := gwu.NewButton("Restart")
+	b3.AddEHandlerFunc(func(e gwu.Event) {
+		counter = 30
+		t2.SetActive(true)
+		e.MarkDirty(t2)
+	}, gwu.ETYPE_CLICK)
+	p.Add(b3)
+
+	event.MarkDirty(hiddenPan)
+
+	return p
+}
+
 type demo struct {
 	link      gwu.Label
-	buildFunc func() gwu.Comp
+	buildFunc func(gwu.Event) gwu.Comp
 	comp      gwu.Comp // Lazily initialized demo comp
 }
 type pdemo *demo
@@ -563,6 +660,17 @@ type pdemo *demo
 func buildShowcaseWin(sess gwu.Session) {
 	win := gwu.NewWindow("show", "Showcase of Features - Gowut")
 	win.Style().SetFullSize()
+	win.AddEHandlerFunc(func(e gwu.Event) {
+		switch e.Type() {
+		case gwu.ETYPE_WIN_LOAD:
+			fmt.Println("LOADING window:", e.Src().Id())
+		case gwu.ETYPE_WIN_UNLOAD:
+			fmt.Println("UNLOADING window:", e.Src().Id())
+		}
+	}, gwu.ETYPE_WIN_LOAD, gwu.ETYPE_WIN_UNLOAD)
+
+	hiddenPan := gwu.NewNaturalPanel()
+	sess.SetAttr("hiddenPan", hiddenPan)
 
 	header := gwu.NewHorizontalPanel()
 	header.Style().SetFullWidth().SetBorderBottom2(2, gwu.BRD_STYLE_SOLID, "#777777")
@@ -617,10 +725,10 @@ func buildShowcaseWin(sess gwu.Session) {
 			demoWrapper.Remove(selDemo.comp)
 		}
 		selDemo = d
-		d.link.Style().SetBackground("#aaffaa")
+		d.link.Style().SetBackground("#88ff88")
 		demoTitle.SetText(d.link.Text())
 		if d.comp == nil {
-			d.comp = d.buildFunc()
+			d.comp = d.buildFunc(e)
 		}
 		demoWrapper.Add(d.comp)
 		if e != nil {
@@ -628,7 +736,7 @@ func buildShowcaseWin(sess gwu.Session) {
 		}
 	}
 
-	createDemo := func(name string, buildFunc func() gwu.Comp) pdemo {
+	createDemo := func(name string, buildFunc func(gwu.Event) gwu.Comp) pdemo {
 		link := gwu.NewLabel(name)
 		link.Style().SetFullWidth().SetCursor(gwu.CURSOR_POINTER).SetDisplay(gwu.DISPLAY_BLOCK).SetColor(gwu.CLR_BLUE)
 		demo := &demo{link: link, buildFunc: buildFunc}
@@ -649,16 +757,6 @@ func buildShowcaseWin(sess gwu.Session) {
 	l.Style().SetFontWeight(gwu.FONT_WEIGHT_BOLD).SetFontSize("110%")
 	links.Add(l)
 	links.AddVSpace(5)
-	l = gwu.NewLabel("Input components")
-	l.Style().SetFontWeight(gwu.FONT_WEIGHT_BOLD).SetDisplay(gwu.DISPLAY_BLOCK)
-	links.Add(l)
-	createDemo("CheckBox", buildCheckBoxDemo)
-	createDemo("ListBox", buildListBoxDemo)
-	createDemo("TextBox", buildTextBoxDemo)
-	createDemo("PasswBox", buildPasswBoxDemo)
-	createDemo("RadioButton", buildRadioButtonDemo)
-	createDemo("SwitchButton", buildSwitchButtonDemo)
-	links.AddVSpace(5)
 	l = gwu.NewLabel("Containers")
 	l.Style().SetFontWeight(gwu.FONT_WEIGHT_BOLD)
 	links.Add(l)
@@ -669,6 +767,16 @@ func buildShowcaseWin(sess gwu.Session) {
 	createDemo("TabPanel", buildTabPanelDemo)
 	createDemo("Window", buildWindowDemo)
 	links.AddVSpace(5)
+	l = gwu.NewLabel("Input components")
+	l.Style().SetFontWeight(gwu.FONT_WEIGHT_BOLD).SetDisplay(gwu.DISPLAY_BLOCK)
+	links.Add(l)
+	createDemo("CheckBox", buildCheckBoxDemo)
+	createDemo("ListBox", buildListBoxDemo)
+	createDemo("TextBox", buildTextBoxDemo)
+	createDemo("PasswBox", buildPasswBoxDemo)
+	createDemo("RadioButton", buildRadioButtonDemo)
+	createDemo("SwitchButton", buildSwitchButtonDemo)
+	links.AddVSpace(5)
 	l = gwu.NewLabel("Other components")
 	l.Style().SetFontWeight(gwu.FONT_WEIGHT_BOLD)
 	links.Add(l)
@@ -677,6 +785,7 @@ func buildShowcaseWin(sess gwu.Session) {
 	createDemo("Image", buildImageDemo)
 	createDemo("Label", buildLabelDemo)
 	createDemo("Link", buildLinkDemo)
+	createDemo("Timer", buildTimerDemo)
 	links.AddVConsumer()
 	setNoWrap(links)
 	content.Add(links)
@@ -688,6 +797,7 @@ func buildShowcaseWin(sess gwu.Session) {
 
 	footer := gwu.NewHorizontalPanel()
 	footer.Style().SetFullWidth().SetBorderTop2(2, gwu.BRD_STYLE_SOLID, "#777777")
+	footer.Add(hiddenPan)
 	footer.AddHConsumer()
 	l = gwu.NewLabel("Copyright © 2013 András Belicza. All rights reserved.")
 	l.Style().SetFontStyle(gwu.FONT_STYLE_ITALIC).SetFontSize("95%")
@@ -720,7 +830,7 @@ func (h SessHandler) Created(s gwu.Session) {
 func (h SessHandler) Removed(s gwu.Session) {}
 
 func main() {
-	// Allow app control from command line:
+	// Allow app control from command line (in co-operation with the starter script):
 	fmt.Println("Type 'r' to restart, 'e' to exit.")
 	go func() {
 		var cmd string

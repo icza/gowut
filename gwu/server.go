@@ -19,6 +19,7 @@
 package gwu
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -121,12 +122,23 @@ type Server interface {
 	//		func (h MySessHanlder) Created(s gwu.Session) {
 	//			win := gwu.NewWindow("login", "Login Window")
 	//			// ...add content to the login window...
-	// 			session.AddWindow(win)
+	// 			s.AddWindow(win)
 	// 		}
 	AddSessCreatorName(name, text string)
 
 	// AddSHandler adds a new session handler.
 	AddSHandler(handler SessionHandler)
+
+	// AddStaticDir registers a directory whose content (files) recursively
+	// will be served by the server when requested.
+	// path is an app-path relative path to address a file, dir is the root directory
+	// to search in.
+	// 
+	// Example:
+	//     AddStaticDir("img", "/tmp/myimg")
+	// And then the request "/appname/img/faces/happy.gif" will serve "/tmp/myimg/faces/happy.gif".
+	// Note that the app name must be included in the request path!
+	AddStaticDir(path, dir string) error
 
 	// Theme returns the default CSS theme of the server.
 	Theme() string
@@ -144,6 +156,8 @@ type Server interface {
 	// Sessionless window names may be specified as optional parameters
 	// that will be opened in the default browser.
 	// Tip: Pass an empty string to open the window list.
+	// Tip: Not passing any window names will start the server silently
+	// without opening any windows.
 	Start(openWins ...string) error
 }
 
@@ -248,7 +262,7 @@ func (s *serverImpl) newSession(e *eventImpl) Session {
 	sessImpl := newSessionImpl(true)
 	sess := &sessImpl
 	if e != nil {
-		e.session = sess
+		e.shared.session = sess
 	}
 	// Store new session
 	s.sessions[sess.Id()] = sess
@@ -270,9 +284,9 @@ func (s *serverImpl) newSession(e *eventImpl) Session {
 // when the current session (as returned by Event.Session()) is public is a no-op.
 // After this method Event.Session() will return the shared public session.
 func (s *serverImpl) removeSess(e *eventImpl) {
-	if e.session.Private() {
-		s.removeSess2(e.session)
-		e.session = &s.sessionImpl
+	if e.shared.session.Private() {
+		s.removeSess2(e.shared.session)
+		e.shared.session = &s.sessionImpl
 	}
 }
 
@@ -299,7 +313,9 @@ func (s *serverImpl) removeSess2(sess Session) {
 func (s *serverImpl) addSessCookie(sess Session, w http.ResponseWriter) {
 	// HttpOnly: do not allow non-HTTP access to it (like javascript) to prevent stealing it...
 	// Secure: only send it over HTTPS
-	c := http.Cookie{Name: _GWU_SESSID_COOKIE, Value: sess.Id(), Path: s.appPath, HttpOnly: true, Secure: s.secure}
+	// MaxAge: to specify the max age of the cookie in seconds, else it's a session cookie and gets deleted after the browser is closed.
+	c := http.Cookie{Name: _GWU_SESSID_COOKIE, Value: sess.Id(), Path: s.appPath, HttpOnly: true, Secure: s.secure,
+		MaxAge: 72 * 60 * 60} // 72 hours max age
 	http.SetCookie(w, &c)
 
 	sess.clearNew()
@@ -322,6 +338,30 @@ func (s *serverImpl) sessCleaner() {
 
 		time.Sleep(sleep)
 	}
+}
+
+func (s *serverImpl) AddStaticDir(path, dir string) error {
+	if strings.HasPrefix(path, "/") {
+		path = path[1:]
+	}
+
+	if len(path) == 0 {
+		return errors.New("path cannot be empty string!")
+	}
+
+	if !strings.HasSuffix(path, "/") {
+		path += "/"
+	}
+
+	path = s.appPath + path
+
+	if path == s.appPath+_PATH_STATIC {
+		return errors.New("path cannot be '" + _PATH_STATIC + "' (reserved)!")
+	}
+
+	http.Handle(path, http.StripPrefix(path, http.FileServer(http.Dir(dir))))
+
+	return nil
 }
 
 func (s *serverImpl) Theme() string {
@@ -414,7 +454,7 @@ func (s *serverImpl) serveStatic(w http.ResponseWriter, r *http.Request) {
 
 	res := parts[0]
 	if res == _RES_NAME_STATIC_JS {
-		w.Header().Set("Expires", time.Now().Add(24*time.Hour).Format(http.TimeFormat)) // Set 24 hours caching
+		w.Header().Set("Expires", time.Now().Add(72*time.Hour).Format(http.TimeFormat)) // Set 72 hours caching
 		w.Header().Set("Content-Type", "application/x-javascript; charset=utf-8")
 		w.Write(staticJs)
 		return
@@ -422,7 +462,7 @@ func (s *serverImpl) serveStatic(w http.ResponseWriter, r *http.Request) {
 	if strings.HasSuffix(res, ".css") {
 		cssCode := staticCss[res]
 		if cssCode != nil {
-			w.Header().Set("Expires", time.Now().Add(24*time.Hour).Format(http.TimeFormat)) // Set 24 hours caching
+			w.Header().Set("Expires", time.Now().Add(72*time.Hour).Format(http.TimeFormat)) // Set 72 hours caching
 			w.Header().Set("Content-Type", "text/css; charset=utf-8")
 			w.Write(cssCode)
 			return
@@ -451,7 +491,7 @@ func (s *serverImpl) serveHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	sess.access()
 
-	// Parts example: "/appname/winname/event?et=0&cid=1" => {"", "appname", "winname", "event"}
+	// Parts example: "/appname/winname/e?et=0&cid=1" => {"", "appname", "winname", "e"}
 	parts := strings.Split(r.URL.Path, "/")
 
 	if len(s.appName) == 0 {
@@ -514,13 +554,24 @@ func (s *serverImpl) serveHTTP(w http.ResponseWriter, r *http.Request) {
 		path = parts[1]
 	}
 
+	rwMutex := sess.rwMutex()
+
 	switch path {
 	case _PATH_EVENT:
+		rwMutex.Lock()
+		defer rwMutex.Unlock()
+
 		s.handleEvent(sess, win, w, r)
 	case _PATH_RENDER_COMP:
+		rwMutex.RLock()
+		defer rwMutex.RUnlock()
+
 		// Render just a component
 		s.renderComp(win, w, r)
 	default:
+		rwMutex.RLock()
+		defer rwMutex.RUnlock()
+
 		// Render the whole window
 		win.RenderWin(NewWriter(w), s)
 	}
@@ -617,7 +668,7 @@ func (s *serverImpl) handleEvent(sess Session, win Window, wr http.ResponseWrite
 		return
 	}
 
-	etype := parseIntParam(_PARAM_EVENT_TYPE, r)
+	etype := parseIntParam(r, _PARAM_EVENT_TYPE)
 	if etype < 0 {
 		http.Error(wr, "Invalid event type!", http.StatusBadRequest)
 		return
@@ -626,20 +677,21 @@ func (s *serverImpl) handleEvent(sess Session, win Window, wr http.ResponseWrite
 		s.logger.Println("\tEvent from comp:", id, " event:", etype)
 	}
 
-	event := newEventImpl(s, EventType(etype), comp, sess)
+	event := newEventImpl(EventType(etype), comp, s, sess)
+	shared := event.shared
 
-	event.x = parseIntParam(_PARAM_MOUSE_X, r)
+	event.x = parseIntParam(r, _PARAM_MOUSE_X)
 	if event.x >= 0 {
-		event.y = parseIntParam(_PARAM_MOUSE_Y, r)
-		event.wx = parseIntParam(_PARAM_MOUSE_WX, r)
-		event.wy = parseIntParam(_PARAM_MOUSE_WY, r)
-		event.mbtn = MouseBtn(parseIntParam(_PARAM_MOUSE_BTN, r))
+		event.y = parseIntParam(r, _PARAM_MOUSE_Y)
+		shared.wx = parseIntParam(r, _PARAM_MOUSE_WX)
+		shared.wy = parseIntParam(r, _PARAM_MOUSE_WY)
+		shared.mbtn = MouseBtn(parseIntParam(r, _PARAM_MOUSE_BTN))
 	} else {
-		event.y, event.wx, event.wy, event.mbtn = -1, -1, -1, -1
+		event.y, shared.wx, shared.wy, shared.mbtn = -1, -1, -1, -1
 	}
 
-	event.modKeys = parseIntParam(_PARAM_MOD_KEYS, r)
-	event.keyCode = Key(parseIntParam(_PARAM_KEY_CODE, r))
+	shared.modKeys = parseIntParam(r, _PARAM_MOD_KEYS)
+	shared.keyCode = Key(parseIntParam(r, _PARAM_KEY_CODE))
 
 	comp.preprocessEvent(event, r)
 
@@ -647,8 +699,8 @@ func (s *serverImpl) handleEvent(sess Session, win Window, wr http.ResponseWrite
 	comp.dispatchEvent(event)
 
 	// Check if a new session was created during event dispatching
-	if event.session.New() {
-		s.addSessCookie(event.session, wr)
+	if shared.session.New() {
+		s.addSessCookie(shared.session, wr)
 	}
 
 	// ...and send back the result
@@ -656,27 +708,27 @@ func (s *serverImpl) handleEvent(sess Session, win Window, wr http.ResponseWrite
 	w := NewWriter(wr)
 	hasAction := false
 	// If we reload, nothing else matters
-	if event.reload {
+	if shared.reload {
 		hasAction = true
-		w.Writevs(_ERA_RELOAD_WIN, _STR_COMMA, event.reloadWin)
+		w.Writevs(_ERA_RELOAD_WIN, _STR_COMMA, shared.reloadWin)
 	} else {
-		if len(event.dirtyComps) > 0 {
+		if len(shared.dirtyComps) > 0 {
 			hasAction = true
 			w.Writev(_ERA_DIRTY_COMPS)
-			for id, _ := range event.dirtyComps {
+			for id, _ := range shared.dirtyComps {
 				w.Write(_STR_COMMA)
 				w.Writev(int(id))
 			}
 		}
-		if event.focusedComp != nil {
+		if shared.focusedComp != nil {
 			if hasAction {
 				w.Write(_STR_SEMICOL)
 			} else {
 				hasAction = true
 			}
-			w.Writevs(_ERA_FOCUS_COMP, _STR_COMMA, int(event.focusedComp.Id()))
+			w.Writevs(_ERA_FOCUS_COMP, _STR_COMMA, int(shared.focusedComp.Id()))
 			// Also register focusable comp at window
-			win.SetFocusedCompId(event.focusedComp.Id())
+			win.SetFocusedCompId(shared.focusedComp.Id())
 		}
 	}
 	if !hasAction {
@@ -684,9 +736,9 @@ func (s *serverImpl) handleEvent(sess Session, win Window, wr http.ResponseWrite
 	}
 }
 
-// parseNumParam parses an int param.
+// parseIntParam parses an int param.
 // If error occurs, -1 will be returned. 
-func parseIntParam(paramName string, r *http.Request) int {
+func parseIntParam(r *http.Request, paramName string) int {
 	if num, err := strconv.Atoi(r.FormValue(paramName)); err == nil {
 		return num
 	}

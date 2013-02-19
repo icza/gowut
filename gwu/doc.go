@@ -65,6 +65,11 @@ AJAX technology is used also to refresh some parts (components) that
 change (during event handling) without having to reload the whole page
 to see the changes.
 
+To quickly test it and see it in action, run the "Showcase of Features"
+application by typing: (assuming you're in the root of your GOPATH)
+
+	go run src/code.google.com/p/gowut/examples/showcase.go
+
 
 Features of Gowut
 
@@ -116,10 +121,11 @@ position in case of a mouse event etc.). 2) The Event is an accessor to the
 Session associated with the client the event is originating from. Through
 the event an event handler may access the current Session, create a new
 Session or may remove it (invalidate it). 3) The event is also used
-to define actions to be executed (automatically by Gowut) after the  event
-handling. For example if the event handler changes a component, the handler
-has to mark it dirty causing it to be re-rendered in the client browser,
-or an event handler can change the focused component, or reload another window.
+to define actions to be executed (automatically by Gowut) after the event
+handling (post-event actions). For example if the event handler changes
+a component, the handler has to mark it dirty causing it to be re-rendered
+in the client browser, or an event handler can change the focused component,
+or reload another window.
 
 Creating a session from an event handler during event dispatching requires
 a public window and an event source component (e.g. a Button).
@@ -131,7 +137,7 @@ SessionHandler can be used then to create the window prior to it being served.
 Here's an example how to do it:
 	// A SessionHandler implementation:
 	type MySessHandler struct {}
-	func (h SessHandler) Created(sess gwu.Session) {
+	func (h SessHandler) Created(s gwu.Session) {
 		win := gwu.NewWindow("login", "Login Window")
 		// ...add content to the login window...
 		s.AddWindow(win)
@@ -160,7 +166,7 @@ When a component generates an event, the page in the browser will make an
 AJAX call sending the event to the server. The event will be passed to all the
 appropriate event handlers. Event handlers can mark components dirty,
 specifying that they may have changed and they must be re-rendered.
-When all the even handlers are done, the ids of the dirty components are sent
+When all the event handlers are done, the ids of the dirty components are sent
 back, and the browser will request only to render the dirty components,
 with AJAX calls, and the results will replace the old component nodes in the
 HTML DOM.
@@ -224,13 +230,14 @@ Other components:
 	Image
 	Label
 	Link
+	Timer
 
 
 Full application example
 
 Let a full example follow here which is a complete application.
 It builds a simple window, adds components to it, registers event handlers which
-modifies the content and starts the GUI server.
+modify the content and starts the GUI server.
 Component modifications (including both individual components and component
 structure) will be seen without page reload.
 All written in Go.
@@ -388,7 +395,7 @@ package gwu
 
 // Gowut version information.
 const (
-	GOWUT_VERSION         = "0.7.0"          // Gowut version (major.minor.maintenance)
-	GOWUT_RELEASE_DATE    = "2013-02-12 CET" // Gowut release date
+	GOWUT_VERSION         = "0.8.0"          // Gowut version (major.minor.maintenance)
+	GOWUT_RELEASE_DATE    = "2013-02-19 CET" // Gowut release date
 	GOWUT_REL_DATE_LAYOUT = "2006-01-02 MST" // Gowut release date layout (for time.Parse())
 )

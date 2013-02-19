@@ -41,17 +41,23 @@ type imageImpl struct {
 // NewImage creates a new Image.
 // The text is used as the alternate text for the image.
 func NewImage(text, url string) Image {
-	c := &imageImpl{newCompImpl(""), newHasTextImpl(text), newHasUrlImpl(url)}
+	c := &imageImpl{newCompImpl(nil), newHasTextImpl(text), newHasUrlImpl(url)}
 	c.Style().AddClass("gwu-Image")
 	return c
 }
 
+var (
+	_STR_IMG_OP = []byte("<img")    // "<img"
+	_STR_ALT    = []byte(" alt=\"") // " alt=\""
+	_STR_IMG_CL = []byte("\">")     // "\">"
+)
+
 func (c *imageImpl) Render(w writer) {
-	w.Writes("<img")
+	w.Write(_STR_IMG_OP)
 	c.renderUrl("src", w)
 	c.renderAttrsAndStyle(w)
 	c.renderEHandlers(w)
-	w.Writes(" alt=\"")
+	w.Write(_STR_ALT)
 	c.renderText(w)
-	w.Writes("\">")
+	w.Write(_STR_IMG_CL)
 }

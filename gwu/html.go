@@ -40,7 +40,7 @@ type htmlImpl struct {
 
 // NewHtml creates a new Html.
 func NewHtml(html string) Html {
-	c := &htmlImpl{newCompImpl(""), html}
+	c := &htmlImpl{newCompImpl(nil), html}
 	c.Style().AddClass("gwu-Html")
 	return c
 }

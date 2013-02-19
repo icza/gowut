@@ -357,15 +357,10 @@ func (c *tableImpl) Render(w writer) {
 
 // renderRowTr renders the formatted HTML TR tag for the specified row.
 func (c *tableImpl) renderRowTr(row int, w writer) {
-	var rf *cellFmtImpl
-	if c.rowFmts != nil {
-		rf = c.rowFmts[row]
-	}
-
 	var defha HAlign = c.halign // default halign of the table
 	var defva VAlign = c.valign // default valign of the table
 
-	if rf == nil {
+	if rf := c.rowFmts[row]; rf == nil {
 		c.renderTr(w)
 	} else {
 		// If rf does not specify alignments, it means alignments must not be overriden,
@@ -384,12 +379,7 @@ func (c *tableImpl) renderRowTr(row int, w writer) {
 
 // renderTd renders the formatted HTML TD tag for the specified cell.
 func (c *tableImpl) renderTd(ci cellIdx, w writer) {
-	var cf *cellFmtImpl
-	if c.cellFmts != nil {
-		cf = c.cellFmts[ci]
-	}
-
-	if cf == nil {
+	if cf := c.cellFmts[ci]; cf == nil {
 		w.Write(_STR_TD)
 	} else {
 		cf.render(_STR_TD_OP, w)

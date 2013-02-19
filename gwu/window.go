@@ -54,7 +54,7 @@ type Window interface {
 	// If an empty string is set, the server's theme will be used.
 	SetTheme(theme string)
 
-	// Render renders the window as a complete HTML document.
+	// RenderWin renders the window as a complete HTML document.
 	RenderWin(w writer, s Server)
 }
 
@@ -117,8 +117,37 @@ func (s *windowImpl) SetTheme(theme string) {
 	s.theme = theme
 }
 
+func (c *windowImpl) Render(w writer) {
+	// Attaching window events is outside of the HTML tag denoted by the window's id.
+	// This means if the window is re-rendered (not reloaded), changed window event handlers
+	// will not be reflected.
+	// This also avoids the effect of registering the event sender functions multiple times.
+
+	// First render window event handlers as window functions.
+	found := false
+	for etype, _ := range c.handlers {
+		if etype.Category() != ECAT_WINDOW {
+			continue
+		}
+
+		if !found {
+			found = true
+			w.Writes("<script>")
+		}
+		// To render       : add<etypeFunc>(function(){se(null,etype,id);});
+		// Example (onload): addonload(function(){se(null,13,4327);});
+		w.Writevs("add", etypeFuncs[etype], "(function(){se(null,", int(etype), ",", int(c.id), ");});")
+	}
+	if found {
+		w.Writes("</script>")
+	}
+
+	// And now call panelImpl's Render()
+	c.panelImpl.Render(w)
+}
+
 func (win *windowImpl) RenderWin(w writer, s Server) {
-	// We could optimize (store byte slices of static strings) this
+	// We could optimize this (store byte slices of static strings)
 	// but windows are rendered "so rarely"...
 	w.Writes("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\"><title>")
 	w.Writees(win.text)
@@ -134,12 +163,12 @@ func (win *windowImpl) RenderWin(w writer, s Server) {
 	w.Writess(win.heads...)
 	w.Writes("</head><body>")
 
-	win.Render(w) // This is panelImpl.Render()
+	win.Render(w)
 
 	w.Writes("</body></html>")
 }
 
-// renderDynJs renders the dynamic JavaScript codes of GWU.
+// renderDynJs renders the dynamic JavaScript codes of Gowut.
 func (win *windowImpl) renderDynJs(w writer, s Server) {
 	w.Writes("<script>")
 	w.Writess("var _pathApp='", s.AppPath(), "';")

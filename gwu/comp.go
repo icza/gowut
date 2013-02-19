@@ -131,8 +131,8 @@ type compImpl struct {
 	attrs     map[string]string // Explicitly set HTML attributes for the component's wrapper tag.
 	styleImpl *styleImpl        // Style builder.
 
-	handlers        map[EventType][]EventHandler // Event handlers mapped from even type. Lazily initialized.
-	valueProviderJs string                       // If the HTML representation of the component has a value, this JavaScript code code must provide it. It will be automatically sent as the PARAM_COMP_ID parameter.
+	handlers        map[EventType][]EventHandler // Event handlers mapped from event type. Lazily initialized.
+	valueProviderJs []byte                       // If the HTML representation of the component has a value, this JavaScript code code must provide it. It will be automatically sent as the PARAM_COMP_ID parameter.
 	syncOnETypes    map[EventType]bool           // Tells on which event types should comp value sync happen.
 }
 
@@ -140,7 +140,7 @@ type compImpl struct {
 // If the component has a value, the valueProviderJs must be a
 // JavaScript code which when evaluated provides the component's
 // value. Pass an empty string if the component does not have a value.
-func newCompImpl(valueProviderJs string) compImpl {
+func newCompImpl(valueProviderJs []byte) compImpl {
 	id := nextCompId()
 	return compImpl{id: id, attrs: map[string]string{"id": id.String()}, styleImpl: newStyleImpl(), valueProviderJs: valueProviderJs}
 }
@@ -239,9 +239,6 @@ func (c *compImpl) AddEHandlerFunc(hf func(e Event), etypes ...EventType) {
 }
 
 func (c *compImpl) HandlersCount(etype EventType) int {
-	if c.handlers == nil {
-		return 0
-	}
 	return len(c.handlers[etype])
 }
 
@@ -279,17 +276,22 @@ var (
 // rendrenderEventHandlers renders the event handlers as attributes.
 func (c *compImpl) renderEHandlers(w writer) {
 	for etype, _ := range c.handlers {
-		// To render         : se(event,etype,compId,value)
-		// Example (checkbox): se(event,0,14,this.checked)
+		etypeAttr := etypeAttrs[etype]
+		if len(etypeAttr) == 0 { // Only general events are added to the etypeAttrs map
+			continue
+		}
+
+		// To render                 : " <etypeAttr>=\"se(event,etype,compId,value)\""
+		// Example (checkbox onclick): " onclick=\"se(event,0,4327,this.checked)\""
 		w.Write(_STR_SPACE)
-		w.Write(etypeAttrs[etype])
+		w.Write(etypeAttr)
 		w.Write(_STR_SE_PREFIX)
 		w.Writev(int(etype))
 		w.Write(_STR_COMMA)
 		w.Writev(int(c.id))
 		if len(c.valueProviderJs) > 0 && c.syncOnETypes != nil && c.syncOnETypes[etype] {
 			w.Write(_STR_COMMA)
-			w.Writes(c.valueProviderJs)
+			w.Write(c.valueProviderJs)
 		}
 		w.Write(_STR_SE_SUFFIX)
 	}
@@ -301,9 +303,6 @@ func (b *compImpl) preprocessEvent(event Event, r *http.Request) {
 }
 
 func (c *compImpl) dispatchEvent(e Event) {
-	if c.handlers == nil {
-		return
-	}
 	for _, handler := range c.handlers[e.Type()] {
 		handler.HandleEvent(e)
 	}

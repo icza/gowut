@@ -104,22 +104,26 @@ type textBoxImpl struct {
 	rows, cols int  // Number of displayed rows and columns.
 }
 
+var (
+	_STR_ENC_URI_THIS_V = []byte("encodeURIComponent(this.value)") // "encodeURIComponent(this.value)"
+)
+
 // NewTextBox creates a new TextBox.
 func NewTextBox(text string) TextBox {
-	c := newTextBoxImpl("encodeURIComponent(this.value)", text, false)
+	c := newTextBoxImpl(_STR_ENC_URI_THIS_V, text, false)
 	c.Style().AddClass("gwu-TextBox")
 	return &c
 }
 
 // NewPasswBox creates a new PasswBox.
 func NewPasswBox(text string) TextBox {
-	c := newTextBoxImpl("encodeURIComponent(this.value)", text, true)
+	c := newTextBoxImpl(_STR_ENC_URI_THIS_V, text, true)
 	c.Style().AddClass("gwu-PasswBox")
 	return &c
 }
 
 // newTextBoxImpl creates a new textBoxImpl.
-func newTextBoxImpl(valueProviderJs, text string, isPassw bool) textBoxImpl {
+func newTextBoxImpl(valueProviderJs []byte, text string, isPassw bool) textBoxImpl {
 	c := textBoxImpl{newCompImpl(valueProviderJs), newHasTextImpl(text), newHasEnabledImpl(), isPassw, 1, 20}
 	c.AddSyncOnETypes(ETYPE_CHANGE)
 	return c

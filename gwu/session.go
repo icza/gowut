@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"io"
 	"sort"
+	"sync"
 	"time"
 )
 
@@ -82,6 +83,9 @@ type Session interface {
 	// ClearNew clears the new flag.
 	// After this New() will return false.
 	clearNew()
+
+	// rwMutex returns the RW mutex of the session.
+	rwMutex() *sync.RWMutex
 }
 
 // Session implementation.
@@ -93,6 +97,8 @@ type sessionImpl struct {
 	windows  map[string]Window      // Windows of the session
 	attrs    map[string]interface{} // Attributes stored in the session
 	timeout  time.Duration          // Session timeout
+
+	rwMutex_ *sync.RWMutex // RW mutex to synchronize session (and related Window and component) access
 }
 
 // newSessionImpl creates a new sessionImpl.
@@ -108,7 +114,7 @@ func newSessionImpl(private bool) sessionImpl {
 
 	// Initialzie private sessions as new, but not the public session
 	return sessionImpl{id: id, isNew: private, created: now, accessed: now, windows: make(map[string]Window),
-		attrs: make(map[string]interface{}), timeout: 30 * time.Minute}
+		attrs: make(map[string]interface{}), timeout: 30 * time.Minute, rwMutex_: &sync.RWMutex{}}
 }
 
 // Number of valid id runes.
@@ -234,4 +240,8 @@ func (s *sessionImpl) access() {
 
 func (s *sessionImpl) clearNew() {
 	s.isNew = false
+}
+
+func (s *sessionImpl) rwMutex() *sync.RWMutex {
+	return s.rwMutex_
 }

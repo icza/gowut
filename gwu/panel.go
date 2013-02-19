@@ -382,12 +382,7 @@ func (c *panelImpl) layoutVertical(w writer) {
 
 // renderTd renders the formatted HTML TD tag for the specified child component.
 func (c *panelImpl) renderTd(c2 Comp, w writer) {
-	var cf *cellFmtImpl
-	if c.cellFmts != nil {
-		cf = c.cellFmts[c2.Id()]
-	}
-
-	if cf == nil {
+	if cf := c.cellFmts[c2.Id()]; cf == nil {
 		w.Write(_STR_TD)
 	} else {
 		cf.render(_STR_TD_OP, w)

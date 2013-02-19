@@ -90,9 +90,13 @@ type listBoxImpl struct {
 	rows     int      // Number of displayed rows
 }
 
+var (
+	_STR_SELIDXS = []byte("selIdxs(this)") // "selIdxs(this)"
+)
+
 // NewListBox creates a new ListBox.
 func NewListBox(values []string) ListBox {
-	c := &listBoxImpl{newCompImpl("selIdxs(this)"), newHasEnabledImpl(), values, false, make([]bool, len(values)), 1}
+	c := &listBoxImpl{newCompImpl(_STR_SELIDXS), newHasEnabledImpl(), values, false, make([]bool, len(values)), 1}
 	c.AddSyncOnETypes(ETYPE_CHANGE)
 	c.Style().AddClass("gwu-ListBox")
 	return c

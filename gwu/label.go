@@ -36,7 +36,7 @@ type labelImpl struct {
 
 // NewLabel creates a new Label.
 func NewLabel(text string) Label {
-	c := &labelImpl{newCompImpl(""), newHasTextImpl(text)}
+	c := &labelImpl{newCompImpl(nil), newHasTextImpl(text)}
 	c.Style().AddClass("gwu-Label")
 	return c
 }

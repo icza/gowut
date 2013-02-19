@@ -37,7 +37,8 @@ type Link interface {
 	Target() string
 
 	// SetTarget sets the target of the link.
-	// Tip: pass "_blank" if you want the URL to open in a new window.
+	// Tip: pass "_blank" if you want the URL to open in a new window
+	// (this is the default).
 	SetTarget(target string)
 
 	// Comp returns the optional child component, if set.
@@ -61,7 +62,7 @@ type linkImpl struct {
 // By default links open in a new window (tab)
 // because their target is set to "_blank".
 func NewLink(text, url string) Link {
-	c := &linkImpl{newCompImpl(""), newHasTextImpl(text), newHasUrlImpl(url), nil}
+	c := &linkImpl{newCompImpl(nil), newHasTextImpl(text), newHasUrlImpl(url), nil}
 	c.SetTarget("_blank")
 	c.Style().AddClass("gwu-Link")
 	return c
@@ -125,8 +126,13 @@ func (c *linkImpl) SetComp(c2 Comp) {
 	c.comp = c2
 }
 
+var (
+	_STR_A_OP = []byte("<a")   // "<a"
+	_STR_A_CL = []byte("</a>") // "</a>"
+)
+
 func (c *linkImpl) Render(w writer) {
-	w.Writes("<a")
+	w.Write(_STR_A_OP)
 	c.renderUrl("href", w)
 	c.renderAttrsAndStyle(w)
 	c.renderEHandlers(w)
@@ -138,5 +144,5 @@ func (c *linkImpl) Render(w writer) {
 		c.comp.Render(w)
 	}
 
-	w.Writes("</a>")
+	w.Write(_STR_A_CL)
 }

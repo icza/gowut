@@ -42,13 +42,13 @@ type buttonImpl struct {
 
 // NewButton creates a new Button.
 func NewButton(text string) Button {
-	c := newButtonImpl("", text)
+	c := newButtonImpl(nil, text)
 	c.Style().AddClass("gwu-Button")
 	return &c
 }
 
 // newButtonImpl creates a new buttonImpl.
-func newButtonImpl(valueProviderJs string, text string) buttonImpl {
+func newButtonImpl(valueProviderJs []byte, text string) buttonImpl {
 	return buttonImpl{newCompImpl(valueProviderJs), newHasTextImpl(text), newHasEnabledImpl()}
 }
 

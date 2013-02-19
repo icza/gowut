@@ -20,6 +20,11 @@ package gwu
 // Expander interface defines a component which can show and hide
 // another component when clicked on the header.
 // 
+// You can register ETYPE_STATE_CHANGE event handlers which will be called when the user
+// expands or collapses the expander by clicking on the header. The event source will be
+// the expander. The event will have a parent event whose source will be the clicked
+// header component and will contain the mouse coordinates.
+// 
 // Default style classes: "gwu-Expander", "gwu-Expander-Header",
 // "gwuimg-collapsed", "gwu-Expander-Header-Expanded", "gwuimg-expanded",
 // "gwu-Expander-Content"
@@ -142,10 +147,13 @@ func (c *expanderImpl) SetHeader(header Comp) {
 	c.header = header
 	header.setParent(c)
 
-	// TODO would be nice to remove this internal handler func when a header is removed!
+	// TODO would be nice to remove this internal handler func when the header is removed!
 	header.AddEHandlerFunc(func(e Event) {
 		c.SetExpanded(!c.expanded)
 		e.MarkDirty(c)
+		if c.handlers[ETYPE_STATE_CHANGE] != nil {
+			c.dispatchEvent(e.forkEvent(ETYPE_STATE_CHANGE, c))
+		}
 	}, ETYPE_CLICK)
 }
 
