@@ -13,7 +13,7 @@ For News, documentation and examples please visit the **Gowut Home Page** here:
 
 To quickly install (or update to) the **latest** version, type:
 ```
-go get -u github.com/icza/gowut/gwu
+go get -u github.com/icza/gowut
 ```
 
 ## Quick test ##
