@@ -68,7 +68,7 @@ to see the changes.
 To quickly test it and see it in action, run the "Showcase of Features"
 application by typing: (assuming you're in the root of your GOPATH)
 
-	go run src/code.google.com/p/gowut/examples/showcase.go
+	go run src/github.com/icza/gowut/examples/showcase/showcase.go
 
 
 Features of Gowut
@@ -243,7 +243,7 @@ structure) will be seen without page reload.
 All written in Go.
 
 Source of this application is available here:
-http://code.google.com/p/gowut/source/browse/examples/simple_demo.go
+https://github.com/icza/gowut/blob/master/examples/simple/simple_demo.go
 
 	type MyButtonHandler struct {
 		counter int
@@ -383,7 +383,7 @@ Author email: gmail.com, user name: iczaaa
 
 Home page: https://sites.google.com/site/gowebuitoolkit/
 
-Source code: http://code.google.com/p/gowut/
+Source code: https://github.com/icza/gowut
 
 Discussion forum: https://groups.google.com/d/forum/gowebuitoolkit
 
@@ -395,7 +395,7 @@ package gwu
 
 // Gowut version information.
 const (
-	GOWUT_VERSION         = "0.8.0"          // Gowut version (major.minor.maintenance)
-	GOWUT_RELEASE_DATE    = "2013-02-19 CET" // Gowut release date
+	GOWUT_VERSION         = "0.9.0"          // Gowut version (major.minor.maintenance)
+	GOWUT_RELEASE_DATE    = "2015-07-08 CET" // Gowut release date
 	GOWUT_REL_DATE_LAYOUT = "2006-01-02 MST" // Gowut release date layout (for time.Parse())
 )

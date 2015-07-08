@@ -158,7 +158,7 @@ func (c *expanderImpl) SetHeader(header Comp) {
 }
 
 func (c *expanderImpl) Content() Comp {
-	return c.header
+	return c.content
 }
 
 func (c *expanderImpl) SetContent(content Comp) {

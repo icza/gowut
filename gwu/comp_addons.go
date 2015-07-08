@@ -83,7 +83,7 @@ func (c *hasEnabledImpl) SetEnabled(enabled bool) {
 	c.enabled = enabled
 }
 
-var _STR_DISABLED = []byte(" disabled=\"disabled\"") // " disabled=\"disabled\""
+var _STR_DISABLED = []byte(` disabled="disabled"`) // ` disabled="disabled"`
 
 // renderEnabled renders the enabled attribute.
 func (c *hasEnabledImpl) renderEnabled(w writer) {
@@ -394,7 +394,7 @@ func (c *tableViewImpl) SetCellPadding(padding int) {
 	c.SetIAttr("cellpadding", padding)
 }
 
-var _STR_ST_VALIGN = []byte(" style=\"vertical-align:") // " style=\"vertical-align:"
+var _STR_ST_VALIGN = []byte(` style="vertical-align:`) // ` style="vertical-align:`
 
 // renderTr renders an HTML TR tag with horizontal and vertical
 // alignment info included. 

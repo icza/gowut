@@ -11,12 +11,10 @@ For News, documentation and examples please visit the **Gowut Home Page** here:
 
 ## Quick install ##
 
-To quickly install (or update to) the **latest** version, type: (you need mercurial client installed for it to work)
+To quickly install (or update to) the **latest** version, type:
 ```
-go get -u code.google.com/p/gowut/gwu
+go get -u github.com/icza/gowut/gwu
 ```
-
-Check out the [Downloads](http://code.google.com/p/gowut/downloads/list) page for other downloads and older releases.
 
 ## Quick test ##
 
@@ -24,24 +22,24 @@ To quickly test it and see it in action, run the following example applications 
 
 **1. Showcase of Features.** This one auto-opens itself in your default browser.
 ```
-go run src/code.google.com/p/gowut/examples/showcase.go
+go run src/github.com/icza/gowut/examples/showcase/showcase.go
 ```
 
 **2. A single window example.** This one auto-opens itself in your default browser.
 ```
-go run src/code.google.com/p/gowut/examples/simple_demo.go
+go run src/github.com/icza/gowut/examples/simple/simple_demo.go
 ```
 
 **3. Login window example with session management.**
 ```
-go run src/code.google.com/p/gowut/examples/login_demo.go
+go run src/github.com/icza/gowut/examples/login/login_demo.go
 ```
 Open the page http://localhost:3434/guitest/ in your browser to see it.
 
 ## Godoc of Gowut ##
 
 You can read the godoc of Gowut online here:
-http://godoc.org/code.google.com/p/gowut/gwu
+http://godoc.org/github.com/icza/gowut/gwu
 
 ## +1 Gowut! ##
 

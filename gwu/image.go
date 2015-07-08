@@ -47,9 +47,9 @@ func NewImage(text, url string) Image {
 }
 
 var (
-	_STR_IMG_OP = []byte("<img")    // "<img"
-	_STR_ALT    = []byte(" alt=\"") // " alt=\""
-	_STR_IMG_CL = []byte("\">")     // "\">"
+	_STR_IMG_OP = []byte("<img")   // "<img"
+	_STR_ALT    = []byte(` alt="`) // ` alt="`
+	_STR_IMG_CL = []byte(`">`)     // `">`
 )
 
 func (c *imageImpl) Render(w writer) {

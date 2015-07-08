@@ -18,7 +18,7 @@
 package main
 
 import (
-	"code.google.com/p/gowut/gwu"
+	"github.com/icza/gowut/gwu"
 	"fmt"
 	"os"
 	"strconv"
@@ -493,7 +493,7 @@ func buildButtonDemo(event gwu.Event) gwu.Comp {
 func buildHtmlDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
-	html := "<span onclick=\"alert('Hi from Html!');\">Hi! I'm inserted as HTML. Click on me!</span>"
+	html := `<span onclick="alert('Hi from Html!');">Hi! I'm inserted as HTML. Click on me!</span>`
 
 	p.Add(gwu.NewLabel("The following HTML code is inserted after the text box as an Html component:"))
 	ta := gwu.NewTextBox(html)
@@ -558,7 +558,7 @@ func buildLinkDemo(event gwu.Event) gwu.Comp {
 	p.SetCellPadding(3)
 
 	p.Add(gwu.NewLink("Visit Gowut Home page", "https://sites.google.com/site/gowebuitoolkit/"))
-	p.Add(gwu.NewLink("Visit Gowut Project page", "http://code.google.com/p/gowut/"))
+	p.Add(gwu.NewLink("Visit Gowut Project page", "https://github.com/icza/gowut"))
 
 	row := gwu.NewHorizontalPanel()
 	row.SetCellPadding(3)
@@ -799,7 +799,7 @@ func buildShowcaseWin(sess gwu.Session) {
 	footer.Style().SetFullWidth().SetBorderTop2(2, gwu.BRD_STYLE_SOLID, "#777777")
 	footer.Add(hiddenPan)
 	footer.AddHConsumer()
-	l = gwu.NewLabel("Copyright © 2013 András Belicza. All rights reserved.")
+	l = gwu.NewLabel("Copyright © 2013-2015 András Belicza. All rights reserved.")
 	l.Style().SetFontStyle(gwu.FONT_STYLE_ITALIC).SetFontSize("95%")
 	footer.Add(l)
 	footer.AddHSpace(10)

@@ -32,14 +32,14 @@ const _CACHED_INTS = 32
 // Render methods use these to avoid array allocations
 // when converting strings to byte slices in order to write them.
 var (
-	_STR_SPACE    = []byte(" ")   // " " (space string)
-	_STR_QUOTE    = []byte("\"")  // "\"" (quotation mark)
-	_STR_EQ_QUOTE = []byte("=\"") // "=\"" (equal sign and a quotation mark)
-	_STR_COMMA    = []byte(",")   // "," (comma string)
-	_STR_COLON    = []byte(":")   // ":" (colon string)
-	_STR_SEMICOL  = []byte(";")   // ";" (semicolon string)
-	_STR_LT       = []byte("<")   // "<" (less than string)
-	_STR_GT       = []byte(">")   // ">" (greater than string)
+	_STR_SPACE    = []byte(" ")  // " " (space string)
+	_STR_QUOTE    = []byte(`"`)  // `"` (quotation mark)
+	_STR_EQ_QUOTE = []byte(`="`) // `="` (equal sign and a quotation mark)
+	_STR_COMMA    = []byte(",")  // "," (comma string)
+	_STR_COLON    = []byte(":")  // ":" (colon string)
+	_STR_SEMICOL  = []byte(";")  // ";" (semicolon string)
+	_STR_LT       = []byte("<")  // "<" (less than string)
+	_STR_GT       = []byte(">")  // ">" (greater than string)
 
 	_STR_SPAN_OP  = []byte("<span")    // "<span"
 	_STR_SPAN_CL  = []byte("</span>")  // "</span>"
@@ -50,9 +50,9 @@ var (
 	_STR_TD_OP    = []byte("<td")      // "<td"
 	_STR_TR_OP    = []byte("<tr")      // "<tr"
 
-	_STR_STYLE = []byte(" style=\"") // " style=\""
-	_STR_CLASS = []byte(" class=\"") // " class=\""
-	_STR_ALIGN = []byte(" align=\"") // " align=\""
+	_STR_STYLE = []byte(` style="`) // ` style="`
+	_STR_CLASS = []byte(` class="`) // ` class="`
+	_STR_ALIGN = []byte(` align="`) // ` align="`
 
 	_STR_INTS  [_CACHED_INTS][]byte                                            // Numbers
 	_STR_BOOLS = map[bool][]byte{false: []byte("false"), true: []byte("true")} // Bools
@@ -135,7 +135,7 @@ func (w writer) Writees(s string) (n int, err error) {
 }
 
 // WriteAttr writes an attribute in the form of:
-// " name=\"value\""
+// ` name="value"`
 func (w writer) WriteAttr(name, value string) (n int, err error) {
 	// Easiest implementation would be:
 	// return w.Writevs(_STR_SPACE, name, _STR_EQ_QUOTE, value, _STR_QUOTE)

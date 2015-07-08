@@ -545,7 +545,7 @@ func (s *serverImpl) serveHTTP(w http.ResponseWriter, r *http.Request) {
 		// Invalid window name, render an error message with a link to the window list
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.WriteHeader(http.StatusNotFound)
-		NewWriter(w).Writess("<html><body>Window for name <b>'", winName, "'</b> not found. See the <a href=\"", s.appPath, "\">Window list</a>.</body></html>")
+		NewWriter(w).Writess("<html><body>Window for name <b>'", winName, `'</b> not found. See the <a href="`, s.appPath, `">Window list</a>.</body></html>`)
 		return
 	}
 
@@ -586,7 +586,7 @@ func (s *serverImpl) renderWinList(sess Session, wr http.ResponseWriter, r *http
 
 	w := NewWriter(wr)
 
-	w.Writes("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\"><title>")
+	w.Writes(`<html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>`)
 	w.Writees(s.text)
 	w.Writess(" - Window list</title></head><body><h2>")
 	w.Writees(s.text)
@@ -602,7 +602,7 @@ func (s *serverImpl) renderWinList(sess Session, wr http.ResponseWriter, r *http
 		if len(s.sessCreatorNames) > 0 {
 			w.Writes("Session creators:<ul>") // TODO needs a better name
 			for name, text := range s.sessCreatorNames {
-				w.Writess("<li><a href=\"", s.appPath, name, "\">", text, "</a>")
+				w.Writess(`<li><a href="`, s.appPath, name, `">`, text, "</a>")
 			}
 			w.Writes("</ul>")
 		}
@@ -616,7 +616,7 @@ func (s *serverImpl) renderWinList(sess Session, wr http.ResponseWriter, r *http
 		}
 		w.Writes("<ul>")
 		for _, win := range session.SortedWins() {
-			w.Writess("<li><a href=\"", s.appPath, win.Name(), "\">", win.Text(), "</a>")
+			w.Writess(`<li><a href="`, s.appPath, win.Name(), `">`, win.Text(), "</a>")
 		}
 		w.Writes("</ul>")
 	}

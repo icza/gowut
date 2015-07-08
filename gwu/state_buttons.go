@@ -290,12 +290,12 @@ func (c *stateButtonImpl) preprocessEvent(event Event, r *http.Request) {
 }
 
 var (
-	_STR_INPUT     = []byte("<input type=\"")       // "<input type=\""
-	_STR_ID        = []byte("\" id=\"")             // "\" id=\""
-	_STR_NAME      = []byte(" name=\"")             // " name=\""
-	_STR_CHECKED   = []byte(" checked=\"checked\"") // " checked=\"checked\""
-	_STR_LABEL_FOR = []byte("><label for=\"")       // "><label for=\""
-	_STR_LABEL_CL  = []byte("</label>")             // "</label>"
+	_STR_INPUT     = []byte(`<input type="`)      // `<input type="`
+	_STR_ID        = []byte(`" id="`)             // `" id="`
+	_STR_NAME      = []byte(` name="`)            // ` name="`
+	_STR_CHECKED   = []byte(` checked="checked"`) // ` checked="checked"`
+	_STR_LABEL_FOR = []byte(`><label for="`)      // `><label for="`
+	_STR_LABEL_CL  = []byte("</label>")           // "</label>"
 )
 
 func (c *stateButtonImpl) Render(w writer) {
@@ -390,8 +390,8 @@ func (c *switchButtonImpl) preprocessEvent(event Event, r *http.Request) {
 }
 
 var (
-	_STR_CL_TR = []byte("><tr>")              // "><tr>"
-	_STR_TD_50 = []byte("<td width=\"50%\">") // "<td width=\"50%\">"
+	_STR_CL_TR = []byte("><tr>")            // "><tr>"
+	_STR_TD_50 = []byte(`<td width="50%">`) // `<td width="50%">`
 )
 
 func (c *switchButtonImpl) Render(w writer) {

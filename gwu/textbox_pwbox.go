@@ -199,12 +199,12 @@ func (c *textBoxImpl) Render(w writer) {
 }
 
 var (
-	_STR_INPUT_OP = []byte("<input type=\"") // "<input type=\""
-	_STR_PASSWORD = []byte("password")       // "password"
-	_STR_TEXT     = []byte("text")           // "text"
-	_STR_SIZE     = []byte("\" size=\"")     // "\" size=\""
-	_STR_VALUE    = []byte(" value=\"")      // " value=\""
-	_STR_INPUT_CL = []byte("\"/>")           // "\"/>"
+	_STR_INPUT_OP = []byte(`<input type="`) // `<input type="`
+	_STR_PASSWORD = []byte("password")      // "password"
+	_STR_TEXT     = []byte("text")          // "text"
+	_STR_SIZE     = []byte(`" size="`)      // `" size="`
+	_STR_VALUE    = []byte(` value="`)      // ` value="`
+	_STR_INPUT_CL = []byte(`"/>`)           // `"/>`
 )
 
 // renderInput renders the component as an input HTML tag.
@@ -229,8 +229,8 @@ func (c *textBoxImpl) renderInput(w writer) {
 
 var (
 	_STR_TEXTAREA_OP    = []byte("<textarea")   // "<textarea"
-	_STR_ROWS           = []byte(" rows=\"")    // " rows=\""
-	_STR_COLS           = []byte("\" cols=\"")  // "\" cols=\""
+	_STR_ROWS           = []byte(` rows="`)     // ` rows="`
+	_STR_COLS           = []byte(`" cols="`)    // `" cols="`
 	_STR_TEXTAREA_OP_CL = []byte("\">\n")       // "\">\n"
 	_STR_TEXTAREA_CL    = []byte("</textarea>") // "</textarea>"
 )

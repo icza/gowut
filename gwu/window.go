@@ -149,17 +149,17 @@ func (c *windowImpl) Render(w writer) {
 func (win *windowImpl) RenderWin(w writer, s Server) {
 	// We could optimize this (store byte slices of static strings)
 	// but windows are rendered "so rarely"...
-	w.Writes("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\"><title>")
+	w.Writes(`<html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>`)
 	w.Writees(win.text)
-	w.Writess("</title><link href=\"", s.AppPath(), _PATH_STATIC)
+	w.Writess(`</title><link href="`, s.AppPath(), _PATH_STATIC)
 	if len(win.theme) == 0 {
 		w.Writes(resNameStaticCss(s.Theme()))
 	} else {
 		w.Writes(resNameStaticCss(win.theme))
 	}
-	w.Writes("\" rel=\"stylesheet\" type=\"text/css\">")
+	w.Writes(`" rel="stylesheet" type="text/css">`)
 	win.renderDynJs(w, s)
-	w.Writess("<script src=\"", s.AppPath(), _PATH_STATIC, _RES_NAME_STATIC_JS, "\"></script>")
+	w.Writess(`<script src="`, s.AppPath(), _PATH_STATIC, _RES_NAME_STATIC_JS, `"></script>`)
 	w.Writess(win.heads...)
 	w.Writes("</head><body>")
 

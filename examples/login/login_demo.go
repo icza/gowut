@@ -18,7 +18,7 @@
 package main
 
 import (
-	"code.google.com/p/gowut/gwu"
+	"github.com/icza/gowut/gwu"
 	"fmt"
 	"log"
 	"math/rand"
@@ -322,8 +322,8 @@ func (h SessHandler) Removed(s gwu.Session) {
 
 func main() {
 	// Create GUI server
-	server := gwu.NewServer("guitest", "")
-	//server := gwu.NewServerTLS("guitest", "", "test_tls/cert.pem", "test_tls/key.pem")
+	//server := gwu.NewServer("guitest", "")
+	server := gwu.NewServerTLS("guitest", "", "test_tls/cert.pem", "test_tls/key.pem")
 	server.SetText("Test GUI Application")
 
 	server.AddSessCreatorName("login", "Login Window")

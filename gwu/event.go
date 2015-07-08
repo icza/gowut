@@ -182,7 +182,7 @@ const (
 )
 
 // Empty event handler which does nothing.
-const EMPTY_EHANDLER emptyEventHandler = emptyEventHandler(0)
+const EMPTY_EHANDLER emptyEventHandler = 0
 
 // EventHandler interface defines a handler capable of handling events.
 type EventHandler interface {

@@ -195,12 +195,12 @@ func (c *listBoxImpl) preprocessEvent(event Event, r *http.Request) {
 }
 
 var (
-	_STR_SELECT_OP     = []byte("<select")                        // "<select"
-	_STR_MULTIPLE      = []byte(" multiple=\"multiple\"")         // " multiple=\"multiple\""
-	_STR_OPTION_OP_SEL = []byte("<option selected=\"selected\">") // "<option selected=\"selected\">"
-	_STR_OPTION_OP     = []byte("<option>")                       // "<option>"
-	_STR_OPTION_CL     = []byte("</option>")                      // "</option>"
-	_STR_SELECT_CL     = []byte("</select>")                      // "</select>"
+	_STR_SELECT_OP     = []byte("<select")                      // "<select"
+	_STR_MULTIPLE      = []byte(` multiple="multiple"`)         // ` multiple="multiple"`
+	_STR_OPTION_OP_SEL = []byte(`<option selected="selected">`) // `<option selected="selected">`
+	_STR_OPTION_OP     = []byte("<option>")                     // "<option>"
+	_STR_OPTION_CL     = []byte("</option>")                    // "</option>"
+	_STR_SELECT_CL     = []byte("</select>")                    // "</select>"
 )
 
 func (c *listBoxImpl) Render(w writer) {
