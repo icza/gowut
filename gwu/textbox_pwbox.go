@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -23,7 +23,7 @@ import (
 )
 
 // TextBox interface defines a component for text input purpose.
-// 
+//
 // Suggested event type to handle actions: ETYPE_CHANGE
 //
 // By default the value of the TextBox is synchronized with the server
@@ -33,7 +33,7 @@ import (
 // (while you type in characters), add the ETYPE_KEY_UP event type
 // to the events on which synchronization happens by calling:
 // 		AddSyncOnETypes(ETYPE_KEY_UP)
-// 
+//
 // Default style class: "gwu-TextBox"
 type TextBox interface {
 	// TextBox is a component.
@@ -77,7 +77,7 @@ type TextBox interface {
 }
 
 // PasswBox interface defines a text box for password input purpose.
-// 
+//
 // Suggested event type to handle actions: ETYPE_CHANGE
 //
 // By default the value of the PasswBox is synchronized with the server
@@ -87,7 +87,7 @@ type TextBox interface {
 // (while you type in characters), add the ETYPE_KEY_UP event type
 // to the events on which synchronization happens by calling:
 // 		AddSyncOnETypes(ETYPE_KEY_UP)
-// 
+//
 // Default style class: "gwu-PasswBox"
 type PasswBox interface {
 	// PasswBox is a TextBox.
@@ -177,7 +177,7 @@ func (c *textBoxImpl) SetMaxLength(maxLength int) {
 
 func (c *textBoxImpl) preprocessEvent(event Event, r *http.Request) {
 	// Empty string for text box is a valid value.
-	// So we have to check whether it is supplied, not just whether its len() > 0 
+	// So we have to check whether it is supplied, not just whether its len() > 0
 	value := r.FormValue(_PARAM_COMP_VALUE)
 	if len(value) > 0 {
 		c.text = value

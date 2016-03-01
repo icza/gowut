@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -35,7 +35,7 @@ const (
 // sequentially (one dimensional, associated with an index), and lays out
 // its children in a row or column using TableView based on a layout strategy,
 // but does not define the way how child components can be added.
-// 
+//
 // Default style class: "gwu-Panel"
 type PanelView interface {
 	// PanelView is a TableView.
@@ -94,7 +94,7 @@ type Panel interface {
 
 	// AddHConsumer adds and returns a horizontal (free) space consumer.
 	// Useful when layout is LAYOUT_HORIZONTAL.
-	// 
+	//
 	// Tip: When adding a horizontal space consumer, you may set the
 	// white space style attribute of other components in the the panel
 	// to WHITE_SPACE_NOWRAP to avoid texts getting wrapped to multiple lines.

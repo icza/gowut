@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -19,7 +19,7 @@ package gwu
 
 // TabBar interface defines the tab bar for selecting the visible
 // component of a TabPanel.
-// 
+//
 // Note: Removing a tab component through the tab bar also
 // removes the content component from the tab panel of the tab bar.
 //
@@ -74,7 +74,7 @@ const (
 // TabPanel interface defines a PanelView which has multiple child components
 // but only one is visible at a time. The visible child can be visually selected
 // using an internal TabBar component.
-// 
+//
 // Both the tab panel and its internal tab bar component are PanelViews.
 // This gives high layout configuration possibilities.
 // Usually you only need to set the tab bar placement with the SetTabBarPlacement()
@@ -87,12 +87,12 @@ const (
 // the content alignment, e.g. with the SetAlignment() method. You can also set different
 // alignments for individual tab components using TabBar().CellFmt(). You can also set
 // other cell formatting applied to the tab bar using TabBarFmt() method.
-// 
+//
 // You can register ETYPE_STATE_CHANGE event handlers which will be called when the user
 // changes tab selection by clicking on a tab. The event source will be the tab panel.
 // The event will have a parent event whose source will be the clicked tab and will
 // contain the mouse coordinates.
-// 
+//
 // Default style classes: "gwu-TabPanel", "gwu-TabPanel-Content"
 type TabPanel interface {
 	// TabPanel is a Container.
@@ -301,7 +301,7 @@ func (c *tabPanelImpl) Add(tab, content Comp) {
 
 func (c *tabPanelImpl) AddString(tab string, content Comp) {
 	tabc := NewLabel(tab)
-	tabc.Style().SetDisplay(DISPLAY_BLOCK) // Display: block - so the whole cell of the tab is clickable 
+	tabc.Style().SetDisplay(DISPLAY_BLOCK) // Display: block - so the whole cell of the tab is clickable
 	c.Add(tabc, content)
 }
 

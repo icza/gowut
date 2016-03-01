@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -40,9 +40,9 @@ type StateButton interface {
 
 // CheckBox interface defines a check box, a button which has
 // 2 states: selected/deselected.
-// 
+//
 // Suggested event type to handle changes: ETYPE_CLICK
-// 
+//
 // Default style classes: "gwu-CheckBox", "gwu-CheckBox-Disabled"
 type CheckBox interface {
 	// CheckBox is a StateButton.
@@ -51,9 +51,9 @@ type CheckBox interface {
 
 // SwitchButton interface defines a button which can be switched
 // ON and OFF.
-// 
+//
 // Suggested event type to handle changes: ETYPE_CLICK
-// 
+//
 // Default style classes: "gwu-SwitchButton", "gwu-SwitchButton-On-Active"
 // "gwu-SwitchButton-On-Inactive", "gwu-SwitchButton-Off-Active",
 // "gwu-SwitchButton-Off-Inactive"
@@ -103,9 +103,9 @@ type RadioGroup interface {
 // and in each group only one radio button can be selected.
 // Selecting an unselected radio button deselects the selected
 // radio button of the group, if there was one.
-// 
+//
 // Suggested event type to handle changes: ETYPE_CLICK
-// 
+//
 // Default style classes: "gwu-RadioButton", "gwu-RadioButton-Disabled"
 type RadioButton interface {
 	// RadioButton is a StateButton.
@@ -128,7 +128,7 @@ type radioGroupImpl struct {
 
 // StateButton implementation.
 type stateButtonImpl struct {
-	buttonImpl // Button implementation 
+	buttonImpl // Button implementation
 
 	state         bool       // State of the button
 	inputType     []byte     // Type of the underlying input tag

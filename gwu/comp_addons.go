@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -354,7 +354,7 @@ type TableView interface {
 // TableView implementation.
 type tableViewImpl struct {
 	compImpl       // component implementation
-	hasHVAlignImpl // Has horizontal and vertical alignment implementation 
+	hasHVAlignImpl // Has horizontal and vertical alignment implementation
 }
 
 // newTableViewImpl creates a new tableViewImpl.
@@ -397,7 +397,7 @@ func (c *tableViewImpl) SetCellPadding(padding int) {
 var _STR_ST_VALIGN = []byte(` style="vertical-align:`) // ` style="vertical-align:`
 
 // renderTr renders an HTML TR tag with horizontal and vertical
-// alignment info included. 
+// alignment info included.
 func (c *tableViewImpl) renderTr(w writer) {
 	w.Write(_STR_TR_OP)
 	if c.halign != HA_DEFAULT {

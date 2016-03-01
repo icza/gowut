@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"html"
 	"io"
+	"log"
 	"strconv"
 )
 
@@ -94,7 +95,7 @@ func (w writer) Writev(v interface{}) (n int, err error) {
 		return w.Write(_STR_BOOLS[v2])
 	}
 
-	fmt.Printf("Not supported type: %T\n", v)
+	log.Printf("Not supported type: %T\n", v)
 	return 0, errors.New(fmt.Sprintf("Not supported type: %T", v))
 }
 
@@ -141,7 +142,7 @@ func (w writer) WriteAttr(name, value string) (n int, err error) {
 	// return w.Writevs(_STR_SPACE, name, _STR_EQ_QUOTE, value, _STR_QUOTE)
 
 	// ...but since this is called very frequently, I allow some extra lines of code
-	// for the sake of efficiency (also avoiding array allocation for the varargs...) 
+	// for the sake of efficiency (also avoiding array allocation for the varargs...)
 
 	n, err = w.Write(_STR_SPACE)
 	if err != nil {
