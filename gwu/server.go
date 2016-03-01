@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -23,8 +23,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os/exec"
-	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -33,8 +31,8 @@ import (
 // Internal path constants.
 const (
 	_PATH_STATIC      = "_gwu_static/" // App path-relative path for GWU static contents.
-	_PATH_EVENT       = "e"            // Window-relative path for sending events 
-	_PATH_RENDER_COMP = "rc"           // Window-relative path for rendering a component 
+	_PATH_EVENT       = "e"            // Window-relative path for sending events
+	_PATH_RENDER_COMP = "rc"           // Window-relative path for rendering a component
 )
 
 // Parameters passed between the browser and the server.
@@ -54,10 +52,10 @@ const (
 
 // Event response actions (client actions to take after processing an event).
 const (
-	_ERA_NO_ACTION   = iota // Event processing OK and no action required 
+	_ERA_NO_ACTION   = iota // Event processing OK and no action required
 	_ERA_RELOAD_WIN         // Window name to be reloaded
 	_ERA_DIRTY_COMPS        // There are dirty components which needs to be refreshed
-	_ERA_FOCUS_COMP         // Focus a compnent 
+	_ERA_FOCUS_COMP         // Focus a compnent
 )
 
 // GWU session id cookie name
@@ -101,7 +99,7 @@ type Server interface {
 
 	// AddSessCreatorName registers a nonexistent window name
 	// whose path auto-creates a new session.
-	// 
+	//
 	// Normally sessions are created from event handlers during
 	// event dispatching by calling Event.NewSession(). This
 	// requires a public window and an event source component
@@ -111,10 +109,10 @@ type Server interface {
 	// session creation (if the current session is not private), and
 	// with a registered SessionHandler you can build the window and
 	// add it to the auto-created new session prior to it being served.
-	// 
+	//
 	// The text linking to the name will be included in the window list
-	// if text is a non-empty string. 
-	// 
+	// if text is a non-empty string.
+	//
 	// Tip: You can use this to pre-register a login window for example.
 	// You can call
 	// 		AddSessCreatorName("login", "Login Window")
@@ -133,7 +131,7 @@ type Server interface {
 	// will be served by the server when requested.
 	// path is an app-path relative path to address a file, dir is the root directory
 	// to search in.
-	// 
+	//
 	// Example:
 	//     AddStaticDir("img", "/tmp/myimg")
 	// And then the request "/appname/img/faces/happy.gif" will serve "/tmp/myimg/faces/happy.gif".
@@ -152,7 +150,7 @@ type Server interface {
 	SetLogger(logger *log.Logger)
 
 	// Start starts the GUI server and waits for incoming connections.
-	// 
+	//
 	// Sessionless window names may be specified as optional parameters
 	// that will be opened in the default browser.
 	// Tip: Pass an empty string to open the window list.
@@ -182,7 +180,7 @@ type serverImpl struct {
 // NewServer creates a new GUI server in HTTP mode.
 // The specified app name will be part of the application path (the first part).
 // If addr is empty string, "localhost:3434" will be used.
-// 
+//
 // Tip: Pass an empty string as appName to place the GUI server to the root path ("/").
 func NewServer(appName, addr string) Server {
 	return newServerImpl(appName, addr, "", "")
@@ -191,10 +189,10 @@ func NewServer(appName, addr string) Server {
 // NewServerTLS creates a new GUI server in secure (HTTPS) mode.
 // The specified app name will be part of the application path (the first part).
 // If addr is empty string, "localhost:3434" will be used.
-// 
+//
 // Tip: Pass an empty string as appName to place the GUI server to the root path ("/").
 // Tip: You can use generate_cert.go in crypto/tls to generate
-// a test certificate and key file (cert.pem andkey.pem). 
+// a test certificate and key file (cert.pem andkey.pem).
 func NewServerTLS(appName, addr, certFile, keyFile string) Server {
 	return newServerImpl(appName, addr, certFile, keyFile)
 }
@@ -376,24 +374,6 @@ func (s *serverImpl) SetLogger(logger *log.Logger) {
 	s.logger = logger
 }
 
-// open opens the specified URL in the default browser of the user.
-func open(url string) error {
-	var cmd string
-	var args []string
-
-	switch runtime.GOOS {
-	case "windows":
-		cmd = "cmd"
-		args = []string{"/c", "start"}
-	case "darwin":
-		cmd = "open"
-	default: // "linux", "freebsd", "openbsd", "netbsd"
-		cmd = "xgd-open"
-	}
-	args = append(args, url)
-	return exec.Command(cmd, args...).Start()
-}
-
 func (s *serverImpl) Start(openWins ...string) error {
 	http.HandleFunc(s.appPath, func(w http.ResponseWriter, r *http.Request) {
 		s.serveHTTP(w, r)
@@ -403,27 +383,12 @@ func (s *serverImpl) Start(openWins ...string) error {
 		s.serveStatic(w, r)
 	})
 
-	fmt.Println("Starting GUI server on:", s.appUrl)
 	if s.logger != nil {
 		s.logger.Println("Starting GUI server on:", s.appUrl)
 	}
 
-	for _, winName := range openWins {
-		open(s.appUrl + winName)
-	}
-
 	go s.sessCleaner()
 
-	var err error
-	if s.secure {
-		err = http.ListenAndServeTLS(s.addr, s.certFile, s.keyFile, nil)
-	} else {
-		err = http.ListenAndServe(s.addr, nil)
-	}
-
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -577,7 +542,7 @@ func (s *serverImpl) serveHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// renderWinList renders the window list of a session as HTML document with clickable links. 
+// renderWinList renders the window list of a session as HTML document with clickable links.
 func (s *serverImpl) renderWinList(sess Session, wr http.ResponseWriter, r *http.Request) {
 	if s.logger != nil {
 		s.logger.Println("\tRending windows list.")
@@ -624,7 +589,7 @@ func (s *serverImpl) renderWinList(sess Session, wr http.ResponseWriter, r *http
 	w.Writes("</body></html>")
 }
 
-// renderComp renders just a component. 
+// renderComp renders just a component.
 func (s *serverImpl) renderComp(win Window, w http.ResponseWriter, r *http.Request) {
 	id, err := AtoID(r.FormValue(_PARAM_COMP_ID))
 	if err != nil {
@@ -737,7 +702,7 @@ func (s *serverImpl) handleEvent(sess Session, win Window, wr http.ResponseWrite
 }
 
 // parseIntParam parses an int param.
-// If error occurs, -1 will be returned. 
+// If error occurs, -1 will be returned.
 func parseIntParam(r *http.Request, paramName string) int {
 	if num, err := strconv.Atoi(r.FormValue(paramName)); err == nil {
 		return num

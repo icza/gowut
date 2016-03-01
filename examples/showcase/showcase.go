@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -18,9 +18,9 @@
 package main
 
 import (
-	"github.com/icza/gowut/gwu"
 	"fmt"
-	"os"
+	"github.com/icza/gowut/gwu"
+	"log"
 	"strconv"
 	"time"
 )
@@ -663,9 +663,9 @@ func buildShowcaseWin(sess gwu.Session) {
 	win.AddEHandlerFunc(func(e gwu.Event) {
 		switch e.Type() {
 		case gwu.ETYPE_WIN_LOAD:
-			fmt.Println("LOADING window:", e.Src().Id())
+			log.Println("LOADING window:", e.Src().Id())
 		case gwu.ETYPE_WIN_UNLOAD:
-			fmt.Println("UNLOADING window:", e.Src().Id())
+			log.Println("UNLOADING window:", e.Src().Id())
 		}
 	}, gwu.ETYPE_WIN_LOAD, gwu.ETYPE_WIN_UNLOAD)
 
@@ -829,24 +829,8 @@ func (h SessHandler) Created(s gwu.Session) {
 
 func (h SessHandler) Removed(s gwu.Session) {}
 
-func main() {
-	// Allow app control from command line (in co-operation with the starter script):
-	fmt.Println("Type 'r' to restart, 'e' to exit.")
-	go func() {
-		var cmd string
-		for {
-			fmt.Scanf("%s", &cmd)
-			switch cmd {
-			case "r": // restart
-				os.Exit(1)
-			case "e": // exit
-				os.Exit(0)
-			}
-		}
-	}()
-
-	// Create GUI server
-	server := gwu.NewServer("showcase", "")
+func init() {
+	server := gwu.NewServer("", "")
 	server.SetText("Gowut - Showcase of Features")
 
 	server.AddSessCreatorName("show", "Showcase of Features - Gowut")
@@ -854,7 +838,7 @@ func main() {
 
 	// Start GUI server
 	if err := server.Start("show"); err != nil {
-		fmt.Println("Error: Cound not start GUI server:", err)
+		log.Println("Error: Cound not start GUI server:", err)
 		return
 	}
 }

@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -51,7 +51,7 @@ const (
 	ETYPE_WIN_UNLOAD // Window unload event
 
 	// Internal events, generated and dispatched internally while processing another event
-	ETYPE_STATE_CHANGE // State change 
+	ETYPE_STATE_CHANGE // State change
 )
 
 // Event type category.
@@ -187,11 +187,11 @@ const EMPTY_EHANDLER emptyEventHandler = 0
 // EventHandler interface defines a handler capable of handling events.
 type EventHandler interface {
 	// Handles the event.
-	// 
+	//
 	// If components are modified in a way that their view changes,
 	// these components must be marked dirty in the event object
 	// (so the client will see up-to-date state).
-	// 
+	//
 	// If the component tree is modified (new component added
 	// or removed for example), then the Container whose structure
 	// was modified has to be marked dirty.
@@ -245,15 +245,15 @@ type Event interface {
 	// MarkDirty marks components dirty,
 	// causing them to be re-rendered after processing the current event.
 	// Component re-rendering happens without page reload in the browser.
-	// 
+	//
 	// Note: the Window itself (which is a Comp) can also be marked dirty
 	// causing the whole window content to be re-rendered without page reload!
-	// 
+	//
 	// Marking a component dirty also marks all of its decendants dirty, recursively.
-	// 
+	//
 	// Also note that components will not be re-rendered multiple times.
 	// For example if a child component and its parent component are both
-	// marked dirty, the child component will only be re-rendered once. 
+	// marked dirty, the child component will only be re-rendered once.
 	MarkDirty(comps ...Comp)
 
 	// SetFocusedComp sets the component to be focused after processing
@@ -387,7 +387,7 @@ func (e *eventImpl) MarkDirty(comps ...Comp) {
 
 // dirty returns true if the specified component is already marked dirty.
 // Note that a component being dirty makes all of its descendants dirty, recursively.
-// 
+//
 // Also note that the "dirty" flag might change during the event dispatching
 // because if a "clean" component is moved from a dirty parent to a clean parent,
 // its inherited dirty flag changes from true to false.
