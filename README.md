@@ -42,5 +42,5 @@ Open the page http://localhost:3434/guitest/ in your browser to see it.
 You can read the godoc of Gowut online here:
 http://godoc.org/github.com/icza/gowut/gwu
 
-## +1 Gowut! ##
+## +1 / Star Gowut! ##
 
