@@ -8,6 +8,7 @@ For News, documentation and examples please visit the **Gowut Home Page** here:
 
 **https://sites.google.com/site/gowebuitoolkit/**
 
+This project is for public releases of Gowut. Development takes place in the [gowut.dev project](https://github.com/icza/gowut.dev).
 
 ## Quick install ##
 
