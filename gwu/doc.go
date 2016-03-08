@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -111,8 +111,8 @@ Event handling is possible via event handlers. An event handler is
 an implementation of the EventHandler interface. Event handlers have to be
 attached to the components which will be the source of the event. Event
 handlers are registered to event types or kinds (EventType) such as click
-event (ETYPE_CLICK), value change event (ETYPE_CHANGE), key up event
-(ETYPE_KEY_UP) etc.
+event (ETypeClick), value change event (ETypeChange), key up event
+(ETypeKeyUp) etc.
 
 The HandleEvent method of an event handler gets an Event value which has
 multiple purposes and functions. 1) The event contains the parameters
@@ -254,7 +254,7 @@ https://github.com/icza/gowut/blob/master/examples/simple/simple_demo.go
 		if b, isButton := e.Src().(gwu.Button); isButton {
 			b.SetText(b.Text() + h.text)
 			h.counter++
-			b.SetToolTip("You've clicked " + strconv.Itoa(h.counter) + " times!")
+			b.SetToolTip(fmt.Sprintf("You've clicked %d times!", h.counter))
 			e.MarkDirty(b)
 		}
 	}
@@ -263,30 +263,30 @@ https://github.com/icza/gowut/blob/master/examples/simple/simple_demo.go
 		// Create and build a window
 		win := gwu.NewWindow("main", "Test GUI Window")
 		win.Style().SetFullWidth()
-		win.SetHAlign(gwu.HA_CENTER)
+		win.SetHAlign(gwu.HaCenter)
 		win.SetCellPadding(2)
 
 		// Button which changes window content
 		win.Add(gwu.NewLabel("I'm a label! Try clicking on the button=>"))
 		btn := gwu.NewButton("Click me")
-		btn.AddEHandler(&MyButtonHandler{text: ":-)"}, gwu.ETYPE_CLICK)
+		btn.AddEHandler(&MyButtonHandler{text: ":-)"}, gwu.ETypeClick)
 		win.Add(btn)
 		btnsPanel := gwu.NewNaturalPanel()
 		btn.AddEHandlerFunc(func(e gwu.Event) {
 			// Create and add a new button...
-			newbtn := gwu.NewButton("Extra #" + strconv.Itoa(btnsPanel.CompsCount()))
+			newbtn := gwu.NewButton(fmt.Sprintf("Extra #%d", btnsPanel.CompsCount()))
 			newbtn.AddEHandlerFunc(func(e gwu.Event) {
 				btnsPanel.Remove(newbtn) // ...which removes itself when clicked
 				e.MarkDirty(btnsPanel)
-			}, gwu.ETYPE_CLICK)
+			}, gwu.ETypeClick)
 			btnsPanel.Insert(newbtn, 0)
 			e.MarkDirty(btnsPanel)
-		}, gwu.ETYPE_CLICK)
+		}, gwu.ETypeClick)
 		win.Add(btnsPanel)
 
 		// ListBox examples
 		p := gwu.NewHorizontalPanel()
-		p.Style().SetBorder2(1, gwu.BRD_STYLE_SOLID, gwu.CLR_BLACK)
+		p.Style().SetBorder2(1, gwu.BrdStyleSolid, gwu.ClrBlack)
 		p.SetCellPadding(2)
 		p.Add(gwu.NewLabel("A drop-down list being"))
 		widelb := gwu.NewListBox([]string{"50", "100", "150", "200", "250"})
@@ -294,7 +294,7 @@ https://github.com/icza/gowut/blob/master/examples/simple/simple_demo.go
 		widelb.AddEHandlerFunc(func(e gwu.Event) {
 			widelb.Style().SetWidth(widelb.SelectedValue() + "px")
 			e.MarkDirty(widelb)
-		}, gwu.ETYPE_CHANGE)
+		}, gwu.ETypeChange)
 		p.Add(widelb)
 		p.Add(gwu.NewLabel("pixel wide. And a multi-select list:"))
 		listBox := gwu.NewListBox([]string{"First", "Second", "Third", "Forth", "Fifth", "Sixth"})
@@ -303,9 +303,9 @@ https://github.com/icza/gowut/blob/master/examples/simple/simple_demo.go
 		p.Add(listBox)
 		countLabel := gwu.NewLabel("Selected count: 0")
 		listBox.AddEHandlerFunc(func(e gwu.Event) {
-			countLabel.SetText("Selected count: " + strconv.Itoa(len(listBox.SelectedIndices())))
+			countLabel.SetText(fmt.Sprintf("Selected count: %d", len(listBox.SelectedIndices())))
 			e.MarkDirty(countLabel)
-		}, gwu.ETYPE_CHANGE)
+		}, gwu.ETypeChange)
 		p.Add(countLabel)
 		win.Add(p)
 
@@ -313,27 +313,27 @@ https://github.com/icza/gowut/blob/master/examples/simple/simple_demo.go
 		greencb := gwu.NewCheckBox("I'm a check box. When checked, I'm green!")
 		greencb.AddEHandlerFunc(func(e gwu.Event) {
 			if greencb.State() {
-				greencb.Style().SetBackground(gwu.CLR_GREEN)
+				greencb.Style().SetBackground(gwu.ClrGreen)
 			} else {
 				greencb.Style().SetBackground("")
 			}
 			e.MarkDirty(greencb)
-		}, gwu.ETYPE_CLICK)
+		}, gwu.ETypeClick)
 		win.Add(greencb)
 
 		// TextBox with echo
 		p = gwu.NewHorizontalPanel()
 		p.Add(gwu.NewLabel("Enter your name:"))
 		tb := gwu.NewTextBox("")
-		tb.AddSyncOnETypes(gwu.ETYPE_KEY_UP)
+		tb.AddSyncOnETypes(gwu.ETypeKeyUp)
 		p.Add(tb)
 		p.Add(gwu.NewLabel("You entered:"))
 		nameLabel := gwu.NewLabel("")
-		nameLabel.Style().SetColor(gwu.CLR_RED)
+		nameLabel.Style().SetColor(gwu.ClrRed)
 		tb.AddEHandlerFunc(func(e gwu.Event) {
 			nameLabel.SetText(tb.Text())
 			e.MarkDirty(nameLabel)
-		}, gwu.ETYPE_CHANGE, gwu.ETYPE_KEY_UP)
+		}, gwu.ETypeChange, gwu.ETypeKeyUp)
 		p.Add(nameLabel)
 		win.Add(p)
 
@@ -359,7 +359,7 @@ generate multiple mouseover and mouseout events because the same HTML node is re
 under the mouse cursor).
 
 2) Attaching onmousedown and onmouseup event handlers to a check box and re-rendering it
-prevents ETYPE_CHANGE handlers being called when clicking on it.
+prevents ETypeChange handlers being called when clicking on it.
 
 
 Closing
@@ -383,11 +383,13 @@ Author email: gmail.com, user name: iczaaa
 
 Home page: https://sites.google.com/site/gowebuitoolkit/
 
-Source code: https://github.com/icza/gowut
+Source code (public releases): https://github.com/icza/gowut
+
+Source code (development): https://github.com/icza/gowut.dev
 
 Discussion forum: https://groups.google.com/d/forum/gowebuitoolkit
 
-Live demo: Coming soon...
+Live demo: https://gowut-demo.appspot.com/show
 
 
 */
@@ -395,7 +397,7 @@ package gwu
 
 // Gowut version information.
 const (
-	GOWUT_VERSION         = "0.9.0"          // Gowut version (major.minor.maintenance)
-	GOWUT_RELEASE_DATE    = "2015-07-08 CET" // Gowut release date
-	GOWUT_REL_DATE_LAYOUT = "2006-01-02 MST" // Gowut release date layout (for time.Parse())
+	GowutVersion       = "1.0.0"          // Gowut version (major.minor.maintenance[dev])
+	GowutReleaseDate   = "2016-03-08 CET" // Gowut release date
+	GowutRelDateLayout = "2006-01-02 MST" // Gowut release date layout (for time.Parse())
 )

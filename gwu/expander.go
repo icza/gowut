@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -19,12 +19,12 @@ package gwu
 
 // Expander interface defines a component which can show and hide
 // another component when clicked on the header.
-// 
-// You can register ETYPE_STATE_CHANGE event handlers which will be called when the user
+//
+// You can register ETypeStateChange event handlers which will be called when the user
 // expands or collapses the expander by clicking on the header. The event source will be
 // the expander. The event will have a parent event whose source will be the clicked
 // header component and will contain the mouse coordinates.
-// 
+//
 // Default style classes: "gwu-Expander", "gwu-Expander-Header",
 // "gwuimg-collapsed", "gwu-Expander-Header-Expanded", "gwuimg-expanded",
 // "gwu-Expander-Content"
@@ -73,8 +73,8 @@ type expanderImpl struct {
 // By default expanders are collapsed.
 func NewExpander() Expander {
 	c := &expanderImpl{tableViewImpl: newTableViewImpl(), expanded: true, headerFmt: newCellFmtImpl(), contentFmt: newCellFmtImpl()}
-	c.headerFmt.SetAlign(HA_LEFT, VA_MIDDLE)
-	c.contentFmt.SetAlign(HA_LEFT, VA_TOP)
+	c.headerFmt.SetAlign(HALeft, VAMiddle)
+	c.contentFmt.SetAlign(HALeft, VATop)
 	c.Style().AddClass("gwu-Expander")
 	// Init styles by changing expanded state, to the default value.
 	c.SetExpanded(false)
@@ -151,10 +151,10 @@ func (c *expanderImpl) SetHeader(header Comp) {
 	header.AddEHandlerFunc(func(e Event) {
 		c.SetExpanded(!c.expanded)
 		e.MarkDirty(c)
-		if c.handlers[ETYPE_STATE_CHANGE] != nil {
-			c.dispatchEvent(e.forkEvent(ETYPE_STATE_CHANGE, c))
+		if c.handlers[ETypeStateChange] != nil {
+			c.dispatchEvent(e.forkEvent(ETypeStateChange, c))
 		}
-	}, ETYPE_CLICK)
+	}, ETypeClick)
 }
 
 func (c *expanderImpl) Content() Comp {
@@ -202,23 +202,23 @@ func (c *expanderImpl) ContentFmt() CellFmt {
 	return c.contentFmt
 }
 
-func (c *expanderImpl) Render(w writer) {
-	w.Write(_STR_TABLE_OP)
+func (c *expanderImpl) Render(w Writer) {
+	w.Write(strTableOp)
 	c.renderAttrsAndStyle(w)
 	c.renderEHandlers(w)
-	w.Write(_STR_GT)
+	w.Write(strGT)
 
 	if c.header != nil {
 		c.renderTr(w)
-		c.headerFmt.render(_STR_TD_OP, w)
+		c.headerFmt.render(strTDOp, w)
 		c.header.Render(w)
 	}
 
 	if c.expanded && c.content != nil {
 		c.renderTr(w)
-		c.contentFmt.render(_STR_TD_OP, w)
+		c.contentFmt.render(strTDOp, w)
 		c.content.Render(w)
 	}
 
-	w.Write(_STR_TABLE_CL)
+	w.Write(strTableCl)
 }

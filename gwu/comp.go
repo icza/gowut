@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -120,7 +120,7 @@ type Comp interface {
 	dispatchEvent(e Event)
 
 	// Render renders the component (as HTML code).
-	Render(w writer)
+	Render(w Writer)
 }
 
 // Comp implementation.
@@ -132,7 +132,7 @@ type compImpl struct {
 	styleImpl *styleImpl        // Style builder.
 
 	handlers        map[EventType][]EventHandler // Event handlers mapped from event type. Lazily initialized.
-	valueProviderJs []byte                       // If the HTML representation of the component has a value, this JavaScript code code must provide it. It will be automatically sent as the PARAM_COMP_ID parameter.
+	valueProviderJs []byte                       // If the HTML representation of the component has a value, this JavaScript code code must provide it. It will be automatically sent as the paramCompId parameter.
 	syncOnETypes    map[EventType]bool           // Tells on which event types should comp value sync happen.
 }
 
@@ -217,7 +217,7 @@ func (c *compImpl) DescendantOf(c2 Comp) bool {
 }
 
 // renderAttrs renders the explicitly set attributes and styles.
-func (c *compImpl) renderAttrsAndStyle(w writer) {
+func (c *compImpl) renderAttrsAndStyle(w Writer) {
 	for name, value := range c.attrs {
 		w.WriteAttr(name, value)
 	}
@@ -263,18 +263,18 @@ func (c *compImpl) AddSyncOnETypes(etypes ...EventType) {
 	for _, etype := range etypes {
 		if !c.syncOnETypes[etype] { // If not yet synced...
 			c.syncOnETypes[etype] = true
-			c.AddEHandler(EMPTY_EHANDLER, etype)
+			c.AddEHandler(EmptyEHandler, etype)
 		}
 	}
 }
 
 var (
-	_STR_SE_PREFIX = []byte(`="se(event,`) // `="se(event,`
-	_STR_SE_SUFFIX = []byte(`)"`)          // `)"`
+	strSePrefix = []byte(`="se(event,`) // `="se(event,`
+	strSeSuffix = []byte(`)"`)          // `)"`
 )
 
 // rendrenderEventHandlers renders the event handlers as attributes.
-func (c *compImpl) renderEHandlers(w writer) {
+func (c *compImpl) renderEHandlers(w Writer) {
 	for etype, _ := range c.handlers {
 		etypeAttr := etypeAttrs[etype]
 		if len(etypeAttr) == 0 { // Only general events are added to the etypeAttrs map
@@ -283,17 +283,17 @@ func (c *compImpl) renderEHandlers(w writer) {
 
 		// To render                 : ` <etypeAttr>="se(event,etype,compId,value)"`
 		// Example (checkbox onclick): ` onclick="se(event,0,4327,this.checked)"`
-		w.Write(_STR_SPACE)
+		w.Write(strSpace)
 		w.Write(etypeAttr)
-		w.Write(_STR_SE_PREFIX)
+		w.Write(strSePrefix)
 		w.Writev(int(etype))
-		w.Write(_STR_COMMA)
+		w.Write(strComma)
 		w.Writev(int(c.id))
 		if len(c.valueProviderJs) > 0 && c.syncOnETypes != nil && c.syncOnETypes[etype] {
-			w.Write(_STR_COMMA)
+			w.Write(strComma)
 			w.Write(c.valueProviderJs)
 		}
-		w.Write(_STR_SE_SUFFIX)
+		w.Write(strSeSuffix)
 	}
 }
 
@@ -310,5 +310,5 @@ func (c *compImpl) dispatchEvent(e Event) {
 
 // THIS IS AN EMPTY IMPLEMENTATION.
 // ALL COMPONENTS SHOULD DEFINE THEIR OWN
-func (c *compImpl) Render(w writer) {
+func (c *compImpl) Render(w Writer) {
 }

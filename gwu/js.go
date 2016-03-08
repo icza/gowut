@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -22,7 +22,7 @@ import (
 )
 
 // Static JavaScript resource name
-const _RES_NAME_STATIC_JS = "gowut-" + GOWUT_VERSION + ".js"
+const resNameStaticJs = "gowut-" + GowutVersion + ".js"
 
 // Static javascript code
 var staticJs []byte
@@ -31,29 +31,29 @@ func init() {
 	// Init staticJs
 	staticJs = []byte("" +
 		// Param consts
-		"var _pEventType='" + _PARAM_EVENT_TYPE +
-		"',_pCompId='" + _PARAM_COMP_ID +
-		"',_pCompValue='" + _PARAM_COMP_VALUE +
-		"',_pFocCompId='" + _PARAM_FOCUSED_COMP_ID +
-		"',_pMouseWX='" + _PARAM_MOUSE_WX +
-		"',_pMouseWY='" + _PARAM_MOUSE_WY +
-		"',_pMouseX='" + _PARAM_MOUSE_X +
-		"',_pMouseY='" + _PARAM_MOUSE_Y +
-		"',_pMouseBtn='" + _PARAM_MOUSE_BTN +
-		"',_pModKeys='" + _PARAM_MOD_KEYS +
-		"',_pKeyCode='" + _PARAM_KEY_CODE +
+		"var _pEventType='" + paramEventType +
+		"',_pCompId='" + paramCompId +
+		"',_pCompValue='" + paramCompValue +
+		"',_pFocCompId='" + paramFocusedCompId +
+		"',_pMouseWX='" + paramMouseWX +
+		"',_pMouseWY='" + paramMouseWY +
+		"',_pMouseX='" + paramMouseX +
+		"',_pMouseY='" + paramMouseY +
+		"',_pMouseBtn='" + paramMouseBtn +
+		"',_pModKeys='" + paramModKeys +
+		"',_pKeyCode='" + paramKeyCode +
 		"';\n" +
 		// Modifier key masks
-		"var _modKeyAlt=" + strconv.Itoa(int(MOD_KEY_ALT)) +
-		",_modKeyCtlr=" + strconv.Itoa(int(MOD_KEY_CTRL)) +
-		",_modKeyMeta=" + strconv.Itoa(int(MOD_KEY_META)) +
-		",_modKeyShift=" + strconv.Itoa(int(MOD_KEY_SHIFT)) +
+		"var _modKeyAlt=" + strconv.Itoa(int(ModKeyAlt)) +
+		",_modKeyCtlr=" + strconv.Itoa(int(ModKeyCtrl)) +
+		",_modKeyMeta=" + strconv.Itoa(int(ModKeyMeta)) +
+		",_modKeyShift=" + strconv.Itoa(int(ModKeyShift)) +
 		";\n" +
 		// Event response action consts
-		"var _eraNoAction=" + strconv.Itoa(_ERA_NO_ACTION) +
-		",_eraReloadWin=" + strconv.Itoa(_ERA_RELOAD_WIN) +
-		",_eraDirtyComps=" + strconv.Itoa(_ERA_DIRTY_COMPS) +
-		",_eraFocusComp=" + strconv.Itoa(_ERA_FOCUS_COMP) +
+		"var _eraNoAction=" + strconv.Itoa(eraNoAction) +
+		",_eraReloadWin=" + strconv.Itoa(eraReloadWin) +
+		",_eraDirtyComps=" + strconv.Itoa(eraDirtyComps) +
+		",_eraFocusComp=" + strconv.Itoa(eraFocusComp) +
 		";" +
 		`
 

@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -23,110 +23,110 @@ import (
 
 // Style attribute constants.
 const (
-	ST_BACKGROUND     = "background"     // Background (color)
-	ST_BORDER         = "border"         // Border
-	ST_BORDER_LEFT    = "border-left"    // Left border
-	ST_BORDER_RIGHT   = "border-right"   // Right border
-	ST_BORDER_TOP     = "border-top"     // Top border
-	ST_BORDER_BOTTOM  = "border-bottom"  // Bottom border
-	ST_COLOR          = "color"          // (Foreground) color
-	ST_CURSOR         = "cursor"         // Cursor
-	ST_DISPLAY        = "display"        // Display
-	ST_FONT_SIZE      = "font-size"      // Font size
-	ST_FONT_STYLE     = "font-style"     // Font style
-	ST_FONT_WEIGHT    = "font-weight"    // Font weight
-	ST_HEIGHT         = "height"         // Height
-	ST_MARGIN         = "margin"         // Margin
-	ST_MARGIN_LEFT    = "margin-left"    // Left margin
-	ST_MARGIN_RIGHT   = "margin-right"   // Right margin
-	ST_MARGIN_TOP     = "margin-top"     // Top margin
-	ST_MARGIN_BOTTOM  = "margin-bottom"  // Bottom margin
-	ST_PADDING        = "padding"        // Padding
-	ST_PADDING_LEFT   = "padding-left"   // Left padding
-	ST_PADDING_RIGHT  = "padding-right"  // Right padding
-	ST_PADDING_TOP    = "padding-top"    // Top padding
-	ST_PADDING_BOTTOM = "padding-bottom" // Bottom padding
-	ST_WHITE_SPACE    = "white-space"    // White-space
-	ST_WIDTH          = "width"          // Width
+	StBackground    = "background"     // Background (color)
+	StBorder        = "border"         // Border
+	StBorderLeft    = "border-left"    // Left border
+	StBorderRight   = "border-right"   // Right border
+	StBorderTop     = "border-top"     // Top border
+	StBorderBottom  = "border-bottom"  // Bottom border
+	StColor         = "color"          // (Foreground) color
+	StCursor        = "cursor"         // Cursor
+	StDisplay       = "display"        // Display
+	StFontSize      = "font-size"      // Font size
+	StFontStyle     = "font-style"     // Font style
+	StFontWeight    = "font-weight"    // Font weight
+	StHeight        = "height"         // Height
+	StMargin        = "margin"         // Margin
+	StMarginLeft    = "margin-left"    // Left margin
+	StMarginRight   = "margin-right"   // Right margin
+	StMarginTop     = "margin-top"     // Top margin
+	StMarginBottom  = "margin-bottom"  // Bottom margin
+	StPadding       = "padding"        // Padding
+	StPaddingLeft   = "padding-left"   // Left padding
+	StPaddingRight  = "padding-right"  // Right padding
+	StPaddingTop    = "padding-top"    // Top padding
+	StPaddingBottom = "padding-bottom" // Bottom padding
+	StWhiteSpace    = "white-space"    // White-space
+	StWidth         = "width"          // Width
 )
 
 // The 17 standard color constants.
 const (
-	CLR_AQUA    = "Aqua"    // Aqua    (#00FFFF)
-	CLR_BLACK   = "Black"   // Black   (#000000)
-	CLR_BLUE    = "Blue"    // Blue    (#0000FF)
-	CLR_FUCHSIA = "Fuchsia" // Fuchsia (#FF00FF)
-	CLR_GRAY    = "Gray"    // Gray    (#808080)
-	CLR_GREY    = "Grey"    // Grey    (#808080)
-	CLR_GREEN   = "Green"   // Green   (#008000)
-	CLR_LIME    = "Lime"    // Lime    (#00FF00)
-	CLR_MAROON  = "Maroon"  // Maroon  (#800000)
-	CLR_NAVY    = "Navy"    // Navy    (#000080)
-	CLR_OLIVE   = "Olive"   // Olive   (#808000)
-	CLR_PURPLE  = "Purple"  // Purple  (#800080)
-	CLR_RED     = "Red"     // Red     (#FF0000)
-	CLR_SILVER  = "Silver"  // Silver  (#C0C0C0)
-	CLR_TEAL    = "Teal"    // Teal    (#008080)
-	CLR_WHITE   = "White"   // White   (#FFFFFF)
-	CLR_YELLOW  = "Yellow"  // Yellow  (#FFFF00)
+	ClrAqua    = "Aqua"    // Aqua    (#00FFFF)
+	ClrBlack   = "Black"   // Black   (#000000)
+	ClrBlue    = "Blue"    // Blue    (#0000FF)
+	ClrFuchsia = "Fuchsia" // Fuchsia (#FF00FF)
+	ClrGray    = "Gray"    // Gray    (#808080)
+	ClrGrey    = "Grey"    // Grey    (#808080)
+	ClrGreen    = "Green"   // Green   (#008000)
+	ClrLime    = "Lime"    // Lime    (#00FF00)
+	ClrMaroon  = "Maroon"  // Maroon  (#800000)
+	ClrNavy    = "Navy"    // Navy    (#000080)
+	ClrOlive   = "Olive"   // Olive   (#808000)
+	ClrPurple  = "Purple"  // Purple  (#800080)
+	ClrRed     = "Red"     // Red     (#FF0000)
+	ClrSilver  = "Silver"  // Silver  (#C0C0C0)
+	ClrTeal    = "Teal"    // Teal    (#008080)
+	ClrWhite   = "White"   // White   (#FFFFFF)
+	ClrYellow  = "Yellow"  // Yellow  (#FFFF00)
 )
 
 // Border style constants.
 const (
-	BRD_STYLE_SOLID  = "solid"  // Solid
-	BRD_STYLE_DASHED = "dashed" // Dashed
-	BRD_STYLE_DOTTED = "dotted" // Dotted
-	BRD_STYLE_DOUBLE = "double" // Double
-	BRD_STYLE_GROOVE = "groove" // 3D grooved border 
-	BRD_STYLE_RIDGE  = "ridge"  // 3D ridged border
-	BRD_STYLE_INSET  = "inset"  // 3D inset border
-	BRD_STYLE_OUTSET = "outset" // 3D outset border
+	BrdStyleSolid  = "solid"  // Solid
+	BrdStyleDashed = "dashed" // Dashed
+	BrdStyleDotted = "dotted" // Dotted
+	BrdStyleDouble = "double" // Double
+	BrdStyleGroove = "groove" // 3D grooved border
+	BrdStyleRidge  = "ridge"  // 3D ridged border
+	BrdStyleInset  = "inset"  // 3D inset border
+	BrdStyleOutset = "outset" // 3D outset border
 )
 
 // Font weight constants.
 const (
-	FONT_WEIGHT_NORMAL  = "normal"  // Normal
-	FONT_WEIGHT_BOLD    = "bold"    // Bold
-	FONT_WEIGHT_BOLDER  = "bolder"  // Bolder
-	FONT_WEIGHT_LIGHTER = "lighter" // Lighter
+	FontWeightNormal  = "normal"  // Normal
+	FontWeightBold    = "bold"    // Bold
+	FontWeightBolder  = "bolder"  // Bolder
+	FontWeightLighter = "lighter" // Lighter
 )
 
 // Font style constants.
 const (
-	FONT_STYLE_NORMAL = "normal" // Normal
-	FONT_STYLE_ITALIC = "italic" // Italic
+	FontStyleNormal = "normal" // Normal
+	FontStyleItalic = "italic" // Italic
 )
 
 // Mouse cursor constants.
 const (
-	CURSOR_AUTO      = "auto"      // Default. Web browser sets the cursor.
-	CURSOR_CROSSHAIR = "crosshair" // Crosshair
-	CURSOR_DEFAULT   = "default"   // The default cursor.
-	CURSOR_HELP      = "help"      // Help
-	CURSOR_MOVE      = "move"      // Move
-	CURSOR_POINTER   = "pointer"   // Pointer
-	CURSOR_PROGRESS  = "progress"  // Progress
-	CURSOR_TEXT      = "text"      // Text
-	CURSOR_WAIT      = "wait"      // Wait
-	CURSOR_INHERIT   = "inherit"   // The cursor should be inherited from the parent element.
+	CursorAuto      = "auto"      // Default. Web browser sets the cursor.
+	CursorCrosshair = "crosshair" // Crosshair
+	CursorDefault   = "default"   // The default cursor.
+	CursorHelp      = "help"      // Help
+	CursorMove      = "move"      // Move
+	CursorPointer   = "pointer"   // Pointer
+	CursorProgress  = "progress"  // Progress
+	CursorText      = "text"      // Text
+	CursorWait      = "wait"      // Wait
+	CursorInherit   = "inherit"   // The cursor should be inherited from the parent element.
 )
 
 // Display mode constants.
 const (
-	DISPLAY_NONE    = "none"    // The element will not be displayed.
-	DISPLAY_BLOCK   = "block"   // The element is displayed as a block.
-	DISPLAY_INLINE  = "inline"  // The element is displayed as an in-line element. This is the default.
-	DISPLAY_INHERIT = "inherit" // The display property value will be inherited from the parent element.
+	DisplayNone    = "none"    // The element will not be displayed.
+	DisplayBlock   = "block"   // The element is displayed as a block.
+	DisplayInline  = "inline"  // The element is displayed as an in-line element. This is the default.
+	DisplayInherit = "inherit" // The display property value will be inherited from the parent element.
 )
 
 // White space constants.
 const (
-	WHITE_SPACE_NORMAL   = "normal"   // Sequences of white spaces are collapsed into a single whitespace. Text will wrap when neccessary. This is the default.
-	WHITE_SPACE_NOWRAP   = "nowrap"   // Sequences of whitespace will collapse into a single whitespace. Text will never wrap to the next line (the text is in one line).
-	WHITE_SPACE_PRE      = "pre"      // Whitespace is preserved. Text will only wrap on line breaks.
-	WHITE_SPACE_PRE_LINE = "pre-line" // Sequences of whitespace will collapse into a single whitespace. Text will wrap when necessary and on line breaks.
-	WHITE_SPACE_PRE_WRAP = "pre-wrap" // Whitespace is preserved. Text will wrap when necessary, and on line breaks.
-	WHITE_SPACE_INHERIT  = "inherit"  // Whitespace property will be inherited from the parent element.
+	WhiteSpaceNormal  = "normal"   // Sequences of white spaces are collapsed into a single whitespace. Text will wrap when neccessary. This is the default.
+	WhiteSpaceNowrap  = "nowrap"   // Sequences of whitespace will collapse into a single whitespace. Text will never wrap to the next line (the text is in one line).
+	WhiteSpacePre     = "pre"      // Whitespace is preserved. Text will only wrap on line breaks.
+	WhiteSpacePreLine = "pre-line" // Sequences of whitespace will collapse into a single whitespace. Text will wrap when necessary and on line breaks.
+	WhiteSpacePreWrap = "pre-wrap" // Whitespace is preserved. Text will wrap when necessary, and on line breaks.
+	WhiteSpaceInherit = "inherit"  // Whitespace property will be inherited from the parent element.
 )
 
 // Style interface contains utility methods for manipulating
@@ -420,13 +420,13 @@ type Style interface {
 
 	// render renders all style information (style class names
 	// and style attributes).
-	render(w writer)
+	render(w Writer)
 
 	// renderClasses renders the style class names.
-	renderClasses(w writer)
+	renderClasses(w Writer)
 
 	// renderAttrs renders the style attributes.
-	renderAttrs(w writer)
+	renderAttrs(w Writer)
 }
 
 type styleImpl struct {
@@ -483,12 +483,12 @@ func (s *styleImpl) Set(name, value string) Style {
 }
 
 func (s *styleImpl) Size() (width, height string) {
-	return s.Get(ST_WIDTH), s.Get(ST_HEIGHT)
+	return s.Get(StWidth), s.Get(StHeight)
 }
 
 func (s *styleImpl) SetSize(width, height string) Style {
-	s.Set(ST_WIDTH, width)
-	s.Set(ST_HEIGHT, height)
+	s.Set(StWidth, width)
+	s.Set(StHeight, height)
 	return s
 }
 
@@ -501,11 +501,11 @@ func (s *styleImpl) SetFullSize() Style {
 }
 
 func (s *styleImpl) Padding() string {
-	return s.Get(ST_PADDING)
+	return s.Get(StPadding)
 }
 
 func (s *styleImpl) SetPadding(value string) Style {
-	return s.Set(ST_PADDING, value)
+	return s.Set(StPadding, value)
 }
 
 func (s *styleImpl) SetPadding2(top, right, bottom, left string) Style {
@@ -517,11 +517,11 @@ func (s *styleImpl) SetPaddingPx(top, right, bottom, left int) Style {
 }
 
 func (s *styleImpl) PaddingLeft() string {
-	return s.Get(ST_PADDING_LEFT)
+	return s.Get(StPaddingLeft)
 }
 
 func (s *styleImpl) SetPaddingLeft(value string) Style {
-	return s.Set(ST_PADDING_LEFT, value)
+	return s.Set(StPaddingLeft, value)
 }
 
 func (s *styleImpl) SetPaddingLeftPx(width int) Style {
@@ -529,11 +529,11 @@ func (s *styleImpl) SetPaddingLeftPx(width int) Style {
 }
 
 func (s *styleImpl) PaddingRight() string {
-	return s.Get(ST_PADDING_RIGHT)
+	return s.Get(StPaddingRight)
 }
 
 func (s *styleImpl) SetPaddingRight(value string) Style {
-	return s.Set(ST_PADDING_RIGHT, value)
+	return s.Set(StPaddingRight, value)
 }
 
 func (s *styleImpl) SetPaddingRightPx(width int) Style {
@@ -541,11 +541,11 @@ func (s *styleImpl) SetPaddingRightPx(width int) Style {
 }
 
 func (s *styleImpl) PaddingTop() string {
-	return s.Get(ST_PADDING_TOP)
+	return s.Get(StPaddingTop)
 }
 
 func (s *styleImpl) SetPaddingTop(value string) Style {
-	return s.Set(ST_PADDING_TOP, value)
+	return s.Set(StPaddingTop, value)
 }
 
 func (s *styleImpl) SetPaddingTopPx(height int) Style {
@@ -553,11 +553,11 @@ func (s *styleImpl) SetPaddingTopPx(height int) Style {
 }
 
 func (s *styleImpl) PaddingBottom() string {
-	return s.Get(ST_PADDING_BOTTOM)
+	return s.Get(StPaddingBottom)
 }
 
 func (s *styleImpl) SetPaddingBottom(value string) Style {
-	return s.Set(ST_PADDING_BOTTOM, value)
+	return s.Set(StPaddingBottom, value)
 }
 
 func (s *styleImpl) SetPaddingBottomPx(height int) Style {
@@ -565,11 +565,11 @@ func (s *styleImpl) SetPaddingBottomPx(height int) Style {
 }
 
 func (s *styleImpl) Margin() string {
-	return s.Get(ST_MARGIN)
+	return s.Get(StMargin)
 }
 
 func (s *styleImpl) SetMargin(value string) Style {
-	return s.Set(ST_MARGIN, value)
+	return s.Set(StMargin, value)
 }
 
 func (s *styleImpl) SetMargin2(top, right, bottom, left string) Style {
@@ -581,11 +581,11 @@ func (s *styleImpl) SetMarginPx(top, right, bottom, left int) Style {
 }
 
 func (s *styleImpl) MarginLeft() string {
-	return s.Get(ST_MARGIN_LEFT)
+	return s.Get(StMarginLeft)
 }
 
 func (s *styleImpl) SetMarginLeft(value string) Style {
-	return s.Set(ST_MARGIN_LEFT, value)
+	return s.Set(StMarginLeft, value)
 }
 
 func (s *styleImpl) SetMarginLeftPx(width int) Style {
@@ -593,11 +593,11 @@ func (s *styleImpl) SetMarginLeftPx(width int) Style {
 }
 
 func (s *styleImpl) MarginRight() string {
-	return s.Get(ST_MARGIN_RIGHT)
+	return s.Get(StMarginRight)
 }
 
 func (s *styleImpl) SetMarginRight(value string) Style {
-	return s.Set(ST_MARGIN_RIGHT, value)
+	return s.Set(StMarginRight, value)
 }
 
 func (s *styleImpl) SetMarginRightPx(width int) Style {
@@ -605,11 +605,11 @@ func (s *styleImpl) SetMarginRightPx(width int) Style {
 }
 
 func (s *styleImpl) MarginTop() string {
-	return s.Get(ST_MARGIN_TOP)
+	return s.Get(StMarginTop)
 }
 
 func (s *styleImpl) SetMarginTop(value string) Style {
-	return s.Set(ST_MARGIN_TOP, value)
+	return s.Set(StMarginTop, value)
 }
 
 func (s *styleImpl) SetMarginTopPx(height int) Style {
@@ -617,11 +617,11 @@ func (s *styleImpl) SetMarginTopPx(height int) Style {
 }
 
 func (s *styleImpl) MarginBottom() string {
-	return s.Get(ST_MARGIN_BOTTOM)
+	return s.Get(StMarginBottom)
 }
 
 func (s *styleImpl) SetMarginBottom(value string) Style {
-	return s.Set(ST_MARGIN_BOTTOM, value)
+	return s.Set(StMarginBottom, value)
 }
 
 func (s *styleImpl) SetMarginBottomPx(height int) Style {
@@ -629,19 +629,19 @@ func (s *styleImpl) SetMarginBottomPx(height int) Style {
 }
 
 func (s *styleImpl) Background() string {
-	return s.Get(ST_BACKGROUND)
+	return s.Get(StBackground)
 }
 
 func (s *styleImpl) SetBackground(value string) Style {
-	return s.Set(ST_BACKGROUND, value)
+	return s.Set(StBackground, value)
 }
 
 func (s *styleImpl) Border() string {
-	return s.Get(ST_BORDER)
+	return s.Get(StBorder)
 }
 
 func (s *styleImpl) SetBorder(value string) Style {
-	return s.Set(ST_BORDER, value)
+	return s.Set(StBorder, value)
 }
 
 func (s *styleImpl) SetBorder2(width int, style, color string) Style {
@@ -649,11 +649,11 @@ func (s *styleImpl) SetBorder2(width int, style, color string) Style {
 }
 
 func (s *styleImpl) BorderLeft() string {
-	return s.Get(ST_BORDER_LEFT)
+	return s.Get(StBorderLeft)
 }
 
 func (s *styleImpl) SetBorderLeft(value string) Style {
-	return s.Set(ST_BORDER_LEFT, value)
+	return s.Set(StBorderLeft, value)
 }
 
 func (s *styleImpl) SetBorderLeft2(width int, style, color string) Style {
@@ -661,11 +661,11 @@ func (s *styleImpl) SetBorderLeft2(width int, style, color string) Style {
 }
 
 func (s *styleImpl) BorderRight() string {
-	return s.Get(ST_BORDER_RIGHT)
+	return s.Get(StBorderRight)
 }
 
 func (s *styleImpl) SetBorderRight(value string) Style {
-	return s.Set(ST_BORDER_RIGHT, value)
+	return s.Set(StBorderRight, value)
 }
 
 func (s *styleImpl) SetBorderRight2(width int, style, color string) Style {
@@ -673,11 +673,11 @@ func (s *styleImpl) SetBorderRight2(width int, style, color string) Style {
 }
 
 func (s *styleImpl) BorderTop() string {
-	return s.Get(ST_BORDER_TOP)
+	return s.Get(StBorderTop)
 }
 
 func (s *styleImpl) SetBorderTop(value string) Style {
-	return s.Set(ST_BORDER_TOP, value)
+	return s.Set(StBorderTop, value)
 }
 
 func (s *styleImpl) SetBorderTop2(width int, style, color string) Style {
@@ -685,11 +685,11 @@ func (s *styleImpl) SetBorderTop2(width int, style, color string) Style {
 }
 
 func (s *styleImpl) BorderBottom() string {
-	return s.Get(ST_BORDER_BOTTOM)
+	return s.Get(StBorderBottom)
 }
 
 func (s *styleImpl) SetBorderBottom(value string) Style {
-	return s.Set(ST_BORDER_BOTTOM, value)
+	return s.Set(StBorderBottom, value)
 }
 
 func (s *styleImpl) SetBorderBottom2(width int, style, color string) Style {
@@ -697,59 +697,59 @@ func (s *styleImpl) SetBorderBottom2(width int, style, color string) Style {
 }
 
 func (s *styleImpl) Color() string {
-	return s.Get(ST_COLOR)
+	return s.Get(StColor)
 }
 
 func (s *styleImpl) SetColor(value string) Style {
-	return s.Set(ST_COLOR, value)
+	return s.Set(StColor, value)
 }
 
 func (s *styleImpl) Cursor() string {
-	return s.Get(ST_CURSOR)
+	return s.Get(StCursor)
 }
 
 func (s *styleImpl) SetCursor(value string) Style {
-	return s.Set(ST_CURSOR, value)
+	return s.Set(StCursor, value)
 }
 
 func (s *styleImpl) Display() string {
-	return s.Get(ST_DISPLAY)
+	return s.Get(StDisplay)
 }
 
 func (s *styleImpl) SetDisplay(value string) Style {
-	return s.Set(ST_DISPLAY, value)
+	return s.Set(StDisplay, value)
 }
 
 func (s *styleImpl) FontSize() string {
-	return s.Get(ST_FONT_SIZE)
+	return s.Get(StFontSize)
 }
 
 func (s *styleImpl) SetFontSize(value string) Style {
-	return s.Set(ST_FONT_SIZE, value)
+	return s.Set(StFontSize, value)
 }
 
 func (s *styleImpl) FontStyle() string {
-	return s.Get(ST_FONT_STYLE)
+	return s.Get(StFontStyle)
 }
 
 func (s *styleImpl) SetFontStyle(value string) Style {
-	return s.Set(ST_FONT_STYLE, value)
+	return s.Set(StFontStyle, value)
 }
 
 func (s *styleImpl) FontWeight() string {
-	return s.Get(ST_FONT_WEIGHT)
+	return s.Get(StFontWeight)
 }
 
 func (s *styleImpl) SetFontWeight(value string) Style {
-	return s.Set(ST_FONT_WEIGHT, value)
+	return s.Set(StFontWeight, value)
 }
 
 func (s *styleImpl) Height() string {
-	return s.Get(ST_HEIGHT)
+	return s.Get(StHeight)
 }
 
 func (s *styleImpl) SetHeight(value string) Style {
-	return s.Set(ST_HEIGHT, value)
+	return s.Set(StHeight, value)
 }
 func (s *styleImpl) SetHeightPx(height int) Style {
 	return s.SetHeight(strconv.Itoa(height) + "px")
@@ -760,11 +760,11 @@ func (s *styleImpl) SetFullHeight() Style {
 }
 
 func (s *styleImpl) Width() string {
-	return s.Get(ST_WIDTH)
+	return s.Get(StWidth)
 }
 
 func (s *styleImpl) SetWidth(value string) Style {
-	return s.Set(ST_WIDTH, value)
+	return s.Set(StWidth, value)
 }
 
 func (s *styleImpl) SetWidthPx(width int) Style {
@@ -776,41 +776,41 @@ func (s *styleImpl) SetFullWidth() Style {
 }
 
 func (s *styleImpl) WhiteSpace() string {
-	return s.Get(ST_WHITE_SPACE)
+	return s.Get(StWhiteSpace)
 }
 
 func (s *styleImpl) SetWhiteSpace(value string) Style {
-	return s.Set(ST_WHITE_SPACE, value)
+	return s.Set(StWhiteSpace, value)
 }
 
-func (s *styleImpl) render(w writer) {
+func (s *styleImpl) render(w Writer) {
 	s.renderClasses(w)
 
 	if s.attrs != nil {
-		w.Write(_STR_STYLE)
+		w.Write(strStyle)
 		s.renderAttrs(w)
-		w.Write(_STR_QUOTE)
+		w.Write(strQuote)
 	}
 }
 
-func (s *styleImpl) renderClasses(w writer) {
+func (s *styleImpl) renderClasses(w Writer) {
 	if len(s.classes) > 0 {
-		w.Write(_STR_CLASS)
+		w.Write(strClass)
 		for i, class := range s.classes {
 			if i > 0 {
-				w.Write(_STR_SPACE)
+				w.Write(strSpace)
 			}
 			w.Writes(class)
 		}
-		w.Write(_STR_QUOTE)
+		w.Write(strQuote)
 	}
 }
 
-func (s *styleImpl) renderAttrs(w writer) {
+func (s *styleImpl) renderAttrs(w Writer) {
 	for name, value := range s.attrs {
 		w.Writes(name)
-		w.Write(_STR_COLON)
+		w.Write(strColon)
 		w.Writes(value)
-		w.Write(_STR_SEMICOL)
+		w.Write(strSemicol)
 	}
 }

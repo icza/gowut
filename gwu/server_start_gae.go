@@ -1,3 +1,5 @@
+// +build appengine
+
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -13,39 +15,30 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-// ID type definition, and unique ID generation.
+// Implementation of the GUI server Start on Google App Engine.
 
 package gwu
 
 import (
-	"strconv"
-	"sync/atomic"
+	"log"
+	"net/http"
 )
 
-// The type of the ids of the components.
-type ID int
+func (s *serverImpl) Start(openWins ...string) error {
+	http.HandleFunc(s.appPath, func(w http.ResponseWriter, r *http.Request) {
+		s.serveHTTP(w, r)
+	})
 
-// Converts an ID to a string.
-func (id ID) String() string {
-	return strconv.Itoa(int(id))
-}
+	http.HandleFunc(s.appPath+pathStatic, func(w http.ResponseWriter, r *http.Request) {
+		s.serveStatic(w, r)
+	})
 
-// Converts a string to ID
-func AtoID(s string) (ID, error) {
-	id, err := strconv.Atoi(s)
-
-	if err != nil {
-		return ID(-1), err
+	log.Println("GAE - Starting GUI server on path:", s.appPath)
+	if s.logger != nil {
+		s.logger.Println("GAE - Starting GUI server on path:", s.appPath)
 	}
-	return ID(id), nil
-}
 
-// Component id generation and provider
+	go s.sessCleaner()
 
-// Last used value for ID
-var lastId = new(int64)
-
-// nextCompId returns a unique component id
-func nextCompId() ID {
-	return ID(atomic.AddInt64(lastId, 1))
+	return nil
 }

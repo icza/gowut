@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -22,7 +22,7 @@ package gwu
 // Multiple windows can be created, but only one is visible
 // at a time in the browser. The Window interface is the
 // equivalent of the browser page.
-// 
+//
 // Default style class: "gwu-Window"
 type Window interface {
 	// Window is a Panel, child components can be added to it.
@@ -43,7 +43,7 @@ type Window interface {
 	// in the HTML head section.
 	AddHeadHtml(html string)
 
-	// SetFocusedCompId sets the id of the currently focused component. 
+	// SetFocusedCompId sets the id of the currently focused component.
 	SetFocusedCompId(id ID)
 
 	// Theme returns the CSS theme of the window.
@@ -55,7 +55,7 @@ type Window interface {
 	SetTheme(theme string)
 
 	// RenderWin renders the window as a complete HTML document.
-	RenderWin(w writer, s Server)
+	RenderWin(w Writer, s Server)
 }
 
 // WinSlice is a slice of windows which implements sort.Interface so it
@@ -86,7 +86,7 @@ type windowImpl struct {
 }
 
 // NewWindow creates a new window.
-// The default layout strategy is LAYOUT_VERTICAL.
+// The default layout strategy is LayoutVertical.
 func NewWindow(name, text string) Window {
 	c := &windowImpl{panelImpl: newPanelImpl(), hasTextImpl: newHasTextImpl(text), name: name}
 	c.Style().AddClass("gwu-Window")
@@ -117,7 +117,7 @@ func (s *windowImpl) SetTheme(theme string) {
 	s.theme = theme
 }
 
-func (c *windowImpl) Render(w writer) {
+func (c *windowImpl) Render(w Writer) {
 	// Attaching window events is outside of the HTML tag denoted by the window's id.
 	// This means if the window is re-rendered (not reloaded), changed window event handlers
 	// will not be reflected.
@@ -126,7 +126,7 @@ func (c *windowImpl) Render(w writer) {
 	// First render window event handlers as window functions.
 	found := false
 	for etype, _ := range c.handlers {
-		if etype.Category() != ECAT_WINDOW {
+		if etype.Category() != ECatWindow {
 			continue
 		}
 
@@ -146,12 +146,12 @@ func (c *windowImpl) Render(w writer) {
 	c.panelImpl.Render(w)
 }
 
-func (win *windowImpl) RenderWin(w writer, s Server) {
+func (win *windowImpl) RenderWin(w Writer, s Server) {
 	// We could optimize this (store byte slices of static strings)
 	// but windows are rendered "so rarely"...
 	w.Writes(`<html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>`)
 	w.Writees(win.text)
-	w.Writess(`</title><link href="`, s.AppPath(), _PATH_STATIC)
+	w.Writess(`</title><link href="`, s.AppPath(), pathStatic)
 	if len(win.theme) == 0 {
 		w.Writes(resNameStaticCss(s.Theme()))
 	} else {
@@ -159,7 +159,7 @@ func (win *windowImpl) RenderWin(w writer, s Server) {
 	}
 	w.Writes(`" rel="stylesheet" type="text/css">`)
 	win.renderDynJs(w, s)
-	w.Writess(`<script src="`, s.AppPath(), _PATH_STATIC, _RES_NAME_STATIC_JS, `"></script>`)
+	w.Writess(`<script src="`, s.AppPath(), pathStatic, resNameStaticJs, `"></script>`)
 	w.Writess(win.heads...)
 	w.Writes("</head><body>")
 
@@ -169,12 +169,12 @@ func (win *windowImpl) RenderWin(w writer, s Server) {
 }
 
 // renderDynJs renders the dynamic JavaScript codes of Gowut.
-func (win *windowImpl) renderDynJs(w writer, s Server) {
+func (win *windowImpl) renderDynJs(w Writer, s Server) {
 	w.Writes("<script>")
 	w.Writess("var _pathApp='", s.AppPath(), "';")
 	w.Writess("var _pathWin='", s.AppPath(), win.name, "/';")
-	w.Writess("var _pathEvent=_pathWin+'", _PATH_EVENT, "';")
-	w.Writess("var _pathRenderComp=_pathWin+'", _PATH_RENDER_COMP, "';")
+	w.Writess("var _pathEvent=_pathWin+'", pathEvent, "';")
+	w.Writess("var _pathRenderComp=_pathWin+'", pathRenderComp, "';")
 	w.Writess("var _focCompId='", win.focusedCompId.String(), "';")
 	w.Writes("</script>")
 }

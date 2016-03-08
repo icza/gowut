@@ -1,3 +1,5 @@
+// +build appengine
+
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -13,39 +15,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-// ID type definition, and unique ID generation.
+// Contains a package init function which starts the server of the Gowut "Showcase of Features" demo.
 
-package gwu
+package showcasecore
 
-import (
-	"strconv"
-	"sync/atomic"
-)
-
-// The type of the ids of the components.
-type ID int
-
-// Converts an ID to a string.
-func (id ID) String() string {
-	return strconv.Itoa(int(id))
+func init() {
+	extraHeadHtmls = []string{analyticsTrackingCode}
+	StartServer("")
 }
 
-// Converts a string to ID
-func AtoID(s string) (ID, error) {
-	id, err := strconv.Atoi(s)
+const analyticsTrackingCode = `<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-	if err != nil {
-		return ID(-1), err
-	}
-	return ID(id), nil
-}
+  ga('create', 'UA-4884955-37', 'auto');
+  ga('send', 'pageview');
 
-// Component id generation and provider
-
-// Last used value for ID
-var lastId = new(int64)
-
-// nextCompId returns a unique component id
-func nextCompId() ID {
-	return ID(atomic.AddInt64(lastId, 1))
-}
+</script>`

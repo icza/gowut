@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -19,7 +19,7 @@ package gwu
 
 // TabBar interface defines the tab bar for selecting the visible
 // component of a TabPanel.
-// 
+//
 // Note: Removing a tab component through the tab bar also
 // removes the content component from the tab panel of the tab bar.
 //
@@ -65,16 +65,16 @@ type TabBarPlacement int
 
 // Tab bar placements.
 const (
-	TB_PLACEMENT_TOP    TabBarPlacement = iota // Tab bar placement to Top
-	TB_PLACEMENT_BOTTOM                        // Tab bar placement to Bottom
-	TB_PLACEMENT_LEFT                          // Tab bar placement to Left
-	TB_PLACEMENT_RIGHT                         // Tab bar placement to Right
+	TbPlacementTop    TabBarPlacement = iota // Tab bar placement to Top
+	TbPlacementBottom                        // Tab bar placement to Bottom
+	TbPlacementLeft                          // Tab bar placement to Left
+	TbPlacementRight                         // Tab bar placement to Right
 )
 
 // TabPanel interface defines a PanelView which has multiple child components
 // but only one is visible at a time. The visible child can be visually selected
 // using an internal TabBar component.
-// 
+//
 // Both the tab panel and its internal tab bar component are PanelViews.
 // This gives high layout configuration possibilities.
 // Usually you only need to set the tab bar placement with the SetTabBarPlacement()
@@ -87,12 +87,12 @@ const (
 // the content alignment, e.g. with the SetAlignment() method. You can also set different
 // alignments for individual tab components using TabBar().CellFmt(). You can also set
 // other cell formatting applied to the tab bar using TabBarFmt() method.
-// 
-// You can register ETYPE_STATE_CHANGE event handlers which will be called when the user
+//
+// You can register ETypeStateChange event handlers which will be called when the user
 // changes tab selection by clicking on a tab. The event source will be the tab panel.
 // The event will have a parent event whose source will be the clicked tab and will
 // contain the mouse coordinates.
-// 
+//
 // Default style classes: "gwu-TabPanel", "gwu-TabPanel-Content"
 type TabPanel interface {
 	// TabPanel is a Container.
@@ -149,15 +149,15 @@ type tabPanelImpl struct {
 }
 
 // NewTabPanel creates a new TabPanel.
-// Default tab bar placement is TB_PLACEMENT_TOP,
-// default horizontal alignment is HA_DEFAULT,
-// default vertical alignment is VA_DEFAULT.
+// Default tab bar placement is TbPlacementTop,
+// default horizontal alignment is HADefault,
+// default vertical alignment is VADefault.
 func NewTabPanel() TabPanel {
 	c := &tabPanelImpl{panelImpl: newPanelImpl(), tabBarImpl: newTabBarImpl(), tabBarFmt: newCellFmtImpl(), selected: -1, prevSelected: -1}
 	c.tabBarFmt.Style().AddClass("gwu-TabBar")
 	c.tabBarImpl.setParent(c)
-	c.SetTabBarPlacement(TB_PLACEMENT_TOP)
-	c.tabBarFmt.SetAlign(HA_LEFT, VA_TOP)
+	c.SetTabBarPlacement(TbPlacementTop)
+	c.tabBarFmt.SetAlign(HALeft, VATop)
 	c.Style().AddClass("gwu-TabPanel")
 	return c
 }
@@ -243,34 +243,34 @@ func (c *tabPanelImpl) SetTabBarPlacement(tabBarPlacement TabBarPlacement) {
 
 	// Remove old style class
 	switch c.tabBarPlacement {
-	case TB_PLACEMENT_TOP:
+	case TbPlacementTop:
 		style.RemoveClass("gwu-TabBar-Top")
-	case TB_PLACEMENT_BOTTOM:
+	case TbPlacementBottom:
 		style.RemoveClass("gwu-TabBar-Bottom")
-	case TB_PLACEMENT_LEFT:
+	case TbPlacementLeft:
 		style.RemoveClass("gwu-TabBar-Left")
-	case TB_PLACEMENT_RIGHT:
+	case TbPlacementRight:
 		style.RemoveClass("gwu-TabBar-Right")
 	}
 
 	c.tabBarPlacement = tabBarPlacement
 
 	switch tabBarPlacement {
-	case TB_PLACEMENT_TOP:
-		c.tabBarImpl.SetLayout(LAYOUT_HORIZONTAL)
-		c.tabBarImpl.SetAlign(HA_LEFT, VA_BOTTOM)
+	case TbPlacementTop:
+		c.tabBarImpl.SetLayout(LayoutHorizontal)
+		c.tabBarImpl.SetAlign(HALeft, VABottom)
 		style.AddClass("gwu-TabBar-Top")
-	case TB_PLACEMENT_BOTTOM:
-		c.tabBarImpl.SetLayout(LAYOUT_HORIZONTAL)
-		c.tabBarImpl.SetAlign(HA_LEFT, VA_TOP)
+	case TbPlacementBottom:
+		c.tabBarImpl.SetLayout(LayoutHorizontal)
+		c.tabBarImpl.SetAlign(HALeft, VATop)
 		style.AddClass("gwu-TabBar-Bottom")
-	case TB_PLACEMENT_LEFT:
-		c.tabBarImpl.SetLayout(LAYOUT_VERTICAL)
-		c.tabBarImpl.SetAlign(HA_RIGHT, VA_TOP)
+	case TbPlacementLeft:
+		c.tabBarImpl.SetLayout(LayoutVertical)
+		c.tabBarImpl.SetAlign(HARight, VATop)
 		style.AddClass("gwu-TabBar-Left")
-	case TB_PLACEMENT_RIGHT:
-		c.tabBarImpl.SetLayout(LAYOUT_VERTICAL)
-		c.tabBarImpl.SetAlign(HA_LEFT, VA_TOP)
+	case TbPlacementRight:
+		c.tabBarImpl.SetLayout(LayoutVertical)
+		c.tabBarImpl.SetAlign(HALeft, VATop)
 		style.AddClass("gwu-TabBar-Right")
 	}
 }
@@ -293,15 +293,15 @@ func (c *tabPanelImpl) Add(tab, content Comp) {
 	tab.AddEHandlerFunc(func(e Event) {
 		c.SetSelected(c.CompIdx(content))
 		e.MarkDirty(c)
-		if c.handlers[ETYPE_STATE_CHANGE] != nil {
-			c.dispatchEvent(e.forkEvent(ETYPE_STATE_CHANGE, c))
+		if c.handlers[ETypeStateChange] != nil {
+			c.dispatchEvent(e.forkEvent(ETypeStateChange, c))
 		}
-	}, ETYPE_CLICK)
+	}, ETypeClick)
 }
 
 func (c *tabPanelImpl) AddString(tab string, content Comp) {
 	tabc := NewLabel(tab)
-	tabc.Style().SetDisplay(DISPLAY_BLOCK) // Display: block - so the whole cell of the tab is clickable 
+	tabc.Style().SetDisplay(DisplayBlock) // Display: block - so the whole cell of the tab is clickable
 	c.Add(tabc, content)
 }
 
@@ -336,48 +336,48 @@ func (c *tabPanelImpl) SetSelected(idx int) {
 	}
 }
 
-func (c *tabPanelImpl) Render(w writer) {
-	w.Write(_STR_TABLE_OP)
+func (c *tabPanelImpl) Render(w Writer) {
+	w.Write(strTableOp)
 	c.renderAttrsAndStyle(w)
 	c.renderEHandlers(w)
-	w.Write(_STR_GT)
+	w.Write(strGT)
 
 	switch c.tabBarPlacement {
-	case TB_PLACEMENT_TOP:
-		w.Write(_STR_TR)
-		c.tabBarFmt.render(_STR_TD_OP, w)
+	case TbPlacementTop:
+		w.Write(strTR)
+		c.tabBarFmt.render(strTDOp, w)
 		c.tabBarImpl.Render(w)
 		c.renderTr(w)
 		c.renderContent(w)
-	case TB_PLACEMENT_BOTTOM:
+	case TbPlacementBottom:
 		c.renderTr(w)
 		c.renderContent(w)
-		w.Write(_STR_TR)
-		c.tabBarFmt.render(_STR_TD_OP, w)
+		w.Write(strTR)
+		c.tabBarFmt.render(strTDOp, w)
 		c.tabBarImpl.Render(w)
-	case TB_PLACEMENT_LEFT:
+	case TbPlacementLeft:
 		c.renderTr(w)
-		c.tabBarFmt.render(_STR_TD_OP, w)
+		c.tabBarFmt.render(strTDOp, w)
 		c.tabBarImpl.Render(w)
 		c.renderContent(w)
-	case TB_PLACEMENT_RIGHT:
+	case TbPlacementRight:
 		c.renderTr(w)
 		c.renderContent(w)
-		c.tabBarFmt.render(_STR_TD_OP, w)
+		c.tabBarFmt.render(strTDOp, w)
 		c.tabBarImpl.Render(w)
 	}
 
-	w.Write(_STR_TABLE_CL)
+	w.Write(strTableCl)
 }
 
 // renderContent renders the selected content component.
-func (c *tabPanelImpl) renderContent(w writer) {
+func (c *tabPanelImpl) renderContent(w Writer) {
 	// Render only the selected content component
 	if c.selected >= 0 {
 		c2 := c.comps[c.selected]
 		c.renderTd(c2, w)
 		c2.Render(w)
 	} else {
-		w.Write(_STR_TD)
+		w.Write(strTD)
 	}
 }

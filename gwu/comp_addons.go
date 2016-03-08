@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -52,7 +52,7 @@ func (c *hasTextImpl) SetText(text string) {
 }
 
 // renderText renders the text.
-func (c *hasTextImpl) renderText(w writer) {
+func (c *hasTextImpl) renderText(w Writer) {
 	w.Writees(c.text)
 }
 
@@ -83,12 +83,12 @@ func (c *hasEnabledImpl) SetEnabled(enabled bool) {
 	c.enabled = enabled
 }
 
-var _STR_DISABLED = []byte(` disabled="disabled"`) // ` disabled="disabled"`
+var strDisabled = []byte(` disabled="disabled"`) // ` disabled="disabled"`
 
 // renderEnabled renders the enabled attribute.
-func (c *hasEnabledImpl) renderEnabled(w writer) {
+func (c *hasEnabledImpl) renderEnabled(w Writer) {
 	if !c.enabled {
-		w.Write(_STR_DISABLED)
+		w.Write(strDisabled)
 	}
 }
 
@@ -120,7 +120,7 @@ func (c *hasUrlImpl) SetUrl(url string) {
 }
 
 // renderUrl renders the URL string.
-func (c *hasUrlImpl) renderUrl(attr string, w writer) {
+func (c *hasUrlImpl) renderUrl(attr string, w Writer) {
 	w.WriteAttr(attr, c.url)
 }
 
@@ -129,11 +129,11 @@ type HAlign string
 
 // Horizontal alignment constants.
 const (
-	HA_LEFT   HAlign = "left"   // Horizontal left alignment
-	HA_CENTER HAlign = "center" // Horizontal center alignment
-	HA_RIGHT  HAlign = "right"  // Horizontal right alignment
+	HALeft   HAlign = "left"   // Horizontal left alignment
+	HACenter        = "center" // Horizontal center alignment
+	HARight         = "right"  // Horizontal right alignment
 
-	HA_DEFAULT HAlign = "" // Browser default (or inherited) horizontal alignment
+	HADefault = "" // Browser default (or inherited) horizontal alignment
 )
 
 // Vertical alignment type.
@@ -141,11 +141,11 @@ type VAlign string
 
 // Vertical alignment constants.
 const (
-	VA_TOP    VAlign = "top"    // Vertical top alignment
-	VA_MIDDLE VAlign = "middle" // Vertical center alignment
-	VA_BOTTOM VAlign = "bottom" // Vertical bottom alignment
+	VATop    VAlign = "top"    // Vertical top alignment
+	VAMiddle        = "middle" // Vertical center alignment
+	VABottom        = "bottom" // Vertical bottom alignment
 
-	VA_DEFAULT VAlign = "" // Browser default (or inherited) vertical alignment
+	VADefault = "" // Browser default (or inherited) vertical alignment
 )
 
 // HasHVAlign interfaces defines a horizontal and a vertical
@@ -234,13 +234,13 @@ type cellFmtImpl struct {
 }
 
 // newCellFmtImpl creates a new cellFmtImpl.
-// Default horizontal alignment is HA_DEFAULT,
-// default vertical alignment is VA_DEFAULT.
+// Default horizontal alignment is HADefult,
+// default vertical alignment is VADefault.
 func newCellFmtImpl() *cellFmtImpl {
-	// Initialize hasHVAlignImpl with HA_DEFAULT and VA_DEFAULT
+	// Initialize hasHVAlignImpl with HADefault and VADefault
 	// so if aligns are not changed, they will not be rendered =>
 	// they will be inherited (from TR).
-	return &cellFmtImpl{hasHVAlignImpl: newHasHVAlignImpl(HA_DEFAULT, VA_DEFAULT)}
+	return &cellFmtImpl{hasHVAlignImpl: newHasHVAlignImpl(HADefault, VADefault)}
 }
 
 func (c *cellFmtImpl) Style() Style {
@@ -278,46 +278,46 @@ func (c *cellFmtImpl) setIAttr(name string, value int) {
 
 // render renders the formatted HTML tag for the specified tag name.
 // tag must start with a less than sign, e.g. "<td".
-func (c *cellFmtImpl) render(tag []byte, w writer) {
+func (c *cellFmtImpl) render(tag []byte, w Writer) {
 	c.renderWithAligns(tag, c.halign, c.valign, w)
 }
 
-var _STR_VALIGN = []byte("vertical-align:") // "vertical-align:"
+var strVAlign = []byte("vertical-align:") // "vertical-align:"
 
 // render renders the formatted HTML tag for the specified tag name
 // using the specified alignments instead of ours.
 // tag must start with a less than sign, e.g. "<td".
-func (c *cellFmtImpl) renderWithAligns(tag []byte, halign HAlign, valign VAlign, w writer) {
+func (c *cellFmtImpl) renderWithAligns(tag []byte, halign HAlign, valign VAlign, w Writer) {
 	w.Write(tag)
 
 	for name, value := range c.attrs {
 		w.WriteAttr(name, value)
 	}
 
-	if halign != HA_DEFAULT {
-		w.Write(_STR_ALIGN)
+	if halign != HADefault {
+		w.Write(strAlign)
 		w.Writes(string(halign))
-		w.Write(_STR_QUOTE)
+		w.Write(strQuote)
 	}
 
 	if c.styleImpl != nil {
 		c.styleImpl.renderClasses(w)
 	}
 
-	if valign != VA_DEFAULT || c.styleImpl != nil {
-		w.Write(_STR_STYLE)
-		if valign != VA_DEFAULT {
-			w.Write(_STR_VALIGN)
+	if valign != VADefault || c.styleImpl != nil {
+		w.Write(strStyle)
+		if valign != VADefault {
+			w.Write(strVAlign)
 			w.Writes(string(valign))
-			w.Write(_STR_SEMICOL)
+			w.Write(strSemicol)
 		}
 		if c.styleImpl != nil {
 			c.styleImpl.renderAttrs(w)
 		}
-		w.Write(_STR_QUOTE)
+		w.Write(strQuote)
 	}
 
-	w.Write(_STR_GT)
+	w.Write(strGT)
 }
 
 // TableView interface defines a component which is rendered into a table.
@@ -340,31 +340,31 @@ type TableView interface {
 	CellSpacing() int
 
 	// SetCellSpacing sets the cell spacing.
-	// Has no effect if layout is LAYOUT_NATURAL.
+	// Has no effect if layout is LayoutNatural.
 	SetCellSpacing(spacing int)
 
 	// CellPadding returns the cell spacing.
 	CellPadding() int
 
 	// SetCellPadding sets the cell padding.
-	// Has no effect if layout is LAYOUT_NATURAL.
+	// Has no effect if layout is LayoutNatural.
 	SetCellPadding(padding int)
 }
 
 // TableView implementation.
 type tableViewImpl struct {
 	compImpl       // component implementation
-	hasHVAlignImpl // Has horizontal and vertical alignment implementation 
+	hasHVAlignImpl // Has horizontal and vertical alignment implementation
 }
 
 // newTableViewImpl creates a new tableViewImpl.
-// Default horizontal alignment is HA_DEFAULT,
-// default vertical alignment is VA_DEFAULT.
+// Default horizontal alignment is HADefault,
+// default vertical alignment is VADefault.
 func newTableViewImpl() tableViewImpl {
-	// Initialize hasHVAlignImpl with HA_DEFAULT and VA_DEFAULT
+	// Initialize hasHVAlignImpl with HADefault and VADefault
 	// so if aligns are not changed, they will not be rendered =>
 	// they will be inherited (from TR).
-	c := tableViewImpl{compImpl: newCompImpl(nil), hasHVAlignImpl: newHasHVAlignImpl(HA_DEFAULT, VA_DEFAULT)}
+	c := tableViewImpl{compImpl: newCompImpl(nil), hasHVAlignImpl: newHasHVAlignImpl(HADefault, VADefault)}
 	c.SetCellSpacing(0)
 	c.SetCellPadding(0)
 	return c
@@ -394,21 +394,21 @@ func (c *tableViewImpl) SetCellPadding(padding int) {
 	c.SetIAttr("cellpadding", padding)
 }
 
-var _STR_ST_VALIGN = []byte(` style="vertical-align:`) // ` style="vertical-align:`
+var strStVAlign = []byte(` style="vertical-align:`) // ` style="vertical-align:`
 
 // renderTr renders an HTML TR tag with horizontal and vertical
-// alignment info included. 
-func (c *tableViewImpl) renderTr(w writer) {
-	w.Write(_STR_TR_OP)
-	if c.halign != HA_DEFAULT {
-		w.Write(_STR_ALIGN)
+// alignment info included.
+func (c *tableViewImpl) renderTr(w Writer) {
+	w.Write(strTROp)
+	if c.halign != HADefault {
+		w.Write(strAlign)
 		w.Writes(string(c.halign))
-		w.Write(_STR_QUOTE)
+		w.Write(strQuote)
 	}
-	if c.valign != VA_DEFAULT {
-		w.Write(_STR_ST_VALIGN)
+	if c.valign != VADefault {
+		w.Write(strStVAlign)
 		w.Writes(string(c.valign))
-		w.Write(_STR_QUOTE)
+		w.Write(strQuote)
 	}
-	w.Write(_STR_GT)
+	w.Write(strGT)
 }

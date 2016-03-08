@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -40,9 +40,9 @@ type StateButton interface {
 
 // CheckBox interface defines a check box, a button which has
 // 2 states: selected/deselected.
-// 
-// Suggested event type to handle changes: ETYPE_CLICK
-// 
+//
+// Suggested event type to handle changes: ETypeClick
+//
 // Default style classes: "gwu-CheckBox", "gwu-CheckBox-Disabled"
 type CheckBox interface {
 	// CheckBox is a StateButton.
@@ -51,9 +51,9 @@ type CheckBox interface {
 
 // SwitchButton interface defines a button which can be switched
 // ON and OFF.
-// 
-// Suggested event type to handle changes: ETYPE_CLICK
-// 
+//
+// Suggested event type to handle changes: ETypeClick
+//
 // Default style classes: "gwu-SwitchButton", "gwu-SwitchButton-On-Active"
 // "gwu-SwitchButton-On-Inactive", "gwu-SwitchButton-Off-Active",
 // "gwu-SwitchButton-Off-Inactive"
@@ -103,9 +103,9 @@ type RadioGroup interface {
 // and in each group only one radio button can be selected.
 // Selecting an unselected radio button deselects the selected
 // radio button of the group, if there was one.
-// 
-// Suggested event type to handle changes: ETYPE_CLICK
-// 
+//
+// Suggested event type to handle changes: ETypeClick
+//
 // Default style classes: "gwu-RadioButton", "gwu-RadioButton-Disabled"
 type RadioButton interface {
 	// RadioButton is a StateButton.
@@ -128,7 +128,7 @@ type radioGroupImpl struct {
 
 // StateButton implementation.
 type stateButtonImpl struct {
-	buttonImpl // Button implementation 
+	buttonImpl // Button implementation
 
 	state         bool       // State of the button
 	inputType     []byte     // Type of the underlying input tag
@@ -151,15 +151,15 @@ func NewRadioGroup(name string) RadioGroup {
 }
 
 var (
-	_STR_CHECKBOX     = []byte("checkbox")     // "checkbox"
-	_STR_RADIO        = []byte("radio")        // "radio"
-	_STR_THIS_CHECKED = []byte("this.checked") // "this.checked"
+	strCheckbox    = []byte("checkbox")     // "checkbox"
+	strRadio       = []byte("radio")        // "radio"
+	strThisChecked = []byte("this.checked") // "this.checked"
 )
 
 // NewCheckBox creates a new CheckBox.
 // The initial state is false.
 func NewCheckBox(text string) CheckBox {
-	c := newStateButtonImpl(text, _STR_CHECKBOX, nil, "gwu-CheckBox-Disabled")
+	c := newStateButtonImpl(text, strCheckbox, nil, "gwu-CheckBox-Disabled")
 	c.Style().AddClass("gwu-CheckBox")
 	return c
 }
@@ -177,7 +177,7 @@ func NewSwitchButton() SwitchButton {
 	valueProviderJs := []byte("sbtnVal(event,'" + onButton.Id().String() + "','" + offButton.Id().String() + "')")
 
 	c := &switchButtonImpl{newCompImpl(valueProviderJs), &onButton, &offButton, true} // Note the "true" state, so the following SetState(false) will be executed (different states)!
-	c.AddSyncOnETypes(ETYPE_CLICK)
+	c.AddSyncOnETypes(ETypeClick)
 	c.SetAttr("cellspacing", "0")
 	c.SetAttr("cellpadding", "0")
 	c.Style().AddClass("gwu-SwitchButton")
@@ -188,16 +188,16 @@ func NewSwitchButton() SwitchButton {
 // NewRadioButton creates a new radio button.
 // The initial state is false.
 func NewRadioButton(text string, group RadioGroup) RadioButton {
-	c := newStateButtonImpl(text, _STR_RADIO, group, "gwu-RadioButton-Disabled")
+	c := newStateButtonImpl(text, strRadio, group, "gwu-RadioButton-Disabled")
 	c.Style().AddClass("gwu-RadioButton")
 	return c
 }
 
 // newStateButtonImpl creates a new stateButtonImpl.
 func newStateButtonImpl(text string, inputType []byte, group RadioGroup, disabledClass string) *stateButtonImpl {
-	c := &stateButtonImpl{newButtonImpl(_STR_THIS_CHECKED, text), false, inputType, group, nextCompId(), disabledClass}
-	// Use ETYPE_CLICK because IE fires onchange only when focus is lost...
-	c.AddSyncOnETypes(ETYPE_CLICK)
+	c := &stateButtonImpl{newButtonImpl(strThisChecked, text), false, inputType, group, nextCompId(), disabledClass}
+	// Use ETypeClick because IE fires onchange only when focus is lost...
+	c.AddSyncOnETypes(ETypeClick)
 	return c
 }
 
@@ -277,7 +277,7 @@ func (c *stateButtonImpl) setStateProp(state bool) {
 }
 
 func (c *stateButtonImpl) preprocessEvent(event Event, r *http.Request) {
-	value := r.FormValue(_PARAM_COMP_VALUE)
+	value := r.FormValue(paramCompValue)
 	if len(value) == 0 {
 		return
 	}
@@ -290,46 +290,46 @@ func (c *stateButtonImpl) preprocessEvent(event Event, r *http.Request) {
 }
 
 var (
-	_STR_INPUT     = []byte(`<input type="`)      // `<input type="`
-	_STR_ID        = []byte(`" id="`)             // `" id="`
-	_STR_NAME      = []byte(` name="`)            // ` name="`
-	_STR_CHECKED   = []byte(` checked="checked"`) // ` checked="checked"`
-	_STR_LABEL_FOR = []byte(`><label for="`)      // `><label for="`
-	_STR_LABEL_CL  = []byte("</label>")           // "</label>"
+	strInput    = []byte(`<input type="`)      // `<input type="`
+	strId       = []byte(`" id="`)             // `" id="`
+	strName     = []byte(` name="`)            // ` name="`
+	strChecked  = []byte(` checked="checked"`) // ` checked="checked"`
+	strLabelFor = []byte(`><label for="`)      // `><label for="`
+	strLabelCl  = []byte("</label>")           // "</label>"
 )
 
-func (c *stateButtonImpl) Render(w writer) {
+func (c *stateButtonImpl) Render(w Writer) {
 	// Proper state button consists of multiple HTML tags (input and label), so render a wrapper tag for them:
-	w.Write(_STR_SPAN_OP)
+	w.Write(strSpanOp)
 	c.renderAttrsAndStyle(w)
-	w.Write(_STR_GT)
+	w.Write(strGT)
 
-	w.Write(_STR_INPUT)
+	w.Write(strInput)
 	w.Write(c.inputType)
-	w.Write(_STR_ID)
+	w.Write(strId)
 	w.Writev(int(c.inputId))
-	w.Write(_STR_QUOTE)
+	w.Write(strQuote)
 	if c.group != nil {
-		w.Write(_STR_NAME)
+		w.Write(strName)
 		w.Writes(c.group.Name())
-		w.Write(_STR_QUOTE)
+		w.Write(strQuote)
 	}
 	if c.state {
-		w.Write(_STR_CHECKED)
+		w.Write(strChecked)
 	}
 	c.renderEnabled(w)
 	c.renderEHandlers(w)
 
-	w.Write(_STR_LABEL_FOR)
+	w.Write(strLabelFor)
 	w.Writev(int(c.inputId))
-	w.Write(_STR_QUOTE)
+	w.Write(strQuote)
 	// TODO readding click handler here causes double event sending...
 	// But we might add mouseover and other handlers still...
 	//c.renderEHandlers(w)
-	w.Write(_STR_GT)
+	w.Write(strGT)
 	c.renderText(w)
-	w.Write(_STR_LABEL_CL)
-	w.Write(_STR_SPAN_CL)
+	w.Write(strLabelCl)
+	w.Write(strSpanCl)
 }
 
 func (c *switchButtonImpl) Enabled() bool {
@@ -375,7 +375,7 @@ func (c *switchButtonImpl) SetOnOff(on, off string) {
 }
 
 func (c *switchButtonImpl) preprocessEvent(event Event, r *http.Request) {
-	value := r.FormValue(_PARAM_COMP_VALUE)
+	value := r.FormValue(paramCompValue)
 	if len(value) == 0 {
 		return
 	}
@@ -390,27 +390,27 @@ func (c *switchButtonImpl) preprocessEvent(event Event, r *http.Request) {
 }
 
 var (
-	_STR_CL_TR = []byte("><tr>")            // "><tr>"
-	_STR_TD_50 = []byte(`<td width="50%">`) // `<td width="50%">`
+	strClTr = []byte("><tr>")            // "><tr>"
+	strTD50 = []byte(`<td width="50%">`) // `<td width="50%">`
 )
 
-func (c *switchButtonImpl) Render(w writer) {
-	w.Write(_STR_TABLE_OP)
+func (c *switchButtonImpl) Render(w Writer) {
+	w.Write(strTableOp)
 	c.renderAttrsAndStyle(w)
 	c.renderEHandlers(w)
 	// For Internet Explorer only:
-	// Since state synchronization is done on ETYPE_CLICK, which will add a click handler
+	// Since state synchronization is done on ETypeClick, which will add a click handler
 	// to the wrapper tag and not to the on/off buttons, the wrapper tag itself must be
 	// disabled (must have a 'disabled' attribute) if the switch button is disabled in order
 	// for clicks really be disabled.
 	c.onButton.renderEnabled(w)
-	w.Write(_STR_CL_TR)
+	w.Write(strClTr)
 
-	w.Write(_STR_TD_50)
+	w.Write(strTD50)
 	c.onButton.Render(w)
 
-	w.Write(_STR_TD_50)
+	w.Write(strTD50)
 	c.offButton.Render(w)
 
-	w.Write(_STR_TABLE_CL)
+	w.Write(strTableCl)
 }

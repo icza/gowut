@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -32,26 +32,26 @@ func (etype EventType) String() string {
 // Event types.
 const (
 	// General events for all components
-	ETYPE_CLICK      EventType = iota // Mouse click event
-	ETYPE_DBL_CLICK                   // Mouse double click event
-	ETYPE_MOUSE_DOWN                  // Mouse down event
-	ETYPE_MOUSE_MOVE                  // Mouse move event
-	ETYPE_MOUSE_OVER                  // Mouse over event
-	ETYPE_MOUSE_OUT                   // Mouse out event
-	ETYPE_MOUSE_UP                    // Mouse up event
-	ETYPE_KEY_DOWN                    // Key down event
-	ETYPE_KEY_PRESS                   // Key press event
-	ETYPE_KEY_UP                      // Key up event
-	ETYPE_BLUR                        // Blur event (component loses focus)
-	ETYPE_CHANGE                      // Change event (value change)
-	ETYPE_FOCUS                       // Focus event (component gains focus)
+	ETypeClick     EventType = iota // Mouse click event
+	ETypeDblClick                   // Mouse double click event
+	ETypeMousedown                  // Mouse down event
+	ETypeMouseMove                  // Mouse move event
+	ETypeMouseOver                  // Mouse over event
+	ETypeMouseOut                   // Mouse out event
+	ETypeMouseUp                    // Mouse up event
+	ETypeKeyDown                    // Key down event
+	ETypeKeyPress                   // Key press event
+	ETypeKeyUp                      // Key up event
+	ETypeBlur                       // Blur event (component loses focus)
+	ETypeChange                     // Change event (value change)
+	ETypeFocus                      // Focus event (component gains focus)
 
 	// Window events (for Window only)
-	ETYPE_WIN_LOAD   // Window load event
-	ETYPE_WIN_UNLOAD // Window unload event
+	ETypeWinLoad   // Window load event
+	ETypeWinUnload // Window unload event
 
 	// Internal events, generated and dispatched internally while processing another event
-	ETYPE_STATE_CHANGE // State change 
+	ETypeStateChange // State change
 )
 
 // Event type category.
@@ -59,57 +59,57 @@ type EventCategory int
 
 // Event type categories.
 const (
-	ECAT_GENERAL  EventCategory = iota // General event type for all components
-	ECAT_WINDOW                        // Window event type for Window only
-	ECAT_INTERNAL                      // Internal event generated and dispatched internally while processing another event
+	ECatGeneral  EventCategory = iota // General event type for all components
+	ECatWindow                        // Window event type for Window only
+	ECatInternal                      // Internal event generated and dispatched internally while processing another event
 
-	ECAT_UNKNOWN EventCategory = -1 // Unknown event category
+	ECatUnknown EventCategory = -1 // Unknown event category
 )
 
 // Category returns the event type category.
 func (etype EventType) Category() EventCategory {
 	switch {
-	case etype >= ETYPE_CLICK && etype <= ETYPE_FOCUS:
-		return ECAT_GENERAL
-	case etype >= ETYPE_WIN_LOAD && etype <= ETYPE_WIN_UNLOAD:
-		return ECAT_WINDOW
-	case etype >= ETYPE_STATE_CHANGE && etype <= ETYPE_STATE_CHANGE:
-		return ECAT_INTERNAL
+	case etype >= ETypeClick && etype <= ETypeFocus:
+		return ECatGeneral
+	case etype >= ETypeWinLoad && etype <= ETypeWinUnload:
+		return ECatWindow
+	case etype >= ETypeStateChange && etype <= ETypeStateChange:
+		return ECatInternal
 	}
 
-	return ECAT_UNKNOWN
+	return ECatUnknown
 }
 
 // Attribute names for the general event types; only for the general event types.
 var etypeAttrs map[EventType][]byte = map[EventType][]byte{
-	ETYPE_CLICK:      []byte("onclick"),
-	ETYPE_DBL_CLICK:  []byte("ondblclick"),
-	ETYPE_MOUSE_DOWN: []byte("onmousedown"),
-	ETYPE_MOUSE_MOVE: []byte("onmousemove"),
-	ETYPE_MOUSE_OVER: []byte("onmouseover"),
-	ETYPE_MOUSE_OUT:  []byte("onmouseout"),
-	ETYPE_MOUSE_UP:   []byte("onmouseup"),
-	ETYPE_KEY_DOWN:   []byte("onkeydown"),
-	ETYPE_KEY_PRESS:  []byte("onkeypress"),
-	ETYPE_KEY_UP:     []byte("onkeyup"),
-	ETYPE_BLUR:       []byte("onblur"),
-	ETYPE_CHANGE:     []byte("onchange"),
-	ETYPE_FOCUS:      []byte("onfocus")}
+	ETypeClick:     []byte("onclick"),
+	ETypeDblClick:  []byte("ondblclick"),
+	ETypeMousedown: []byte("onmousedown"),
+	ETypeMouseMove: []byte("onmousemove"),
+	ETypeMouseOver: []byte("onmouseover"),
+	ETypeMouseOut:  []byte("onmouseout"),
+	ETypeMouseUp:   []byte("onmouseup"),
+	ETypeKeyDown:   []byte("onkeydown"),
+	ETypeKeyPress:  []byte("onkeypress"),
+	ETypeKeyUp:     []byte("onkeyup"),
+	ETypeBlur:      []byte("onblur"),
+	ETypeChange:    []byte("onchange"),
+	ETypeFocus:     []byte("onfocus")}
 
 // Function names for window event types.
 var etypeFuncs map[EventType][]byte = map[EventType][]byte{
-	ETYPE_WIN_LOAD:   []byte("onload"),
-	ETYPE_WIN_UNLOAD: []byte("onbeforeunload")} // Bind it to onbeforeunload (instead of onunload) for several reasons (onunload might cause trouble for AJAX; onunload is not called in IE if page is just refreshed...)
+	ETypeWinLoad:   []byte("onload"),
+	ETypeWinUnload: []byte("onbeforeunload")} // Bind it to onbeforeunload (instead of onunload) for several reasons (onunload might cause trouble for AJAX; onunload is not called in IE if page is just refreshed...)
 
 // Mouse button type.
 type MouseBtn int
 
 // Mouse buttons
 const (
-	MOUSE_BTN_UNKNOWN MouseBtn = -1 // Unknown mouse button (info not available)
-	MOUSE_BTN_LEFT             = 0  // Left mouse button
-	MOUSE_BTN_MIDDLE           = 1  // Middle mouse button
-	MOUSE_BTN_RIGHT            = 2  // Right mouse button
+	MouseBtnUnknown MouseBtn = -1 // Unknown mouse button (info not available)
+	MouseBtnLeft             = 0  // Left mouse button
+	MouseBtnMiddle           = 1  // Middle mouse button
+	MouseBtnRight            = 2  // Right mouse button
 )
 
 // Modifier key type.
@@ -117,10 +117,10 @@ type ModKey int
 
 // Modifier key masks.
 const (
-	MOD_KEY_ALT   ModKey = 1 << iota // Alt key
-	MOD_KEY_CTRL                     // Control key
-	MOD_KEY_META                     // Meta key
-	MOD_KEY_SHIFT                    // Shift key
+	ModKeyAlt   ModKey = 1 << iota // Alt key
+	ModKeyCtrl                     // Control key
+	ModKeyMeta                     // Meta key
+	ModKeyShift                    // Shift key
 )
 
 // Key (keyboard key) type.
@@ -128,70 +128,70 @@ type Key int
 
 // Some key codes.
 const (
-	KEY_BACKSPACE  Key = 8
-	KEY_ENTER      Key = 13
-	KEY_SHIFT      Key = 16
-	KEY_CTRL       Key = 17
-	KEY_ALT        Key = 18
-	KEY_CAPS_LOCK  Key = 20
-	KEY_ESCAPE     Key = 27
-	KEY_SPACE      Key = 32
-	KEY_PG_UP      Key = 33
-	KEY_PG_DOWN    Key = 34
-	KEY_END        Key = 35
-	KEY_HOME       Key = 36
-	KEY_LEFT       Key = 37
-	KEY_UP         Key = 38
-	KEY_RIGHT      Key = 39
-	KEY_DOWN       Key = 40
-	KEY_PRINT_SCRN Key = 44
-	KEY_INSERT     Key = 45
-	KEY_DEL        Key = 46
+	KeyBackspace Key = 8
+	KeyEnter         = 13
+	KeyShift         = 16
+	KeyCtrl          = 17
+	KeyAlt           = 18
+	KeyCapsLock      = 20
+	KeyEscape        = 27
+	KeySpace         = 32
+	KeyPgUp          = 33
+	KeyPgDown        = 34
+	KeyEnd           = 35
+	KeyHome          = 36
+	KeyLeft          = 37
+	KeyUp            = 38
+	KeyRight         = 39
+	KeyDown          = 40
+	KeyPrintScrn     = 44
+	KeyInsert        = 45
+	KeyDel           = 46
 
-	KEY_0 Key = 48
-	KEY_9 Key = 57
+	Key0 = 48
+	Key9 = 57
 
-	KEY_A Key = 65
-	KEY_Z Key = 90
+	KeyA = 65
+	KeyZ = 90
 
-	KEY_WIN Key = 91
+	KeyWin = 91
 
-	KEY_NUMPAD_0     Key = 96
-	KEY_NUMPAD_9     Key = 105
-	KEY_NUMPAD_MUL   Key = 106
-	KEY_NUMPAD_PLUS  Key = 107
-	KEY_NUMPAD_MINUS Key = 109
-	KEY_NUMPAD_DOT   Key = 110
-	KEY_NUMPAD_DIV   Key = 111
+	KeyNumpad0     = 96
+	KeyNumPad9     = 105
+	KeyNumpadMul   = 106
+	KeyNumpadPlus  = 107
+	KeyNumpadMinus = 109
+	KeyNumpadDot   = 110
+	KeyNumpadDiv   = 111
 
-	KEY_F1  Key = 112
-	KEY_F2  Key = 113
-	KEY_F3  Key = 114
-	KEY_F4  Key = 115
-	KEY_F5  Key = 116
-	KEY_F6  Key = 117
-	KEY_F7  Key = 118
-	KEY_F8  Key = 119
-	KEY_F9  Key = 120
-	KEY_F10 Key = 121
-	KEY_F11 Key = 122
-	KEY_F12 Key = 123
+	KeyF1  = 112
+	KeyF2  = 113
+	KeyF3  = 114
+	KeyF4  = 115
+	KeyF5  = 116
+	KeyF6  = 117
+	KeyF7  = 118
+	KeyF8  = 119
+	KeyF9  = 120
+	KeyF10 = 121
+	KeyF11 = 122
+	KeyF12 = 123
 
-	KEY_NUM_LOCK    Key = 144
-	KEY_SCROLL_LOCK Key = 145
+	KeyNumLock    = 144
+	KeyScrollLock = 145
 )
 
 // Empty event handler which does nothing.
-const EMPTY_EHANDLER emptyEventHandler = 0
+const EmptyEHandler emptyEventHandler = 0
 
 // EventHandler interface defines a handler capable of handling events.
 type EventHandler interface {
 	// Handles the event.
-	// 
+	//
 	// If components are modified in a way that their view changes,
 	// these components must be marked dirty in the event object
 	// (so the client will see up-to-date state).
-	// 
+	//
 	// If the component tree is modified (new component added
 	// or removed for example), then the Container whose structure
 	// was modified has to be marked dirty.
@@ -222,7 +222,7 @@ type Event interface {
 	MouseWin() (x, y int)
 
 	// MouseBtn returns the mouse button.
-	// If no mouse button info is available, MOUSE_BTN_UNKNOWN is returned.
+	// If no mouse button info is available, MouseBtnUnknown is returned.
 	MouseBtn() MouseBtn
 
 	// ModKeys returns the states of the modifier keys.
@@ -245,15 +245,15 @@ type Event interface {
 	// MarkDirty marks components dirty,
 	// causing them to be re-rendered after processing the current event.
 	// Component re-rendering happens without page reload in the browser.
-	// 
+	//
 	// Note: the Window itself (which is a Comp) can also be marked dirty
 	// causing the whole window content to be re-rendered without page reload!
-	// 
+	//
 	// Marking a component dirty also marks all of its decendants dirty, recursively.
-	// 
+	//
 	// Also note that components will not be re-rendered multiple times.
 	// For example if a child component and its parent component are both
-	// marked dirty, the child component will only be re-rendered once. 
+	// marked dirty, the child component will only be re-rendered once.
 	MarkDirty(comps ...Comp)
 
 	// SetFocusedComp sets the component to be focused after processing
@@ -387,7 +387,7 @@ func (e *eventImpl) MarkDirty(comps ...Comp) {
 
 // dirty returns true if the specified component is already marked dirty.
 // Note that a component being dirty makes all of its descendants dirty, recursively.
-// 
+//
 // Also note that the "dirty" flag might change during the event dispatching
 // because if a "clean" component is moved from a dirty parent to a clean parent,
 // its inherited dirty flag changes from true to false.

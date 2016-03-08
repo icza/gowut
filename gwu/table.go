@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -23,7 +23,7 @@ package gwu
 // if table size is known or can be guessed before/during building it,
 // it is recommended to call EnsureSize to minimize reallocations
 // in the background.
-// 
+//
 // Default style class: "gwu-Table"
 type Table interface {
 	// Table is a TableView.
@@ -81,6 +81,16 @@ type Table interface {
 	// If the table does not have a cell specified by row and col,
 	// this is a no-op.
 	SetColSpan(row, col, colSpan int)
+
+	// Trim trims all the rows: removes trailing cells that has nil component
+	// by making the rows shorter.
+	// This comes handy for example if the table contains cells where colspan > 1 is set;
+	// by calling this method we can ensure no empty cells will be rendered at the end of such rows.
+	Trim()
+
+	// TrimRow trims the specified row: removes trailing cells that has nil value
+	// by making the row shorter.
+	TrimRow(row int)
 }
 
 // cellIdx type specifies a cell by its row and col indices.
@@ -98,8 +108,8 @@ type tableImpl struct {
 }
 
 // NewTable creates a new Table.
-// Default horizontal alignment is HA_DEFAULT,
-// default vertical alignment is VA_DEFAULT.
+// Default horizontal alignment is HADefault,
+// default vertical alignment is VADefault.
 func NewTable() Table {
 	c := &tableImpl{tableViewImpl: newTableViewImpl()}
 	c.Style().AddClass("gwu-Table")
@@ -271,8 +281,11 @@ func (c *tableImpl) Add(c2 Comp, row, col int) bool {
 	if row < 0 || col < 0 {
 		return false
 	}
-	if row >= len(c.comps) || col >= len(c.comps[row]) {
-		c.EnsureSize(row+1, col+1)
+	if row >= len(c.comps) {
+		c.ensureRows(row + 1)
+	}
+	if col >= len(c.comps[row]) {
+		c.EnsureCols(row, col+1)
 	}
 
 	rowComps := c.comps[row]
@@ -332,11 +345,33 @@ func (c *tableImpl) SetColSpan(row, col, colSpan int) {
 	}
 }
 
-func (c *tableImpl) Render(w writer) {
-	w.Write(_STR_TABLE_OP)
+func (c *tableImpl) Trim() {
+	for row := range c.comps {
+		c.TrimRow(row)
+	}
+}
+
+func (c *tableImpl) TrimRow(row int) {
+	if row < 0 || row >= len(c.comps) {
+		return
+	}
+
+	rowComps := c.comps[row]
+	ci := cellIdx{row: row, col: len(rowComps) - 1} // Create a reusable cell index
+	for ; ci.col >= 0 && rowComps[ci.col] == nil; ci.col-- {
+		// Cell is about to "disappear", remove its formatter (if any)
+		delete(c.cellFmts, ci)
+	}
+
+	// ci.col now points to a non-nil component (or is -1)
+	c.comps[row] = rowComps[:ci.col+1]
+}
+
+func (c *tableImpl) Render(w Writer) {
+	w.Write(strTableOp)
 	c.renderAttrsAndStyle(w)
 	c.renderEHandlers(w)
-	w.Write(_STR_GT)
+	w.Write(strGT)
 
 	// Create a reusable cell index
 	ci := cellIdx{}
@@ -352,11 +387,11 @@ func (c *tableImpl) Render(w writer) {
 		}
 	}
 
-	w.Write(_STR_TABLE_CL)
+	w.Write(strTableCl)
 }
 
 // renderRowTr renders the formatted HTML TR tag for the specified row.
-func (c *tableImpl) renderRowTr(row int, w writer) {
+func (c *tableImpl) renderRowTr(row int, w Writer) {
 	var defha HAlign = c.halign // default halign of the table
 	var defva VAlign = c.valign // default valign of the table
 
@@ -366,22 +401,22 @@ func (c *tableImpl) renderRowTr(row int, w writer) {
 		// If rf does not specify alignments, it means alignments must not be overriden,
 		// default alignments of the table must be used!
 		ha, va := rf.halign, rf.valign
-		if ha == HA_DEFAULT {
+		if ha == HADefault {
 			ha = defha
 		}
-		if va == VA_DEFAULT {
+		if va == VADefault {
 			va = defva
 		}
 
-		rf.renderWithAligns(_STR_TR_OP, ha, va, w)
+		rf.renderWithAligns(strTROp, ha, va, w)
 	}
 }
 
 // renderTd renders the formatted HTML TD tag for the specified cell.
-func (c *tableImpl) renderTd(ci cellIdx, w writer) {
+func (c *tableImpl) renderTd(ci cellIdx, w Writer) {
 	if cf := c.cellFmts[ci]; cf == nil {
-		w.Write(_STR_TD)
+		w.Write(strTD)
 	} else {
-		cf.render(_STR_TD_OP, w)
+		cf.render(strTDOp, w)
 	}
 }

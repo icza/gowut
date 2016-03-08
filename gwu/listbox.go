@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -25,9 +25,9 @@ import (
 
 // ListBox interface defines a component which allows selecting one or multiple values
 // from a predefined list.
-// 
-// Suggested event type to handle changes: ETYPE_CHANGE
-// 
+//
+// Suggested event type to handle changes: ETypeChange
+//
 // Default style class: "gwu-ListBox"
 type ListBox interface {
 	// ListBox is a component
@@ -81,7 +81,7 @@ type ListBox interface {
 
 // ListBox implementation.
 type listBoxImpl struct {
-	compImpl       // Component implementation 
+	compImpl       // Component implementation
 	hasEnabledImpl // Has enabled implementation
 
 	values   []string // Values to choose from
@@ -91,13 +91,13 @@ type listBoxImpl struct {
 }
 
 var (
-	_STR_SELIDXS = []byte("selIdxs(this)") // "selIdxs(this)"
+	strSelidx = []byte("selIdxs(this)") // "selIdxs(this)"
 )
 
 // NewListBox creates a new ListBox.
 func NewListBox(values []string) ListBox {
-	c := &listBoxImpl{newCompImpl(_STR_SELIDXS), newHasEnabledImpl(), values, false, make([]bool, len(values)), 1}
-	c.AddSyncOnETypes(ETYPE_CHANGE)
+	c := &listBoxImpl{newCompImpl(strSelidx), newHasEnabledImpl(), values, false, make([]bool, len(values)), 1}
+	c.AddSyncOnETypes(ETypeChange)
 	c.Style().AddClass("gwu-ListBox")
 	return c
 }
@@ -180,7 +180,7 @@ func (c *listBoxImpl) ClearSelected() {
 }
 
 func (c *listBoxImpl) preprocessEvent(event Event, r *http.Request) {
-	value := r.FormValue(_PARAM_COMP_VALUE)
+	value := r.FormValue(paramCompValue)
 	if len(value) == 0 {
 		return
 	}
@@ -195,34 +195,34 @@ func (c *listBoxImpl) preprocessEvent(event Event, r *http.Request) {
 }
 
 var (
-	_STR_SELECT_OP     = []byte("<select")                      // "<select"
-	_STR_MULTIPLE      = []byte(` multiple="multiple"`)         // ` multiple="multiple"`
-	_STR_OPTION_OP_SEL = []byte(`<option selected="selected">`) // `<option selected="selected">`
-	_STR_OPTION_OP     = []byte("<option>")                     // "<option>"
-	_STR_OPTION_CL     = []byte("</option>")                    // "</option>"
-	_STR_SELECT_CL     = []byte("</select>")                    // "</select>"
+	strSelectOp    = []byte("<select")                      // "<select"
+	strMultiple    = []byte(` multiple="multiple"`)         // ` multiple="multiple"`
+	strOptionOpSel = []byte(`<option selected="selected">`) // `<option selected="selected">`
+	strOptionOp    = []byte("<option>")                     // "<option>"
+	strOptionCl    = []byte("</option>")                    // "</option>"
+	strSelectCl    = []byte("</select>")                    // "</select>"
 )
 
-func (c *listBoxImpl) Render(w writer) {
-	w.Write(_STR_SELECT_OP)
+func (c *listBoxImpl) Render(w Writer) {
+	w.Write(strSelectOp)
 	if c.multi {
-		w.Write(_STR_MULTIPLE)
+		w.Write(strMultiple)
 	}
 	w.WriteAttr("size", strconv.Itoa(c.rows))
 	c.renderAttrsAndStyle(w)
 	c.renderEnabled(w)
 	c.renderEHandlers(w)
-	w.Write(_STR_GT)
+	w.Write(strGT)
 
 	for i, value := range c.values {
 		if c.selected[i] {
-			w.Write(_STR_OPTION_OP_SEL)
+			w.Write(strOptionOpSel)
 		} else {
-			w.Write(_STR_OPTION_OP)
+			w.Write(strOptionOp)
 		}
 		w.Writees(value)
-		w.Write(_STR_OPTION_CL)
+		w.Write(strOptionCl)
 	}
 
-	w.Write(_STR_SELECT_CL)
+	w.Write(strSelectCl)
 }

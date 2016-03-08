@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -18,8 +18,8 @@
 package main
 
 import (
-	"github.com/icza/gowut/gwu"
 	"fmt"
+	"github.com/icza/gowut/gwu"
 	"log"
 	"math/rand"
 	"os"
@@ -37,7 +37,7 @@ func (h *MyButtonHandler) HandleEvent(e gwu.Event) {
 	if b, isButton := e.Src().(gwu.Button); isButton {
 		b.SetText(b.Text() + h.text)
 		h.counter++
-		b.SetToolTip("You've clicked " + strconv.Itoa(h.counter) + " times!")
+		b.SetToolTip(fmt.Sprintf("You've clicked %d times!", h.counter))
 		e.MarkDirty(b)
 	}
 }
@@ -56,7 +56,7 @@ func (h *GreenHandler) HandleEvent(e gwu.Event) {
 	}
 
 	if state {
-		src.Style().SetBackground(gwu.CLR_GREEN)
+		src.Style().SetBackground(gwu.ClrGreen)
 	} else {
 		src.Style().SetBackground("")
 	}
@@ -73,7 +73,7 @@ func buildPrivateWins(s gwu.Session) {
 	win.SetCellPadding(2)
 
 	p := gwu.NewPanel()
-	p.SetLayout(gwu.LAYOUT_HORIZONTAL)
+	p.SetLayout(gwu.LayoutHorizontal)
 	p.SetCellPadding(2)
 	p.Add(gwu.NewLabel("I'm a label! Try clicking on the button=>"))
 	p.Add(gwu.NewLink("Google Home", "https://google.com"))
@@ -82,32 +82,32 @@ func buildPrivateWins(s gwu.Session) {
 	p.Add(img)
 	win.Add(p)
 	button := gwu.NewButton("Click me")
-	button.AddEHandler(&MyButtonHandler{text: ":-)"}, gwu.ETYPE_CLICK)
+	button.AddEHandler(&MyButtonHandler{text: ":-)"}, gwu.ETypeClick)
 	win.Add(button)
 	extraBtns := gwu.NewPanel()
-	extraBtns.SetLayout(gwu.LAYOUT_NATURAL)
+	extraBtns.SetLayout(gwu.LayoutNatural)
 	button.AddEHandlerFunc(func(e gwu.Event) {
-		extraBtn := gwu.NewButton("Extra #" + strconv.Itoa(extraBtns.CompsCount()))
+		extraBtn := gwu.NewButton(fmt.Sprintf("Extra #%d", extraBtns.CompsCount()))
 		extraBtn.AddEHandlerFunc(func(e gwu.Event) {
 			extraBtn.Parent().Remove(extraBtn)
 			e.MarkDirty(extraBtns)
-		}, gwu.ETYPE_CLICK)
+		}, gwu.ETypeClick)
 		extraBtns.Insert(extraBtn, 0)
 		e.MarkDirty(extraBtns)
-	}, gwu.ETYPE_CLICK)
+	}, gwu.ETypeClick)
 	win.Add(extraBtns)
 
 	p = gwu.NewPanel()
-	p.SetLayout(gwu.LAYOUT_HORIZONTAL)
+	p.SetLayout(gwu.LayoutHorizontal)
 	p.SetCellPadding(2)
-	p.Style().SetBorder2(1, gwu.BRD_STYLE_SOLID, gwu.CLR_BLACK)
+	p.Style().SetBorder2(1, gwu.BrdStyleSolid, gwu.ClrBlack)
 	p.Add(gwu.NewLabel("A drop-down list being"))
 	wideListBox := gwu.NewListBox([]string{"50", "100", "150", "200", "250"})
 	wideListBox.Style().SetWidth("50")
 	wideListBox.AddEHandlerFunc(func(e gwu.Event) {
 		wideListBox.Style().SetWidth(wideListBox.SelectedValue() + "px")
 		e.MarkDirty(wideListBox)
-	}, gwu.ETYPE_CHANGE)
+	}, gwu.ETypeChange)
 	p.Add(wideListBox)
 	p.Add(gwu.NewLabel("pixel wide. And a multi-select list:"))
 	listBox := gwu.NewListBox([]string{"First", "Second", "Third", "Forth", "Fifth", "Sixth"})
@@ -117,27 +117,27 @@ func buildPrivateWins(s gwu.Session) {
 	countLabel := gwu.NewLabel("Selected count: 0")
 	listBox.AddEHandlerFunc(func(e gwu.Event) {
 		selCount := len(listBox.SelectedIndices())
-		countLabel.SetText("Selected count: " + strconv.Itoa(selCount))
+		countLabel.SetText(fmt.Sprintf("Selected count: %d", selCount))
 		e.MarkDirty(countLabel)
-	}, gwu.ETYPE_CHANGE)
+	}, gwu.ETypeChange)
 	p.Add(countLabel)
 	win.Add(p)
 
 	greenCheckBox := gwu.NewCheckBox("I'm a check box. When checked, I'm green!")
 	greenCheckBox.AddEHandlerFunc(func(e gwu.Event) {
 		if greenCheckBox.State() {
-			greenCheckBox.Style().SetBackground(gwu.CLR_GREEN)
+			greenCheckBox.Style().SetBackground(gwu.ClrGreen)
 		} else {
 			greenCheckBox.Style().SetBackground("")
 		}
 		e.MarkDirty(greenCheckBox)
-	}, gwu.ETYPE_CLICK)
-	greenCheckBox.AddEHandler(greenHandler, gwu.ETYPE_CLICK)
+	}, gwu.ETypeClick)
+	greenCheckBox.AddEHandler(greenHandler, gwu.ETypeClick)
 	win.Add(greenCheckBox)
 
 	table := gwu.NewTable()
 	table.SetCellPadding(2)
-	table.Style().SetBorder2(1, gwu.BRD_STYLE_SOLID, gwu.CLR_BLACK)
+	table.Style().SetBorder2(1, gwu.BrdStyleSolid, gwu.ClrBlack)
 	table.EnsureSize(2, 4)
 	table.Add(gwu.NewLabel("TAB-"), 0, 0)
 	table.Add(gwu.NewLabel("LE"), 0, 1)
@@ -145,69 +145,69 @@ func buildPrivateWins(s gwu.Session) {
 	table.Add(gwu.NewLabel("MO"), 0, 3)
 	table.Add(gwu.NewLabel("Enter your name:"), 1, 0)
 	tb := gwu.NewTextBox("")
-	tb.AddSyncOnETypes(gwu.ETYPE_KEY_UP)
+	tb.AddSyncOnETypes(gwu.ETypeKeyUp)
 	table.Add(tb, 1, 1)
 	table.Add(gwu.NewLabel("You entered:"), 1, 2)
 	nameLabel := gwu.NewLabel("")
-	nameLabel.Style().SetColor(gwu.CLR_RED)
+	nameLabel.Style().SetColor(gwu.ClrRed)
 	tb.AddEHandlerFunc(func(e gwu.Event) {
 		nameLabel.SetText(tb.Text())
 		e.MarkDirty(nameLabel)
-	}, gwu.ETYPE_CHANGE, gwu.ETYPE_KEY_UP)
+	}, gwu.ETypeChange, gwu.ETypeKeyUp)
 	table.Add(nameLabel, 1, 3)
 	win.Add(table)
 
 	table = gwu.NewTable()
-	table.Style().SetBorder2(1, gwu.BRD_STYLE_SOLID, gwu.CLR_BLACK)
-	table.SetAlign(gwu.HA_RIGHT, gwu.VA_TOP)
+	table.Style().SetBorder2(1, gwu.BrdStyleSolid, gwu.ClrBlack)
+	table.SetAlign(gwu.HARight, gwu.VATop)
 	table.EnsureSize(5, 5)
 	for row := 0; row < 5; row++ {
 		group := gwu.NewRadioGroup(strconv.Itoa(row))
 		for col := 0; col < 5; col++ {
-			radio := gwu.NewRadioButton("= "+strconv.Itoa(col)+" =", group)
+			radio := gwu.NewRadioButton(fmt.Sprintf("= %d =", col), group)
 			radio.AddEHandlerFunc(func(e gwu.Event) {
 				radios := []gwu.RadioButton{radio, radio.Group().PrevSelected()}
 				for _, radio := range radios {
 					if radio != nil {
 						if radio.State() {
-							radio.Style().SetBackground(gwu.CLR_GREEN)
+							radio.Style().SetBackground(gwu.ClrGreen)
 						} else {
 							radio.Style().SetBackground("")
 						}
 						e.MarkDirty(radio)
 					}
 				}
-			}, gwu.ETYPE_CLICK)
+			}, gwu.ETypeClick)
 			table.Add(radio, row, col)
 		}
 	}
 	table.SetColSpan(2, 1, 2)
 	table.SetRowSpan(3, 1, 2)
 	table.CellFmt(2, 2).Style().SetSizePx(150, 80)
-	table.CellFmt(2, 2).SetAlign(gwu.HA_RIGHT, gwu.VA_BOTTOM)
+	table.CellFmt(2, 2).SetAlign(gwu.HARight, gwu.VABottom)
 	table.RowFmt(2).Style().SetBackground("#808080")
-	table.RowFmt(2).SetAlign(gwu.HA_DEFAULT, gwu.VA_MIDDLE)
+	table.RowFmt(2).SetAlign(gwu.HADefault, gwu.VAMiddle)
 	table.RowFmt(3).Style().SetBackground("#d0d0d0")
 	table.RowFmt(4).Style().SetBackground("#b0b0b0")
 	win.Add(table)
 
 	tabPanel := gwu.NewTabPanel()
-	tabPanel.SetTabBarPlacement(gwu.TB_PLACEMENT_TOP)
+	tabPanel.SetTabBarPlacement(gwu.TbPlacementTop)
 	for i := 0; i < 6; i++ {
 		if i == 3 {
 			img := gwu.NewImage("", "https://www.google.com/images/srpr/logo3w.png")
 			img.Style().SetWidthPx(100)
-			tabPanel.Add(img, gwu.NewLabel("This is some long content, random="+strconv.Itoa(rand.Int())))
+			tabPanel.Add(img, gwu.NewLabel(fmt.Sprintf("This is some long content, random=%d", rand.Int())))
 			continue
 		}
-		tabPanel.AddString(strconv.Itoa(i)+". tab", gwu.NewLabel("This is some long content, random="+strconv.Itoa(rand.Int())))
+		tabPanel.AddString(fmt.Sprintf("%d. tab", i), gwu.NewLabel(fmt.Sprintf("This is some long content, random=%d", rand.Int())))
 	}
 	win.Add(tabPanel)
 	tabPanel = gwu.NewTabPanel()
-	tabPanel.SetTabBarPlacement(gwu.TB_PLACEMENT_LEFT)
-	tabPanel.TabBarFmt().SetVAlign(gwu.VA_BOTTOM)
+	tabPanel.SetTabBarPlacement(gwu.TbPlacementLeft)
+	tabPanel.TabBarFmt().SetVAlign(gwu.VABottom)
 	for i := 7; i < 11; i++ {
-		l := gwu.NewLabel("This is some long content, random=" + strconv.Itoa(rand.Int()))
+		l := gwu.NewLabel(fmt.Sprintf("This is some long content, random=%d", rand.Int()))
 		if i == 9 {
 			img := gwu.NewImage("", "https://www.google.com/images/srpr/logo3w.png")
 			img.Style().SetWidthPx(100)
@@ -215,7 +215,7 @@ func buildPrivateWins(s gwu.Session) {
 			tabPanel.CellFmt(l).Style().SetSizePx(400, 400)
 			continue
 		}
-		tabPanel.AddString(strconv.Itoa(i)+". tab", l)
+		tabPanel.AddString(fmt.Sprintf("%d. tab", i), l)
 		tabPanel.CellFmt(l).Style().SetSizePx(400, 400)
 	}
 	win.Add(tabPanel)
@@ -226,7 +226,7 @@ func buildPrivateWins(s gwu.Session) {
 	back := gwu.NewButton("Back")
 	back.AddEHandlerFunc(func(e gwu.Event) {
 		e.ReloadWin(win.Name())
-	}, gwu.ETYPE_CLICK)
+	}, gwu.ETypeClick)
 	win2.Add(back)
 	s.AddWin(win2)
 }
@@ -234,25 +234,25 @@ func buildPrivateWins(s gwu.Session) {
 func buildLoginWin(s gwu.Session) {
 	win := gwu.NewWindow("login", "Login Window")
 	win.Style().SetFullSize()
-	win.SetAlign(gwu.HA_CENTER, gwu.VA_MIDDLE)
+	win.SetAlign(gwu.HACenter, gwu.VAMiddle)
 
 	p := gwu.NewPanel()
-	p.SetHAlign(gwu.HA_CENTER)
+	p.SetHAlign(gwu.HACenter)
 	p.SetCellPadding(2)
 
 	l := gwu.NewLabel("Test GUI Login Window")
-	l.Style().SetFontWeight(gwu.FONT_WEIGHT_BOLD).SetFontSize("150%")
+	l.Style().SetFontWeight(gwu.FontWeightBold).SetFontSize("150%")
 	p.Add(l)
 	l = gwu.NewLabel("Login")
-	l.Style().SetFontWeight(gwu.FONT_WEIGHT_BOLD).SetFontSize("130%")
+	l.Style().SetFontWeight(gwu.FontWeightBold).SetFontSize("130%")
 	p.Add(l)
-	p.CellFmt(l).Style().SetBorder2(1, gwu.BRD_STYLE_DASHED, gwu.CLR_NAVY)
+	p.CellFmt(l).Style().SetBorder2(1, gwu.BrdStyleDashed, gwu.ClrNavy)
 	l = gwu.NewLabel("user/pass: admin/a")
-	l.Style().SetFontSize("80%").SetFontStyle(gwu.FONT_STYLE_ITALIC)
+	l.Style().SetFontSize("80%").SetFontStyle(gwu.FontStyleItalic)
 	p.Add(l)
 
 	errL := gwu.NewLabel("")
-	errL.Style().SetColor(gwu.CLR_RED)
+	errL.Style().SetColor(gwu.ClrRed)
 	p.Add(errL)
 
 	table := gwu.NewTable()
@@ -278,7 +278,7 @@ func buildLoginWin(s gwu.Session) {
 			errL.SetText("Invalid user name or password!")
 			e.MarkDirty(errL)
 		}
-	}, gwu.ETYPE_CLICK)
+	}, gwu.ETypeClick)
 	p.Add(b)
 	l = gwu.NewLabel("")
 	p.Add(l)
@@ -288,7 +288,7 @@ func buildLoginWin(s gwu.Session) {
 	win.SetFocusedCompId(tb.Id())
 
 	p = gwu.NewPanel()
-	p.SetLayout(gwu.LAYOUT_HORIZONTAL)
+	p.SetLayout(gwu.LayoutHorizontal)
 	p.SetCellPadding(2)
 	p.Add(gwu.NewLabel("Here's an ON/OFF switch which enables/disables the other one:"))
 	sw := gwu.NewSwitchButton()
@@ -303,7 +303,7 @@ func buildLoginWin(s gwu.Session) {
 	sw.AddEHandlerFunc(func(e gwu.Event) {
 		sw2.SetEnabled(sw.State())
 		e.MarkDirty(sw2)
-	}, gwu.ETYPE_CLICK)
+	}, gwu.ETypeClick)
 	win.Add(p)
 
 	s.AddWin(win)
@@ -323,7 +323,8 @@ func (h SessHandler) Removed(s gwu.Session) {
 func main() {
 	// Create GUI server
 	//server := gwu.NewServer("guitest", "")
-	server := gwu.NewServerTLS("guitest", "", "test_tls/cert.pem", "test_tls/key.pem")
+	folder := "../../../../../../test_tls/"
+	server := gwu.NewServerTLS("guitest", "", folder+"cert.pem", folder+"key.pem")
 	server.SetText("Test GUI Application")
 
 	server.AddSessCreatorName("login", "Login Window")
@@ -331,13 +332,13 @@ func main() {
 
 	win := gwu.NewWindow("home", "Home Window")
 	l := gwu.NewLabel("Home, sweet home of " + server.Text())
-	l.Style().SetFontWeight(gwu.FONT_WEIGHT_BOLD).SetFontSize("130%")
+	l.Style().SetFontWeight(gwu.FontWeightBold).SetFontSize("130%")
 	win.Add(l)
 	win.Add(gwu.NewLabel("Click on the button to login:"))
 	b := gwu.NewButton("Login")
 	b.AddEHandlerFunc(func(e gwu.Event) {
 		e.ReloadWin("login")
-	}, gwu.ETYPE_CLICK)
+	}, gwu.ETypeClick)
 	win.Add(b)
 
 	server.AddWin(win)

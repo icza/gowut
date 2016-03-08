@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -23,15 +23,15 @@ import (
 
 // Timer interface defines a component which can generate a timed event
 // or a series of timed events periodically.
-// 
+//
 // Timers don't have a visual part, they are used only to generate events.
-// The generated events are of type ETYPE_STATE_CHANGE.
-// 
+// The generated events are of type ETypeStateChange.
+//
 // Note that receiving an event from a Timer (like from any other components)
 // updates the last accessed property of the associated session, causing
 // a session never to expire if there are active timers on repeat at the
 // client side.
-// 
+//
 // Also note that the Timer component operates at the client side meaning
 // if the client is closed (or navigates away), events will not be generated.
 // (This can also be used to detect if a Window is still open.)
@@ -45,7 +45,7 @@ type Timer interface {
 	// SetTimeout sets the timeout of the timer.
 	// Event will be generated after the timeout period. If timer is on repeat,
 	// events will be generated periodically after each timeout.
-	// 
+	//
 	// Note: while this method allows you to pass an arbitrary time.Duration,
 	// implementation might be using less precision (most likely millisecond).
 	// Durations less than 1 ms might be rounded up to 1 ms.
@@ -124,29 +124,29 @@ func (c *timerImpl) Reset() {
 }
 
 var (
-	_STR_SCRIPT_OP = []byte("<script>setupTimer(") // "<script>setupTimer("
-	_STR_SCRIPT_CL = []byte(");</script>")         // ");</script>"
+	strScriptOp = []byte("<script>setupTimer(") // "<script>setupTimer("
+	strScriptCl = []byte(");</script>")         // ");</script>"
 )
 
-func (c *timerImpl) Render(w writer) {
-	w.Write(_STR_SPAN_OP)
+func (c *timerImpl) Render(w Writer) {
+	w.Write(strSpanOp)
 	c.renderAttrsAndStyle(w)
 	c.renderEHandlers(w)
-	w.Write(_STR_GT)
+	w.Write(strGT)
 
-	w.Write(_STR_SCRIPT_OP)
+	w.Write(strScriptOp)
 	w.Writev(int(c.id))
-	w.Write(_STR_COMMA)
-	w.Writev(int(ETYPE_STATE_CHANGE))
-	w.Write(_STR_COMMA)
+	w.Write(strComma)
+	w.Writev(int(ETypeStateChange))
+	w.Write(strComma)
 	w.Writev(int(c.timeout / time.Millisecond))
-	w.Write(_STR_COMMA)
+	w.Write(strComma)
 	w.Writev(c.repeat)
-	w.Write(_STR_COMMA)
+	w.Write(strComma)
 	w.Writev(c.active)
-	w.Write(_STR_COMMA)
+	w.Write(strComma)
 	w.Writev(c.reset)
-	w.Write(_STR_SCRIPT_CL)
+	w.Write(strScriptCl)
 
-	w.Write(_STR_SPAN_CL)
+	w.Write(strSpanCl)
 }

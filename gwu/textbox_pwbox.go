@@ -1,15 +1,15 @@
 // Copyright (C) 2013 Andras Belicza. All rights reserved.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -23,17 +23,17 @@ import (
 )
 
 // TextBox interface defines a component for text input purpose.
-// 
-// Suggested event type to handle actions: ETYPE_CHANGE
+//
+// Suggested event type to handle actions: ETypeChange
 //
 // By default the value of the TextBox is synchronized with the server
-// on ETYPE_CHANGE event which is when the TextBox loses focus
+// on ETypeChange event which is when the TextBox loses focus
 // or when the ENTER key is pressed.
 // If you want a TextBox to synchronize values during editing
-// (while you type in characters), add the ETYPE_KEY_UP event type
+// (while you type in characters), add the ETypeKeyUp event type
 // to the events on which synchronization happens by calling:
-// 		AddSyncOnETypes(ETYPE_KEY_UP)
-// 
+// 		AddSyncOnETypes(ETypeKeyUp)
+//
 // Default style class: "gwu-TextBox"
 type TextBox interface {
 	// TextBox is a component.
@@ -77,17 +77,17 @@ type TextBox interface {
 }
 
 // PasswBox interface defines a text box for password input purpose.
-// 
-// Suggested event type to handle actions: ETYPE_CHANGE
+//
+// Suggested event type to handle actions: ETypeChange
 //
 // By default the value of the PasswBox is synchronized with the server
-// on ETYPE_CHANGE event which is when the PasswBox loses focus
+// on ETypeChange event which is when the PasswBox loses focus
 // or when the ENTER key is pressed.
 // If you want a PasswBox to synchronize values during editing
-// (while you type in characters), add the ETYPE_KEY_UP event type
+// (while you type in characters), add the ETypeKeyUp event type
 // to the events on which synchronization happens by calling:
-// 		AddSyncOnETypes(ETYPE_KEY_UP)
-// 
+// 		AddSyncOnETypes(ETypeKeyUp)
+//
 // Default style class: "gwu-PasswBox"
 type PasswBox interface {
 	// PasswBox is a TextBox.
@@ -105,19 +105,19 @@ type textBoxImpl struct {
 }
 
 var (
-	_STR_ENC_URI_THIS_V = []byte("encodeURIComponent(this.value)") // "encodeURIComponent(this.value)"
+	strEncURIThisV = []byte("encodeURIComponent(this.value)") // "encodeURIComponent(this.value)"
 )
 
 // NewTextBox creates a new TextBox.
 func NewTextBox(text string) TextBox {
-	c := newTextBoxImpl(_STR_ENC_URI_THIS_V, text, false)
+	c := newTextBoxImpl(strEncURIThisV, text, false)
 	c.Style().AddClass("gwu-TextBox")
 	return &c
 }
 
 // NewPasswBox creates a new PasswBox.
 func NewPasswBox(text string) TextBox {
-	c := newTextBoxImpl(_STR_ENC_URI_THIS_V, text, true)
+	c := newTextBoxImpl(strEncURIThisV, text, true)
 	c.Style().AddClass("gwu-PasswBox")
 	return &c
 }
@@ -125,7 +125,7 @@ func NewPasswBox(text string) TextBox {
 // newTextBoxImpl creates a new textBoxImpl.
 func newTextBoxImpl(valueProviderJs []byte, text string, isPassw bool) textBoxImpl {
 	c := textBoxImpl{newCompImpl(valueProviderJs), newHasTextImpl(text), newHasEnabledImpl(), isPassw, 1, 20}
-	c.AddSyncOnETypes(ETYPE_CHANGE)
+	c.AddSyncOnETypes(ETypeChange)
 	return c
 }
 
@@ -177,20 +177,20 @@ func (c *textBoxImpl) SetMaxLength(maxLength int) {
 
 func (c *textBoxImpl) preprocessEvent(event Event, r *http.Request) {
 	// Empty string for text box is a valid value.
-	// So we have to check whether it is supplied, not just whether its len() > 0 
-	value := r.FormValue(_PARAM_COMP_VALUE)
+	// So we have to check whether it is supplied, not just whether its len() > 0
+	value := r.FormValue(paramCompValue)
 	if len(value) > 0 {
 		c.text = value
 	} else {
 		// Empty string might be a valid value, if the component value param is present:
-		values, present := r.Form[_PARAM_COMP_VALUE] // Form is surely parsed (we called FormValue())
+		values, present := r.Form[paramCompValue] // Form is surely parsed (we called FormValue())
 		if present && len(values) > 0 {
 			c.text = values[0]
 		}
 	}
 }
 
-func (c *textBoxImpl) Render(w writer) {
+func (c *textBoxImpl) Render(w Writer) {
 	if c.rows <= 1 || c.isPassw {
 		c.renderInput(w)
 	} else {
@@ -199,45 +199,45 @@ func (c *textBoxImpl) Render(w writer) {
 }
 
 var (
-	_STR_INPUT_OP = []byte(`<input type="`) // `<input type="`
-	_STR_PASSWORD = []byte("password")      // "password"
-	_STR_TEXT     = []byte("text")          // "text"
-	_STR_SIZE     = []byte(`" size="`)      // `" size="`
-	_STR_VALUE    = []byte(` value="`)      // ` value="`
-	_STR_INPUT_CL = []byte(`"/>`)           // `"/>`
+	strInputOp  = []byte(`<input type="`) // `<input type="`
+	strPassword = []byte("password")      // "password"
+	strText     = []byte("text")          // "text"
+	strSize     = []byte(`" size="`)      // `" size="`
+	strValue    = []byte(` value="`)      // ` value="`
+	strInputCl  = []byte(`"/>`)           // `"/>`
 )
 
 // renderInput renders the component as an input HTML tag.
-func (c *textBoxImpl) renderInput(w writer) {
-	w.Write(_STR_INPUT_OP)
+func (c *textBoxImpl) renderInput(w Writer) {
+	w.Write(strInputOp)
 	if c.isPassw {
-		w.Write(_STR_PASSWORD)
+		w.Write(strPassword)
 	} else {
-		w.Write(_STR_TEXT)
+		w.Write(strText)
 	}
-	w.Write(_STR_SIZE)
+	w.Write(strSize)
 	w.Writev(c.cols)
-	w.Write(_STR_QUOTE)
+	w.Write(strQuote)
 	c.renderAttrsAndStyle(w)
 	c.renderEnabled(w)
 	c.renderEHandlers(w)
 
-	w.Write(_STR_VALUE)
+	w.Write(strValue)
 	c.renderText(w)
-	w.Write(_STR_INPUT_CL)
+	w.Write(strInputCl)
 }
 
 var (
-	_STR_TEXTAREA_OP    = []byte("<textarea")   // "<textarea"
-	_STR_ROWS           = []byte(` rows="`)     // ` rows="`
-	_STR_COLS           = []byte(`" cols="`)    // `" cols="`
-	_STR_TEXTAREA_OP_CL = []byte("\">\n")       // "\">\n"
-	_STR_TEXTAREA_CL    = []byte("</textarea>") // "</textarea>"
+	strTextareaOp   = []byte("<textarea")   // "<textarea"
+	strRows         = []byte(` rows="`)     // ` rows="`
+	strCols         = []byte(`" cols="`)    // `" cols="`
+	strTextAreaOpCl = []byte("\">\n")       // "\">\n"
+	strTextAreaCl   = []byte("</textarea>") // "</textarea>"
 )
 
 // renderTextArea renders the component as an textarea HTML tag.
-func (c *textBoxImpl) renderTextArea(w writer) {
-	w.Write(_STR_TEXTAREA_OP)
+func (c *textBoxImpl) renderTextArea(w Writer) {
+	w.Write(strTextareaOp)
 	c.renderAttrsAndStyle(w)
 	c.renderEnabled(w)
 	c.renderEHandlers(w)
@@ -245,12 +245,12 @@ func (c *textBoxImpl) renderTextArea(w writer) {
 	// New line char after the <textarea> tag is ignored.
 	// So we must render a newline after textarea, else if text value
 	// starts with a new line, it will be ommitted!
-	w.Write(_STR_ROWS)
+	w.Write(strRows)
 	w.Writev(c.rows)
-	w.Write(_STR_COLS)
+	w.Write(strCols)
 	w.Writev(c.cols)
-	w.Write(_STR_TEXTAREA_OP_CL)
+	w.Write(strTextAreaOpCl)
 
 	c.renderText(w)
-	w.Write(_STR_TEXTAREA_CL)
+	w.Write(strTextAreaCl)
 }
