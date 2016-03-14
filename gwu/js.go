@@ -59,22 +59,22 @@ func init() {
 
 function createXmlHttp() {
 	if (window.XMLHttpRequest) // IE7+, Firefox, Chrome, Opera, Safari
-		return xmlhttp=new XMLHttpRequest();
+		return new XMLHttpRequest();
 	else // IE6, IE5
-		return xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		return new ActiveXObject("Microsoft.XMLHTTP");
 }
 
 // Send event
 function se(event, etype, compId, compValue) {
-	var xmlhttp = createXmlHttp();
+	var xhr = createXmlHttp();
 	
-	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
-			procEresp(xmlhttp);
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4 && xhr.status == 200)
+			procEresp(xhr);
 	}
 	
-	xmlhttp.open("POST", _pathEvent, true); // asynch call
-	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.open("POST", _pathEvent, true); // asynch call
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	
 	var data="";
 	
@@ -112,11 +112,11 @@ function se(event, etype, compId, compValue) {
 		data += "&" + _pKeyCode + "=" + (event.which ? event.which : event.keyCode);
 	}
 	
-	xmlhttp.send(data);
+	xhr.send(data);
 }
 
-function procEresp(xmlhttp) {
-	var actions = xmlhttp.responseText.split(";");
+function procEresp(xhr) {
+	var actions = xhr.responseText.split(";");
 	
 	if (actions.length == 0) {
 		window.alert("No response received!");
@@ -154,13 +154,13 @@ function rerenderComp(compId) {
 	if (!e) // Component removed or not visible (e.g. on inactive tab of TabPanel)
 		return;
 	
-	var xmlhttp = createXmlHttp();
+	var xhr = createXmlHttp();
 	
-	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4 && xhr.status == 200) {
 			// Remember focused comp which might be replaced here:
 			var focusedCompId = document.activeElement.id;
-			e.outerHTML = xmlhttp.responseText;
+			e.outerHTML = xhr.responseText;
 			focusComp(focusedCompId);
 			
 			// Inserted JS code is not executed automatically, do it manually:
@@ -172,10 +172,10 @@ function rerenderComp(compId) {
 		}
 	}
 	
-	xmlhttp.open("POST", _pathRenderComp, false); // synch call (if async, browser specific DOM rendering errors may arise)
-	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.open("POST", _pathRenderComp, false); // synch call (if async, browser specific DOM rendering errors may arise)
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	
-	xmlhttp.send(_pCompId + "=" + compId);
+	xhr.send(_pCompId + "=" + compId);
 }
 
 // Get selected indices (of an HTML select)
@@ -245,11 +245,11 @@ function addonbeforeunload(func) {
 
 var timers = new Object();
 
-function setupTimer(compId, etype, timeout, repeat, active, reset) {
+function setupTimer(compId, js, timeout, repeat, active, reset) {
 	var timer = timers[compId];
 	
 	if (timer != null) {
-		var changed = timer.timeout != timeout || timer.repeat != repeat || timer.reset != reset;
+		var changed = timer.js != js || timer.timeout != timeout || timer.repeat != repeat || timer.reset != reset;
 		if (!active || changed) {
 			if (timer.repeat)
 				clearInterval(timer.id);
@@ -265,16 +265,54 @@ function setupTimer(compId, etype, timeout, repeat, active, reset) {
 	
 	// Create new timer
 	timers[compId] = timer = new Object();
+	timer.js = js;
 	timer.timeout = timeout;
 	timer.repeat = repeat;
 	timer.reset = reset;
 	
 	// Start the timer
-	var js = "se(null," + etype + "," + compId + ");";
 	if (timer.repeat)
 		timer.id = setInterval(js, timeout);
 	else
 		timer.id = setTimeout(js, timeout);
+}
+
+function checkSession(compId) {
+	var e = document.getElementById(compId);
+	if (!e) // Component removed or not visible (e.g. on inactive tab of TabPanel)
+		return;
+	
+	var xhr = createXmlHttp();
+	
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			var timeoutSec = parseFloat(xhr.responseText);
+			if (timeoutSec < 60)
+				e.classList.add("gwu-SessMonitor-Expired");
+			else
+				e.classList.remove("gwu-SessMonitor-Expired");
+			var cnvtr = window[e.getAttribute("gwuJsFuncName")];
+			e.children[0].innerText = typeof cnvtr === 'function' ? cnvtr(timeoutSec) : convertSessTimeout(timeoutSec);
+		}
+	}
+	
+	xhr.open("GET", _pathSessCheck, false); // synch call (else we can't catch connection error)
+	try {
+		xhr.send();
+		e.classList.remove("gwu-SessMonitor-Error");
+	} catch (err) {
+		e.classList.add("gwu-SessMonitor-Error");
+		e.children[0].innerText = "CONN ERR";
+	}
+}
+
+function convertSessTimeout(sec) {
+	if (sec <= 0)
+		return "Expired!";
+	else if (sec < 60)
+			return "<1 min";
+	else
+		return "~" + Math.round(sec / 60) + " min";
 }
 
 // INITIALIZATION

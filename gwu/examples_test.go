@@ -13,10 +13,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package gwu
+package gwu_test
 
 import (
-	"code/google/com/p/gowut/gwu"
+	"github.com/icza/gowut/gwu"
 )
 
 // Example code determining which button was clicked.
@@ -32,7 +32,7 @@ func ExampleButton() {
 // Example code determining what kind of key is involved.
 func ExampleTextBox() {
 	b := gwu.NewTextBox("")
-	tb.AddSyncOnETypes(gwu.ETypeKeyUp) // This is here so we will see up-to-date value in the event handler
+	b.AddSyncOnETypes(gwu.ETypeKeyUp) // This is here so we will see up-to-date value in the event handler
 	b.AddEHandlerFunc(func(e gwu.Event) {
 		if e.ModKey(gwu.ModKeyShift) {
 			// SHIFT is pressed

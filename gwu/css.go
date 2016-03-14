@@ -91,6 +91,9 @@ body {font-family:Arial}
 .gwu-TabBar-Selected    {padding-left:5px; padding-right:5px; border:1px solid #8080f8; background:#8080f8; cursor:default}
 .gwu-TabPanel {}
 .gwu-TabPanel-Content {border:1px solid #8080f8; width:100%; height:100%}
+
+.gwu-SessMonitor {}
+.gwu-SessMonitor-Expired, .gwu-SessMonitor-Error {color:red}
 `)
 
 	staticCss[resNameStaticCss(ThemeDebug)] = []byte(string(staticCss[resNameStaticCss(ThemeDefault)]) +

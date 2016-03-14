@@ -78,6 +78,7 @@ type Session interface {
 	SetTimeout(timeout time.Duration)
 
 	// access registers an access to the session.
+	// Implementation locks or the sessions RW mutex.
 	access()
 
 	// ClearNew clears the new flag.
@@ -225,6 +226,9 @@ func (s *sessionImpl) SetTimeout(timeout time.Duration) {
 }
 
 func (s *sessionImpl) access() {
+	s.rwMutex_.Lock()
+	defer s.rwMutex_.Unlock()
+
 	s.accessed = time.Now()
 }
 

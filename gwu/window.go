@@ -40,8 +40,12 @@ type Window interface {
 	SetName(name string)
 
 	// AddHeadHtml adds an HTML text which will be included
-	// in the HTML head section.
+	// in the HTML <head> section.
 	AddHeadHtml(html string)
+
+	// RemoveHeadHtml removes an HTML head text
+	// that was previously added with AddHeadHtml().
+	RemoveHeadHtml(html string)
 
 	// SetFocusedCompId sets the id of the currently focused component.
 	SetFocusedCompId(id ID)
@@ -105,6 +109,17 @@ func (w *windowImpl) AddHeadHtml(html string) {
 	w.heads = append(w.heads, html)
 }
 
+func (w *windowImpl) RemoveHeadHtml(html string) {
+	for i, v := range w.heads {
+		if v == html {
+			old := w.heads
+			w.heads = append(w.heads[:i], w.heads[i+1:]...)
+			old[len(old)-1] = ""
+			return
+		}
+	}
+}
+
 func (w *windowImpl) SetFocusedCompId(id ID) {
 	w.focusedCompId = id
 }
@@ -132,14 +147,14 @@ func (c *windowImpl) Render(w Writer) {
 
 		if !found {
 			found = true
-			w.Writes("<script>")
+			w.Write(strScriptOp)
 		}
 		// To render       : add<etypeFunc>(function(){se(null,etype,id);});
 		// Example (onload): addonload(function(){se(null,13,4327);});
 		w.Writevs("add", etypeFuncs[etype], "(function(){se(null,", int(etype), ",", int(c.id), ");});")
 	}
 	if found {
-		w.Writes("</script>")
+		w.Write(strScriptCl)
 	}
 
 	// And now call panelImpl's Render()
@@ -152,7 +167,7 @@ func (win *windowImpl) RenderWin(w Writer, s Server) {
 	w.Writes(`<html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>`)
 	w.Writees(win.text)
 	w.Writess(`</title><link href="`, s.AppPath(), pathStatic)
-	if len(win.theme) == 0 {
+	if win.theme == "" {
 		w.Writes(resNameStaticCss(s.Theme()))
 	} else {
 		w.Writes(resNameStaticCss(win.theme))
@@ -170,11 +185,12 @@ func (win *windowImpl) RenderWin(w Writer, s Server) {
 
 // renderDynJs renders the dynamic JavaScript codes of Gowut.
 func (win *windowImpl) renderDynJs(w Writer, s Server) {
-	w.Writes("<script>")
+	w.Write(strScriptOp)
 	w.Writess("var _pathApp='", s.AppPath(), "';")
+	w.Writess("var _pathSessCheck=_pathApp+'", pathSessCheck, "';")
 	w.Writess("var _pathWin='", s.AppPath(), win.name, "/';")
 	w.Writess("var _pathEvent=_pathWin+'", pathEvent, "';")
 	w.Writess("var _pathRenderComp=_pathWin+'", pathRenderComp, "';")
 	w.Writess("var _focCompId='", win.focusedCompId.String(), "';")
-	w.Writes("</script>")
+	w.Write(strScriptCl)
 }

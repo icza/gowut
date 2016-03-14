@@ -39,10 +39,10 @@ type Timer interface {
 	// Timer is a component.
 	Comp
 
-	// Timeout returns the timeout of the timer.
+	// Timeout returns the timeout duration of the timer.
 	Timeout() time.Duration
 
-	// SetTimeout sets the timeout of the timer.
+	// SetTimeout sets the timeout duration of the timer.
 	// Event will be generated after the timeout period. If timer is on repeat,
 	// events will be generated periodically after each timeout.
 	//
@@ -68,7 +68,7 @@ type Timer interface {
 	SetActive(active bool)
 
 	// Reset will cause the timer to restart/reschedule.
-	// A Timer does not resets the countdown when it is re-rendered,
+	// A Timer does not reset the countdown when it is re-rendered,
 	// only if the timer config is changed (e.g. timeout or repeat).
 	// By calling Reset() the countdown will reset when the timer is
 	// re-rendered.
@@ -97,10 +97,9 @@ func (c *timerImpl) Timeout() time.Duration {
 
 func (c *timerImpl) SetTimeout(timeout time.Duration) {
 	if timeout < time.Millisecond {
-		c.timeout = time.Millisecond
-	} else {
-		c.timeout = timeout
+		timeout = time.Millisecond
 	}
+	c.timeout = timeout
 }
 
 func (c *timerImpl) Repeat() bool {
@@ -124,20 +123,22 @@ func (c *timerImpl) Reset() {
 }
 
 var (
-	strScriptOp = []byte("<script>setupTimer(") // "<script>setupTimer("
-	strScriptCl = []byte(");</script>")         // ");</script>"
+	strSetupTimerOp = []byte("setupTimer(") // "setupTimer("
+	strJsSendEvtOp  = []byte("se(null,")    // "se(null,"
 )
 
-func (c *timerImpl) Render(w Writer) {
-	w.Write(strSpanOp)
-	c.renderAttrsAndStyle(w)
-	c.renderEHandlers(w)
-	w.Write(strGT)
-
-	w.Write(strScriptOp)
+// renderSetupTimerJs renders the Javascript code which sets up the timer.
+// js_vs param holds the values which render Javascript code to be scheduled:
+//     setupTimer(compId,"jscode",timeout,repeat,active,reset);
+func (c *timerImpl) renderSetupTimerJs(w Writer, js_vs ...interface{}) {
+	w.Write(strSetupTimerOp)
 	w.Writev(int(c.id))
 	w.Write(strComma)
-	w.Writev(int(ETypeStateChange))
+	// js param
+	w.Write(strQuote)
+	w.Writevs(js_vs...)
+	w.Write(strQuote)
+	// end of js param
 	w.Write(strComma)
 	w.Writev(int(c.timeout / time.Millisecond))
 	w.Write(strComma)
@@ -146,6 +147,17 @@ func (c *timerImpl) Render(w Writer) {
 	w.Writev(c.active)
 	w.Write(strComma)
 	w.Writev(c.reset)
+	w.Write(strJsFuncCl)
+}
+
+func (c *timerImpl) Render(w Writer) {
+	w.Write(strSpanOp)
+	c.renderAttrsAndStyle(w)
+	c.renderEHandlers(w)
+	w.Write(strGT)
+
+	w.Write(strScriptOp)
+	c.renderSetupTimerJs(w, strJsSendEvtOp, int(ETypeStateChange), strComma, int(c.id), strJsFuncCl)
 	w.Write(strScriptCl)
 
 	w.Write(strSpanCl)

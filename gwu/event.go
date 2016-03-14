@@ -157,7 +157,7 @@ const (
 	KeyWin = 91
 
 	KeyNumpad0     = 96
-	KeyNumPad9     = 105
+	KeyNumpad9     = 105
 	KeyNumpadMul   = 106
 	KeyNumpadPlus  = 107
 	KeyNumpadMinus = 109
@@ -279,7 +279,7 @@ type Event interface {
 	// forkEvent forks a new Event from this one.
 	// The new event will have a parent pointing to us.
 	// Accessing/changing the session and defining post-event actions in the forked
-	// event work like if they would be done on this event.
+	// event works as if they would be done on this event.
 	forkEvent(etype EventType, src Comp) Event
 }
 

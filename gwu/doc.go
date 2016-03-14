@@ -218,8 +218,8 @@ Containers to group and lay out components:
 
 Input components to get data from users:
 	CheckBox
-	ListBox    (it's either a drop-down list or a multi-line/multi-select list box)
-	TextBox    (it's either a one-line text box or a multi-line text area)
+	ListBox     (it's either a drop-down list or a multi-line/multi-select list box)
+	TextBox     (it's either a one-line text box or a multi-line text area)
 	PasswBox
 	RadioButton
 	SwitchButton
@@ -230,6 +230,7 @@ Other components:
 	Image
 	Label
 	Link
+	SessMonitor
 	Timer
 
 
@@ -397,7 +398,7 @@ package gwu
 
 // Gowut version information.
 const (
-	GowutVersion       = "1.0.0"          // Gowut version (major.minor.maintenance[dev])
-	GowutReleaseDate   = "2016-03-08 CET" // Gowut release date
+	GowutVersion       = "1.1.0"          // Gowut version: major.minor.maintenance[-dev]
+	GowutReleaseDate   = "2016-03-14 CET" // Gowut release date
 	GowutRelDateLayout = "2006-01-02 MST" // Gowut release date layout (for time.Parse())
 )

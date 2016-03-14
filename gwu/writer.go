@@ -33,23 +33,27 @@ const cachedInts = 64
 // Render methods use these to avoid array allocations
 // when converting strings to byte slices in order to write them.
 var (
-	strSpace   = []byte(" ")  // " " (space string)
-	strQuote   = []byte(`"`)  // `"` (quotation mark)
-	strEqQuote = []byte(`="`) // `="` (equal sign and a quotation mark)
-	strComma   = []byte(",")  // "," (comma string)
-	strColon   = []byte(":")  // ":" (colon string)
-	strSemicol = []byte(";")  // ";" (semicolon string)
-	strLT      = []byte("<")  // "<" (less than string)
-	strGT      = []byte(">")  // ">" (greater than string)
+	strSpace    = []byte(" ")  // " " (space string)
+	strQuote    = []byte(`"`)  // `"` (quotation mark)
+	strEqQuote  = []byte(`="`) // `="` (equal sign and a quotation mark)
+	strComma    = []byte(",")  // "," (comma string)
+	strColon    = []byte(":")  // ":" (colon string)
+	strSemicol  = []byte(";")  // ";" (semicolon string)
+	strLT       = []byte("<")  // "<" (less than string)
+	strGT       = []byte(">")  // ">" (greater than string)
+	strParenCl  = []byte(")")  // ")" (closing parenthesis)
+	strJsFuncCl = []byte(");") // ");" (closing parenthesis and a semicolon)
 
-	strSpanOp  = []byte("<span")    // "<span"
-	strSpanCl  = []byte("</span>")  // "</span>"
-	strTableOp = []byte("<table")   // "<table"
-	strTableCl = []byte("</table>") // "</table>"
-	strTD      = []byte("<td>")     // "<td>"
-	strTR      = []byte("<tr>")     // "<tr>"
-	strTDOp    = []byte("<td")      // "<td"
-	strTROp    = []byte("<tr")      // "<tr"
+	strSpanOp   = []byte("<span")     // "<span"
+	strSpanCl   = []byte("</span>")   // "</span>"
+	strTableOp  = []byte("<table")    // "<table"
+	strTableCl  = []byte("</table>")  // "</table>"
+	strTD       = []byte("<td>")      // "<td>"
+	strTR       = []byte("<tr>")      // "<tr>"
+	strTDOp     = []byte("<td")       // "<td"
+	strTROp     = []byte("<tr")       // "<tr"
+	strScriptOp = []byte("<script>")  // "<script>"
+	strScriptCl = []byte("</script>") // "</script>"
 
 	strStyle = []byte(` style="`) // ` style="`
 	strClass = []byte(` class="`) // ` class="`

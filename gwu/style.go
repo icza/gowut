@@ -58,7 +58,7 @@ const (
 	ClrFuchsia = "Fuchsia" // Fuchsia (#FF00FF)
 	ClrGray    = "Gray"    // Gray    (#808080)
 	ClrGrey    = "Grey"    // Grey    (#808080)
-	ClrGreen    = "Green"   // Green   (#008000)
+	ClrGreen   = "Green"   // Green   (#008000)
 	ClrLime    = "Lime"    // Lime    (#00FF00)
 	ClrMaroon  = "Maroon"  // Maroon  (#800000)
 	ClrNavy    = "Navy"    // Navy    (#000080)

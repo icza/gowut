@@ -289,7 +289,7 @@ func buildWindowDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
 	p.Add(gwu.NewLabel("The Window represents the whole window, the page inside the browser."))
-	p.AddVSpace(5)
+	p.AddVSpace(20)
 	p.Add(gwu.NewLabel("The Window is the top of the component hierarchy. It is an extension of the Panel."))
 
 	return p
@@ -586,6 +586,16 @@ func buildLinkDemo(event gwu.Event) gwu.Comp {
 	return p
 }
 
+func buildSessMonitorDemo(event gwu.Event) gwu.Comp {
+	p := gwu.NewPanel()
+
+	p.Add(gwu.NewLabel("The SessMonitor component monitors and displays the session timeout and network connectivity without interacting with the session."))
+	p.AddVSpace(20)
+	p.Add(gwu.NewLabel("An example SessMonitor can be viewed on the right side of the header."))
+
+	return p
+}
+
 func buildTimerDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 	p.SetCellPadding(3)
@@ -689,11 +699,15 @@ func buildShowcaseWin(sess gwu.Session) {
 	sess.SetAttr("hiddenPan", hiddenPan)
 
 	header := gwu.NewHorizontalPanel()
-	header.Style().SetFullWidth().SetBorderBottom2(2, gwu.BrdStyleSolid, "#777777")
-	l := gwu.NewLabel("Gowut - Showcase of Features")
-	l.Style().SetFontWeight(gwu.FontWeightBold).SetFontSize("120%")
-	header.Add(l)
+	header.Style().SetFullWidth().SetBorderBottom2(2, gwu.BrdStyleSolid, "#cccccc")
+	title := gwu.NewLink("Gowut - Showcase of Features", win.Name())
+	title.SetTarget("")
+	title.Style().SetColor(gwu.ClrBlue).SetFontWeight(gwu.FontWeightBold).SetFontSize("120%").Set("text-decoration", "none")
+	header.Add(title)
 	header.AddHConsumer()
+	header.Add(gwu.NewLabel("Session timeout:"))
+	header.Add(gwu.NewSessMonitor())
+	header.AddHSpace(10)
 	header.Add(gwu.NewLabel("Theme:"))
 	themes := gwu.NewListBox([]string{"default", "debug"})
 	themes.AddEHandlerFunc(func(e gwu.Event) {
@@ -703,6 +717,7 @@ func buildShowcaseWin(sess gwu.Session) {
 	header.Add(themes)
 	header.AddHSpace(10)
 	reset := gwu.NewLink("Reset", "#")
+	reset.Style().SetColor(gwu.ClrBlue)
 	reset.SetTarget("")
 	reset.AddEHandlerFunc(func(e gwu.Event) {
 		e.RemoveSess()
@@ -764,12 +779,12 @@ func buildShowcaseWin(sess gwu.Session) {
 		return demo
 	}
 
-	links.Style().SetFullHeight().SetBorderRight2(2, gwu.BrdStyleSolid, "#777777")
+	links.Style().SetFullHeight().SetBorderRight2(2, gwu.BrdStyleSolid, "#cccccc")
 	links.AddVSpace(5)
 	homeDemo := createDemo("Home", buildHomeDemo)
 	selectDemo(homeDemo, nil)
 	links.AddVSpace(5)
-	l = gwu.NewLabel("Component Palette")
+	l := gwu.NewLabel("Component Palette")
 	l.Style().SetFontWeight(gwu.FontWeightBold).SetFontSize("110%")
 	links.Add(l)
 	links.AddVSpace(5)
@@ -801,6 +816,7 @@ func buildShowcaseWin(sess gwu.Session) {
 	createDemo("Image", buildImageDemo)
 	createDemo("Label", buildLabelDemo)
 	createDemo("Link", buildLinkDemo)
+	createDemo("SessMonitor", buildSessMonitorDemo)
 	createDemo("Timer", buildTimerDemo)
 	links.AddVConsumer()
 	setNoWrap(links)
@@ -812,7 +828,7 @@ func buildShowcaseWin(sess gwu.Session) {
 	win.CellFmt(content).Style().SetFullSize()
 
 	footer := gwu.NewHorizontalPanel()
-	footer.Style().SetFullWidth().SetBorderTop2(2, gwu.BrdStyleSolid, "#777777")
+	footer.Style().SetFullWidth().SetBorderTop2(2, gwu.BrdStyleSolid, "#cccccc")
 	footer.Add(hiddenPan)
 	footer.AddHConsumer()
 	l = gwu.NewLabel("Copyright © 2013-2016 András Belicza. All rights reserved.")
@@ -849,6 +865,9 @@ func (h SessHandler) Removed(s gwu.Session) {}
 func StartServer(appName string) {
 	// Create GUI server
 	server := gwu.NewServer(appName, "")
+	for _, headHtml := range extraHeadHtmls {
+		server.AddRootHeadHtml(headHtml)
+	}
 	server.AddStaticDir("/asdf", "w:/")
 	server.SetText("Gowut - Showcase of Features")
 
