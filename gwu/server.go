@@ -646,7 +646,7 @@ func (s *serverImpl) serveHTTP(w http.ResponseWriter, r *http.Request) {
 // renderWinList renders the window list of a session as HTML document with clickable links.
 func (s *serverImpl) renderWinList(wr http.ResponseWriter, r *http.Request, sess Session) {
 	if s.logger != nil {
-		s.logger.Println("\tRending windows list.")
+		s.logger.Println("\tRendering windows list.")
 	}
 	wr.Header().Set("Content-Type", "text/html; charset=utf-8")
 
