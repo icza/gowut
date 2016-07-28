@@ -646,7 +646,7 @@ func (s *serverImpl) serveHTTP(w http.ResponseWriter, r *http.Request) {
 // renderWinList renders the window list of a session as HTML document with clickable links.
 func (s *serverImpl) renderWinList(wr http.ResponseWriter, r *http.Request, sess Session) {
 	if s.logger != nil {
-		s.logger.Println("\tRending windows list.")
+		s.logger.Println("\tRendering windows list.")
 	}
 	wr.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -745,7 +745,7 @@ func (s *serverImpl) handleEvent(sess Session, win Window, wr http.ResponseWrite
 		s.logger.Println("\tEvent from comp:", id, " event:", etype)
 	}
 
-	event := newEventImpl(EventType(etype), comp, s, sess)
+	event := newEventImpl(EventType(etype), comp, s, sess, wr, r)
 	shared := event.shared
 
 	event.x = parseIntParam(r, paramMouseX)

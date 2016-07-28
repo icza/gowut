@@ -38,7 +38,7 @@ func open(url string) error {
 	case "darwin":
 		cmd = "open"
 	default: // "linux", "freebsd", "openbsd", "netbsd"
-		cmd = "xgd-open"
+		cmd = "xdg-open"
 	}
 	args = append(args, url)
 	return exec.Command(cmd, args...).Start()
@@ -59,7 +59,9 @@ func (s *serverImpl) Start(openWins ...string) error {
 	}
 
 	for _, winName := range openWins {
-		open(s.appUrl + winName)
+		if err := open(s.appUrl + winName); err != nil {
+			s.logger.Printf("Opening window '%s' err: %v\n", s.appUrl+winName, err)
+		}
 	}
 
 	go s.sessCleaner()

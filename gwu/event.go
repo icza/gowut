@@ -18,6 +18,7 @@
 package gwu
 
 import (
+	"net/http"
 	"strconv"
 )
 
@@ -283,6 +284,33 @@ type Event interface {
 	forkEvent(etype EventType, src Comp) Event
 }
 
+// HasRequestResponse defines methods to acquire / access
+// http.ResponseWriter and http.Request from something that supports this.
+//
+// The concrete type that implements Event does implement this too,
+// but this is not added to the Event interface intentionally to not urge the use of this.
+// Users should not rely on this as in a future implementation there might not be
+// a response and request associated with an event.
+// But this may be useful in certain scenarios, such as you need to know the client IP address,
+// or you want to use custom authentication that needs the request/response.
+//
+// To get access to these methods, simply use a type assertion, asserting that the event value
+// implements this interface. For example:
+//
+//     someButton.AddEHandlerFunc(func(e gwu.Event) {
+//         if hrr, ok := e.(gwu.HasRequestResponse); ok {
+//             req := hrr.Request()
+//             log.Println("Client addr:", req.RemoteAddr)
+//         }
+//     }, gwu.ETypeClick)
+type HasRequestResponse interface {
+	// ResponseWriter returns the associated HTTP response writer.
+	ResponseWriter() http.ResponseWriter
+
+	// Request returns the associated HTTP request.
+	Request() *http.Request
+}
+
 // Event implementation.
 type eventImpl struct {
 	etype  EventType  // Event type
@@ -308,12 +336,16 @@ type sharedEvtData struct {
 	dirtyComps  map[ID]Comp // The dirty components
 	focusedComp Comp        // Component to be focused after the event processing
 	session     Session     // Session
+
+	rw  http.ResponseWriter // ResponseWriter of the HTTP request the event was created from
+	req *http.Request       // Request of the HTTP request the event was created from
 }
 
 // newEventImpl creates a new eventImpl
-func newEventImpl(etype EventType, src Comp, server *serverImpl, session Session) *eventImpl {
+func newEventImpl(etype EventType, src Comp, server *serverImpl, session Session,
+	rw http.ResponseWriter, req *http.Request) *eventImpl {
 	e := eventImpl{etype: etype, src: src,
-		shared: &sharedEvtData{server: server, dirtyComps: make(map[ID]Comp, 2), session: session}}
+		shared: &sharedEvtData{server: server, dirtyComps: make(map[ID]Comp, 2), session: session, rw: rw, req: req}}
 	return &e
 }
 
@@ -427,6 +459,14 @@ func (e *eventImpl) forkEvent(etype EventType, src Comp) Event {
 	return &eventImpl{etype: etype, src: src, parent: e,
 		x: -1, y: -1, // Mouse coordinates are unknown in the new source component...
 		shared: e.shared}
+}
+
+func (e *eventImpl) ResponseWriter() http.ResponseWriter {
+	return e.shared.rw
+}
+
+func (e *eventImpl) Request() *http.Request {
+	return e.shared.req
 }
 
 // Handler function wrapper

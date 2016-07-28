@@ -181,12 +181,12 @@ func (c *listBoxImpl) ClearSelected() {
 
 func (c *listBoxImpl) preprocessEvent(event Event, r *http.Request) {
 	value := r.FormValue(paramCompValue)
+	c.ClearSelected()
 	if len(value) == 0 {
 		return
 	}
 
 	// Set selected indices
-	c.ClearSelected()
 	for _, sidx := range strings.Split(value, ",") {
 		if idx, err := strconv.Atoi(sidx); err == nil {
 			c.selected[idx] = true
