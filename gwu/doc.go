@@ -140,7 +140,7 @@ Here's an example how to do it:
 	func (h sessHandler) Created(s gwu.Session) {
 		win := gwu.NewWindow("login", "Login Window")
 		// ...add content to the login window...
-		s.AddWindow(win)
+		h.AddWindow(win)
 	}
 	func (h sessHandler) Removed(s gwu.Session) {}
 
