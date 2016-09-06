@@ -136,18 +136,18 @@ with the client exists, a new session will be created. A registered
 SessionHandler can be used then to create the window prior to it being served.
 Here's an example how to do it:
 	// A SessionHandler implementation:
-	type MySessHandler struct {}
-	func (h SessHandler) Created(s gwu.Session) {
+	type sessHandler struct {}
+	func (h sessHandler) Created(s gwu.Session) {
 		win := gwu.NewWindow("login", "Login Window")
 		// ...add content to the login window...
 		s.AddWindow(win)
 	}
-	func (h SessHandler) Removed(s gwu.Session) {}
+	func (h sessHandler) Removed(s gwu.Session) {}
 
 	// And to auto-create sessions for the login window:
 	server := gwu.NewServer("guitest","")
 	server.AddSessCreatorName("login", "Login Window")
-	server.AddSHandler(MySessHandler{})
+	server.AddSHandler(sessHandler{})
 
 Despite the use of sessions if you access the application remotely (e.g. not
 from localhost), security is only guaranteed if you configure the server to run
@@ -246,12 +246,12 @@ All written in Go.
 Source of this application is available here:
 https://github.com/icza/gowut/blob/master/examples/simple/simple_demo.go
 
-	type MyButtonHandler struct {
+	type myButtonHandler struct {
 		counter int
 		text    string
 	}
 
-	func (h *MyButtonHandler) HandleEvent(e gwu.Event) {
+	func (h *myButtonHandler) HandleEvent(e gwu.Event) {
 		if b, isButton := e.Src().(gwu.Button); isButton {
 			b.SetText(b.Text() + h.text)
 			h.counter++
@@ -270,7 +270,7 @@ https://github.com/icza/gowut/blob/master/examples/simple/simple_demo.go
 		// Button which changes window content
 		win.Add(gwu.NewLabel("I'm a label! Try clicking on the button=>"))
 		btn := gwu.NewButton("Click me")
-		btn.AddEHandler(&MyButtonHandler{text: ":-)"}, gwu.ETypeClick)
+		btn.AddEHandler(&myButtonHandler{text: ":-)"}, gwu.ETypeClick)
 		win.Add(btn)
 		btnsPanel := gwu.NewNaturalPanel()
 		btn.AddEHandlerFunc(func(e gwu.Event) {
@@ -398,7 +398,7 @@ package gwu
 
 // Gowut version information.
 const (
-	GowutVersion       = "v1.1.1"         // Gowut version: "v"major.minor.maintenance[-dev]
-	GowutReleaseDate   = "2016-07-28 CET" // Gowut release date
+	GowutVersion       = "v1.1.2"         // Gowut version: "v"major.minor.maintenance[-dev]
+	GowutReleaseDate   = "2016-09-06 CET" // Gowut release date
 	GowutRelDateLayout = "2006-01-02 MST" // Gowut release date layout (for time.Parse())
 )

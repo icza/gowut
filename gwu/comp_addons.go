@@ -124,7 +124,7 @@ func (c *hasUrlImpl) renderUrl(attr string, w Writer) {
 	w.WriteAttr(attr, c.url)
 }
 
-// Horizontal alignment type.
+// HAlign is the horizontal alignment type.
 type HAlign string
 
 // Horizontal alignment constants.
@@ -136,7 +136,7 @@ const (
 	HADefault = "" // Browser default (or inherited) horizontal alignment
 )
 
-// Vertical alignment type.
+// VAlign is the vertical alignment type.
 type VAlign string
 
 // Vertical alignment constants.

@@ -18,7 +18,6 @@
 package gwu
 
 import (
-	"errors"
 	"fmt"
 	"html"
 	"io"
@@ -125,7 +124,7 @@ func (w writerImpl) Writev(v interface{}) (n int, err error) {
 	}
 
 	log.Printf("Not supported type: %T\n", v)
-	return 0, errors.New(fmt.Sprintf("Not supported type: %T", v))
+	return 0, fmt.Errorf("Not supported type: %T", v)
 }
 
 func (w writerImpl) Writevs(v ...interface{}) (n int, err error) {

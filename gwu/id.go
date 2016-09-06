@@ -22,7 +22,7 @@ import (
 	"sync/atomic"
 )
 
-// The type of the ids of the components.
+// ID is the type of the ids of the components.
 type ID int
 
 // Converts an ID to a string.
@@ -30,7 +30,7 @@ func (id ID) String() string {
 	return strconv.Itoa(int(id))
 }
 
-// Converts a string to ID
+// AtoID converts a string to ID.
 func AtoID(s string) (ID, error) {
 	id, err := strconv.Atoi(s)
 

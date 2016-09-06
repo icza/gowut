@@ -1,6 +1,6 @@
 # Welcome! #
 
-[![GoDoc](https://godoc.org/github.com/icza/gowut/gwu?status.svg)](https://godoc.org/github.com/icza/gowut/gwu)
+[![GoDoc](https://godoc.org/github.com/icza/gowut/gwu?status.svg)](https://godoc.org/github.com/icza/gowut/gwu) [![Go Report Card](https://goreportcard.com/badge/github.com/icza/gowut)](https://goreportcard.com/report/github.com/icza/gowut)
 
 Gowut (Go Web UI Toolkit) is a full-featured, easy to use, platform independent Web UI Toolkit written in pure Go, no platform dependent native code is linked or called.
 

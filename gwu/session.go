@@ -99,7 +99,7 @@ type sessionImpl struct {
 	attrs    map[string]interface{} // Attributes stored in the session
 	timeout  time.Duration          // Session timeout
 
-	rwMutex_ *sync.RWMutex // RW mutex to synchronize session (and related Window and component) access
+	rwMutexF *sync.RWMutex // RW mutex to synchronize session (and related Window and component) access
 }
 
 // newSessionImpl creates a new sessionImpl.
@@ -115,7 +115,7 @@ func newSessionImpl(private bool) sessionImpl {
 
 	// Initialzie private sessions as new, but not the public session
 	return sessionImpl{id: id, isNew: private, created: now, accessed: now, windows: make(map[string]Window),
-		attrs: make(map[string]interface{}), timeout: 30 * time.Minute, rwMutex_: &sync.RWMutex{}}
+		attrs: make(map[string]interface{}), timeout: 30 * time.Minute, rwMutexF: &sync.RWMutex{}}
 }
 
 // Valid characters (bytes) to be used in session ids
@@ -226,8 +226,8 @@ func (s *sessionImpl) SetTimeout(timeout time.Duration) {
 }
 
 func (s *sessionImpl) access() {
-	s.rwMutex_.Lock()
-	defer s.rwMutex_.Unlock()
+	s.rwMutexF.Lock()
+	defer s.rwMutexF.Unlock()
 
 	s.accessed = time.Now()
 }
@@ -237,5 +237,5 @@ func (s *sessionImpl) clearNew() {
 }
 
 func (s *sessionImpl) rwMutex() *sync.RWMutex {
-	return s.rwMutex_
+	return s.rwMutexF
 }

@@ -398,7 +398,7 @@ func (c *tableImpl) renderRowTr(row int, w Writer) {
 	if rf := c.rowFmts[row]; rf == nil {
 		c.renderTr(w)
 	} else {
-		// If rf does not specify alignments, it means alignments must not be overriden,
+		// If rf does not specify alignments, it means alignments must not be overridden,
 		// default alignments of the table must be used!
 		ha, va := rf.halign, rf.valign
 		if ha == HADefault {

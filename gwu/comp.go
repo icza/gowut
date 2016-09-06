@@ -275,7 +275,7 @@ var (
 
 // rendrenderEventHandlers renders the event handlers as attributes.
 func (c *compImpl) renderEHandlers(w Writer) {
-	for etype, _ := range c.handlers {
+	for etype := range c.handlers {
 		etypeAttr := etypeAttrs[etype]
 		if len(etypeAttr) == 0 { // Only general events are added to the etypeAttrs map
 			continue
@@ -299,7 +299,7 @@ func (c *compImpl) renderEHandlers(w Writer) {
 
 // THIS IS AN EMPTY IMPLEMENTATION AS NOT ALL COMPONENTS NEED THIS.
 // THOSE WHO DO SHOULD DEFINE THEIR OWN.
-func (b *compImpl) preprocessEvent(event Event, r *http.Request) {
+func (c *compImpl) preprocessEvent(event Event, r *http.Request) {
 }
 
 func (c *compImpl) dispatchEvent(e Event) {

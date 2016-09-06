@@ -244,7 +244,7 @@ func (c *textBoxImpl) renderTextArea(w Writer) {
 
 	// New line char after the <textarea> tag is ignored.
 	// So we must render a newline after textarea, else if text value
-	// starts with a new line, it will be ommitted!
+	// starts with a new line, it will be omitted!
 	w.Write(strRows)
 	w.Writev(c.rows)
 	w.Write(strCols)

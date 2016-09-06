@@ -60,7 +60,7 @@ func (c *tabBarImpl) Remove(c2 Comp) bool {
 	return c.panelImpl.Remove(c2)
 }
 
-// Tab bar placement type.
+// TabBarPlacement is the Tab bar placement type.
 type TabBarPlacement int
 
 // Tab bar placements.

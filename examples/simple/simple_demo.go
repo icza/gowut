@@ -22,12 +22,12 @@ import (
 	"github.com/icza/gowut/gwu"
 )
 
-type MyButtonHandler struct {
+type myButtonHandler struct {
 	counter int
 	text    string
 }
 
-func (h *MyButtonHandler) HandleEvent(e gwu.Event) {
+func (h *myButtonHandler) HandleEvent(e gwu.Event) {
 	if b, isButton := e.Src().(gwu.Button); isButton {
 		b.SetText(b.Text() + h.text)
 		h.counter++
@@ -46,7 +46,7 @@ func main() {
 	// Button which changes window content
 	win.Add(gwu.NewLabel("I'm a label! Try clicking on the button=>"))
 	btn := gwu.NewButton("Click me")
-	btn.AddEHandler(&MyButtonHandler{text: ":-)"}, gwu.ETypeClick)
+	btn.AddEHandler(&myButtonHandler{text: ":-)"}, gwu.ETypeClick)
 	win.Add(btn)
 	btnsPanel := gwu.NewNaturalPanel()
 	btn.AddEHandlerFunc(func(e gwu.Event) {

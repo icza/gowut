@@ -853,13 +853,13 @@ func setNoWrap(panel gwu.Panel) {
 }
 
 // SessHandler is our session handler to build the showcases window.
-type SessHandler struct{}
+type sessHandler struct{}
 
-func (h SessHandler) Created(s gwu.Session) {
+func (h sessHandler) Created(s gwu.Session) {
 	buildShowcaseWin(s)
 }
 
-func (h SessHandler) Removed(s gwu.Session) {}
+func (h sessHandler) Removed(s gwu.Session) {}
 
 // StartServer creates and starts the Gowut GUI server.
 func StartServer(appName string) {
@@ -872,7 +872,7 @@ func StartServer(appName string) {
 	server.SetText("Gowut - Showcase of Features")
 
 	server.AddSessCreatorName("show", "Showcase of Features - Gowut")
-	server.AddSHandler(SessHandler{})
+	server.AddSHandler(sessHandler{})
 	// Just for the demo: Add an extra "Gowut-Server" header to all responses holding the Gowut version
 	server.SetHeaders(map[string][]string{
 		"Gowut-Server": {gwu.GowutVersion},

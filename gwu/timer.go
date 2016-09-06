@@ -128,15 +128,15 @@ var (
 )
 
 // renderSetupTimerJs renders the Javascript code which sets up the timer.
-// js_vs param holds the values which render Javascript code to be scheduled:
+// jsVs param holds the values which render Javascript code to be scheduled:
 //     setupTimer(compId,"jscode",timeout,repeat,active,reset);
-func (c *timerImpl) renderSetupTimerJs(w Writer, js_vs ...interface{}) {
+func (c *timerImpl) renderSetupTimerJs(w Writer, jsVs ...interface{}) {
 	w.Write(strSetupTimerOp)
 	w.Writev(int(c.id))
 	w.Write(strComma)
 	// js param
 	w.Write(strQuote)
-	w.Writevs(js_vs...)
+	w.Writevs(jsVs...)
 	w.Write(strQuote)
 	// end of js param
 	w.Write(strComma)

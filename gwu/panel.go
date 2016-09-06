@@ -27,8 +27,8 @@ type Layout int
 // Layout strategies.
 const (
 	LayoutNatural    Layout = iota // Natural layout: elements are displayed in their natural order.
-	LayoutVertical                 // Vertical layout: elements are layed out vertically.
-	LayoutHorizontal               // Horizontal layout: elements are layed out horizontally.
+	LayoutVertical                 // Vertical layout: elements are laid out vertically.
+	LayoutHorizontal               // Horizontal layout: elements are laid out horizontally.
 )
 
 // PanelView interface defines a container which stores child components

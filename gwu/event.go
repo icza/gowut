@@ -22,7 +22,7 @@ import (
 	"strconv"
 )
 
-// Event type (kind) type.
+// EventType is the event type (kind) type.
 type EventType int
 
 // Converts an Event type to a string.
@@ -55,7 +55,7 @@ const (
 	ETypeStateChange // State change
 )
 
-// Event type category.
+// EventCategory is the event type category.
 type EventCategory int
 
 // Event type categories.
@@ -102,7 +102,7 @@ var etypeFuncs map[EventType][]byte = map[EventType][]byte{
 	ETypeWinLoad:   []byte("onload"),
 	ETypeWinUnload: []byte("onbeforeunload")} // Bind it to onbeforeunload (instead of onunload) for several reasons (onunload might cause trouble for AJAX; onunload is not called in IE if page is just refreshed...)
 
-// Mouse button type.
+// MouseBtn is the mouse button type.
 type MouseBtn int
 
 // Mouse buttons
@@ -113,7 +113,7 @@ const (
 	MouseBtnRight            = 2  // Right mouse button
 )
 
-// Modifier key type.
+// ModKey is the modifier key type.
 type ModKey int
 
 // Modifier key masks.
@@ -182,7 +182,7 @@ const (
 	KeyScrollLock = 145
 )
 
-// Empty event handler which does nothing.
+// EmptyEHandler is the empty event handler which does nothing.
 const EmptyEHandler emptyEventHandler = 0
 
 // EventHandler interface defines a handler capable of handling events.
@@ -250,7 +250,7 @@ type Event interface {
 	// Note: the Window itself (which is a Comp) can also be marked dirty
 	// causing the whole window content to be re-rendered without page reload!
 	//
-	// Marking a component dirty also marks all of its decendants dirty, recursively.
+	// Marking a component dirty also marks all of its descendants dirty, recursively.
 	//
 	// Also note that components will not be re-rendered multiple times.
 	// For example if a child component and its parent component are both

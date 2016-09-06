@@ -163,7 +163,7 @@ func (c *listBoxImpl) SetSelected(i int, selected bool) {
 
 func (c *listBoxImpl) SetSelectedIndices(indices []int) {
 	// First clear selected slice
-	for i, _ := range c.selected {
+	for i := range c.selected {
 		c.selected[i] = false
 	}
 
@@ -174,7 +174,7 @@ func (c *listBoxImpl) SetSelectedIndices(indices []int) {
 }
 
 func (c *listBoxImpl) ClearSelected() {
-	for i, _ := range c.selected {
+	for i := range c.selected {
 		c.selected[i] = false
 	}
 }

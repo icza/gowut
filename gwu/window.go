@@ -124,15 +124,15 @@ func (w *windowImpl) SetFocusedCompId(id ID) {
 	w.focusedCompId = id
 }
 
-func (s *windowImpl) Theme() string {
-	return s.theme
+func (w *windowImpl) Theme() string {
+	return w.theme
 }
 
-func (s *windowImpl) SetTheme(theme string) {
-	s.theme = theme
+func (w *windowImpl) SetTheme(theme string) {
+	w.theme = theme
 }
 
-func (c *windowImpl) Render(w Writer) {
+func (w *windowImpl) Render(wr Writer) {
 	// Attaching window events is outside of the HTML tag denoted by the window's id.
 	// This means if the window is re-rendered (not reloaded), changed window event handlers
 	// will not be reflected.
@@ -140,57 +140,57 @@ func (c *windowImpl) Render(w Writer) {
 
 	// First render window event handlers as window functions.
 	found := false
-	for etype, _ := range c.handlers {
+	for etype := range w.handlers {
 		if etype.Category() != ECatWindow {
 			continue
 		}
 
 		if !found {
 			found = true
-			w.Write(strScriptOp)
+			wr.Write(strScriptOp)
 		}
 		// To render       : add<etypeFunc>(function(){se(null,etype,id);});
 		// Example (onload): addonload(function(){se(null,13,4327);});
-		w.Writevs("add", etypeFuncs[etype], "(function(){se(null,", int(etype), ",", int(c.id), ");});")
+		wr.Writevs("add", etypeFuncs[etype], "(function(){se(null,", int(etype), ",", int(w.id), ");});")
 	}
 	if found {
-		w.Write(strScriptCl)
+		wr.Write(strScriptCl)
 	}
 
 	// And now call panelImpl's Render()
-	c.panelImpl.Render(w)
+	w.panelImpl.Render(wr)
 }
 
-func (win *windowImpl) RenderWin(w Writer, s Server) {
+func (w *windowImpl) RenderWin(wr Writer, s Server) {
 	// We could optimize this (store byte slices of static strings)
 	// but windows are rendered "so rarely"...
-	w.Writes(`<html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>`)
-	w.Writees(win.text)
-	w.Writess(`</title><link href="`, s.AppPath(), pathStatic)
-	if win.theme == "" {
-		w.Writes(resNameStaticCss(s.Theme()))
+	wr.Writes(`<html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>`)
+	wr.Writees(w.text)
+	wr.Writess(`</title><link href="`, s.AppPath(), pathStatic)
+	if w.theme == "" {
+		wr.Writes(resNameStaticCss(s.Theme()))
 	} else {
-		w.Writes(resNameStaticCss(win.theme))
+		wr.Writes(resNameStaticCss(w.theme))
 	}
-	w.Writes(`" rel="stylesheet" type="text/css">`)
-	win.renderDynJs(w, s)
-	w.Writess(`<script src="`, s.AppPath(), pathStatic, resNameStaticJs, `"></script>`)
-	w.Writess(win.heads...)
-	w.Writes("</head><body>")
+	wr.Writes(`" rel="stylesheet" type="text/css">`)
+	w.renderDynJs(wr, s)
+	wr.Writess(`<script src="`, s.AppPath(), pathStatic, resNameStaticJs, `"></script>`)
+	wr.Writess(w.heads...)
+	wr.Writes("</head><body>")
 
-	win.Render(w)
+	w.Render(wr)
 
-	w.Writes("</body></html>")
+	wr.Writes("</body></html>")
 }
 
 // renderDynJs renders the dynamic JavaScript codes of Gowut.
-func (win *windowImpl) renderDynJs(w Writer, s Server) {
-	w.Write(strScriptOp)
-	w.Writess("var _pathApp='", s.AppPath(), "';")
-	w.Writess("var _pathSessCheck=_pathApp+'", pathSessCheck, "';")
-	w.Writess("var _pathWin='", s.AppPath(), win.name, "/';")
-	w.Writess("var _pathEvent=_pathWin+'", pathEvent, "';")
-	w.Writess("var _pathRenderComp=_pathWin+'", pathRenderComp, "';")
-	w.Writess("var _focCompId='", win.focusedCompId.String(), "';")
-	w.Write(strScriptCl)
+func (w *windowImpl) renderDynJs(wr Writer, s Server) {
+	wr.Write(strScriptOp)
+	wr.Writess("var _pathApp='", s.AppPath(), "';")
+	wr.Writess("var _pathSessCheck=_pathApp+'", pathSessCheck, "';")
+	wr.Writess("var _pathWin='", s.AppPath(), w.name, "/';")
+	wr.Writess("var _pathEvent=_pathWin+'", pathEvent, "';")
+	wr.Writess("var _pathRenderComp=_pathWin+'", pathRenderComp, "';")
+	wr.Writess("var _focCompId='", w.focusedCompId.String(), "';")
+	wr.Write(strScriptCl)
 }
