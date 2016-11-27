@@ -1,0 +1,18 @@
+
+Changes and new features in 1.1.0:
+----------------------------------
+
+-A new SessMonitor component which can be used to monitor and display session timeout and network connectivity at the client side without interacting with the session.
+
+-New method in Server: SetAppRootHandler().
+With this you can now set your own logic to provide response to the app root path (when no window name is specified).
+The default function renders the window list, including authenticated windows and session creators - with clickable links.
+
+-New method in Window: RemoveHeadHtml() which removes an HTML head text that was previously added with AddHeadHtml().
+
+-New methods in Server: AddRootHeadHtml() and RemoveRootHeadHtml().
+These are similar to Window.AddHeadHtml() and Window.RemoveHeadHtml(), but these relate to extra head HTML text that are rendered for the window list page (app root).
+
+-Showcase of feature demo app improvements.
+
+-Other minor changes, improvements and optimization.

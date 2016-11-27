@@ -1,0 +1,56 @@
+
+-New event response action: show a dialog (e.g. confirmation, input).
+After dialog is closed, it should generate a new event transferring the action/input from the dialog.
+
+-Clicking on the icon of the Expander's header should also expand/collapse.
+This might require to add the icon as a separate component, and also register event handler to it.
+(Unless the style of the header's component is modified - which I want to avoid.)
+
+-Event request might contain rendered dirty comps right away, making additional calls to render comps needless -> faster response overall
+
+-Include ohlow widgets in the Html demo of the showcase app? https://www.ohloh.net/p/gowut/widgets
+
+-New param when sending/receiving actions: start cycle to detect if server was restarted.
+
+-Make Showcase app available live (on AppEngine)
+
+-Additional "internal" events:
+	-link activated (maybe this is already covered with ETYPE_ONCLICK? check it!)
+	-image loaded/failed
+
+-Refactor: TabBarPlacement => SidePlacement (same constants: TOP, BOTTOM, LEFT, RIGHT)?
+
+-ImageButton or SetImage() method for Button
+
+-Implement Comp.RemoveEHandler() and Comp.RemoveEHandlerFunc() (and use it when removing tabs or expander headers...)
+
+-New components:
+	-new comps for input type (problem: weak support, mostly just by Chrome and Opera): date; color; range (jslider)
+	-SuggestBox
+	-Absolute Panel
+	-Dialogs/Popups
+	-Slider
+	-iframe, in the showcase app it should link/contain the source code of the showcase app!
+	-ProgressBar
+	-Form (+ fileuploader, submit button)
+	-Audio and Video (HTML5)
+	-YouTube
+
+
+-On client side display a progress icon while waiting for events or refreshing comps.
+Also display an error icon if an ajax call fails, gather messages and list them all when clicked.
+
+
+-Allow replacing root window (at Server)
+	-Consider a Home Window (also replacable)
+
+
+-Ability to "push" from server to client (not just when an event is received).
+	-websocket?
+
+-Somehow save window state and reload. (serialization)
+
+-LIMITATIONS @ doc.go
+
+-More return actions for events: "redirect to a URL (e.g. another window)", "show an alert or confirm. dialog"
+

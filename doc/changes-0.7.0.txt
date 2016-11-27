@@ -1,0 +1,30 @@
+
+Changes and new features in 0.7.0:
+----------------------------------
+
+-A new example application: "Showcase of Features".
+The application is written using Gowut (of course) and showcases the component library.
+You can start it by typing (from the root of your GOPATH):
+go run src/code.google.com/p/gowut/examples/showcase.go
+
+-New component: Expander
+Expander shows and hides a content component when clicking on the header component.
+
+-A new TableView interface which defines methods associated with a component rendered into a table.
+Allows changing border, cell spacing, cell padding and default horizontal and vertical alignment for example.
+Used for: Panel, Table, TabPanel (and TabBar)
+
+-Added many new methods and constants to the style builder.
+
+-Panel improvements:
+* Constructors to create panels initialized with a different layout, e.g. NewHorizontalPanel().
+* New helper methods to add space consumer components.
+* New methods as part of the TableView.
+
+-Changed CSS styles (beautified) of many components.
+
+-CheckBox and RadioButton now have additional style classes for the disabled state.
+
+-"Mass" code optimization.
+
+-Other minor changes, improvements and bug fixes.

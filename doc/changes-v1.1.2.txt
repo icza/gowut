@@ -1,0 +1,6 @@
+
+Changes and new features in v1.1.2:
+----------------------------------
+
+-Many code optimization, code formatting and grammar fixing to have an A+ Go Report Card rating!
+https://goreportcard.com/report/github.com/icza/gowut

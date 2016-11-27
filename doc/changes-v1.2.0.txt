@@ -1,0 +1,8 @@
+
+Changes and new features in v1.2.0:
+----------------------------------
+
+-Window list has been rewritten to use Gowut components.
+
+-Encoded form of AppPath is used when specifying Cookie paths.
+For details, see https://github.com/icza/gowut/issues/27

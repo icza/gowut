@@ -1,0 +1,29 @@
+
+Changes and new features in 1.0.0:
+----------------------------------
+
+-Exported a new Writer which is used to render components.
+A value of this Writer is passed to Comp.Render().
+It is now possible to use components implemented entirely by you (this Writer is the last piece that was not exported previously), or you can now change the Render() implementation.
+
+-Renamed all identifiers (constants and variables) to conform to the Go naming conventions (from UPPER_CASE to CamelCase).
+This is a backward incompatible change.
+Renaming rule is simple and consistent, for example CLR_RED => ClrRed, ETYPE_CLICK => ETypeClick etc.
+
+-New methods in Server: SetHeader() and Header().
+You can use these to set HTTP response headers that will be added to all responses.
+For antecedent, see issue #10: https://github.com/icza/gowut/issues/10
+
+-Table.Add() now only ensures the table has enough rows, and enough cells in the row.
+Previously it called Table.EnsureSize() if the cell was nonexistent.
+
+-New methods in Table: Trim() and TrimRow().
+These come handy for example if the table contains cells where colspan > 1 is set.
+By calling this method we can ensure no empty cells will be rendered at the end of such rows.
+For antecedent, see issue #11: https://github.com/icza/gowut/issues/11
+
+-Made changes to make it work on Google App Engine (GAE).
+Gowut and the Gowut "Showcase of Features" demo app can now be run on GAE.
+Live demo is available here: https://gowut-demo.appspot.com/show
+
+-Other minor changes, improvements and optimization.

@@ -1,0 +1,25 @@
+
+Changes and new features in 0.8.0:
+----------------------------------
+
+-Significant event system improvements.
+* Event types are now categorized. This category can be accessed with EventType.Category(). Events that existed before fall under the ECAT_GENERAL category. These can be used/added to any components.
+* 2 new event types in the ECAT_WINDOW category: ETYPE_WIN_LOAD and ETYPE_WIN_UNLOAD. These can be used to detect the window load and unload events. They are to be used for Window only.
+* A new event type in the ECAT_INTERNAL category: ETYPE_STATE_CHANGE. This is an internal event type which is related to state changes in component internals such as changing selected tab (TabPanel) or expanding/collapsing an Expander.
+  These internal events usually have a parent event designating the source sub-component (such as a tab component of a TabPanel or the header component of an Expander) and the mouse coordinates for example.
+
+-Event sending from clients are now asynchronous (instead of synchronous). The GUI Server implements proper RW locking.
+Component re-rendering is still synchronous (to avoid browser specific DOM rendering errors).
+
+-Server now has an AddStaticDir() method which can be used to register a folder whose content will be served (recursively) by the server when requested.
+For example you can place your images, custom CSS files and any other static content in a folder, tell the Server about this folder with the AddStaticDir() method,
+and you can reference these files in your components.
+
+-A new component: Timer. You can use this to generate a timed event or a series of timed events periodically.
+Practical uses include refreshing a component periodically, or checking if a Window is still open.
+
+-Set a max age for the gwu session id cookie (to preserve session id after browser restart).
+
+-The 'Showcase of Features' example app has been updated to demonstrate the new features.
+
+-Other minor changes, improvements and more optimization.
