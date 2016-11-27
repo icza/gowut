@@ -19,11 +19,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/icza/gowut/gwu"
 	"log"
 	"math/rand"
 	"os"
 	"strconv"
+
+	"github.com/icza/gowut/gwu"
 )
 
 type myButtonHandler struct {
@@ -319,9 +320,9 @@ func (h sessHandler) Removed(s gwu.Session) {
 
 func main() {
 	// Create GUI server
-	server := gwu.NewServer("guitest", "")
-	//folder := "../../../../../../test_tls/"
-	//server := gwu.NewServerTLS("guitest", "", folder+"cert.pem", folder+"key.pem")
+	//server := gwu.NewServer("guitest", "")
+	folder := "test_tls/"
+	server := gwu.NewServerTLS("guitest", "", folder+"cert.pem", folder+"key.pem")
 	server.SetText("Test GUI Application")
 
 	server.AddSessCreatorName("login", "Login Window")
