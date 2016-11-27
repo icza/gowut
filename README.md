@@ -4,7 +4,7 @@
 
 Gowut (Go Web UI Toolkit) is a full-featured, easy to use, platform independent Web UI Toolkit written in pure Go, no platform dependent native code is linked or called.
 
-This project is for public releases and for issue tracking of Gowut. Development takes place in the [gowut.dev](https://github.com/icza/gowut.dev) project.
+Development takes place in the `dev` branch: https://github.com/icza/gowut/tree/dev
 
 For News, documentation and examples please visit the **Gowut Home Page** here:
 
@@ -14,17 +14,17 @@ For News, documentation and examples please visit the **Gowut Home Page** here:
 
 To quickly install (or update to) the **latest** version, type:
 
-    go get -u github.com/icza/gowut/gwu
+    go get -u github.com/icza/gowut/...
 
 ## Quick test ##
 
-To quickly test it and see it in action, run the following example applications (assuming you're in the root of your GOPATH):
+To quickly test it and see it in action, run the following example applications (assuming you're in the root of your `GOPATH`):
 
 **1. Showcase of Features.**
 
 This one auto-opens itself in your default browser.
 
-    go run src/github.com/icza/gowut/examples/showcase/showcase.go
+    go run src/github.com/icza/gowut/_examples/showcase/showcase.go
 
 The Showcase of Features is also available live: https://gowut-demo.appspot.com/show
 
@@ -32,13 +32,13 @@ The Showcase of Features is also available live: https://gowut-demo.appspot.com/
 
 This one auto-opens itself in your default browser.
 
-    go run src/github.com/icza/gowut/examples/simple/simple_demo.go
+    go run src/github.com/icza/gowut/_examples/simple/simple_demo.go
 
 **3. Login window example with session management.**
 
-    go run src/github.com/icza/gowut/examples/login/login_demo.go
+    go run src/github.com/icza/gowut/_examples/login/login_demo.go
 
-Open the page http://localhost:3434/guitest/ in your browser to see it.
+Open the page https://localhost:3434/guitest/ in your browser to see it.
 
 ## Godoc of Gowut ##
 

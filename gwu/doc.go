@@ -68,7 +68,7 @@ to see the changes.
 To quickly test it and see it in action, run the "Showcase of Features"
 application by typing: (assuming you're in the root of your GOPATH)
 
-	go run src/github.com/icza/gowut/examples/showcase/showcase.go
+	go run src/github.com/icza/gowut/_examples/showcase/showcase.go
 
 
 Features of Gowut
@@ -244,7 +244,7 @@ structure) will be seen without page reload.
 All written in Go.
 
 Source of this application is available here:
-https://github.com/icza/gowut/blob/master/examples/simple/simple_demo.go
+https://github.com/icza/gowut/blob/master/_examples/simple/simple_demo.go
 
 	type myButtonHandler struct {
 		counter int
@@ -384,9 +384,7 @@ Author email: gmail.com, user name: iczaaa
 
 Home page: https://sites.google.com/site/gowebuitoolkit/
 
-Source code (public releases): https://github.com/icza/gowut
-
-Source code (development): https://github.com/icza/gowut.dev
+Source code: https://github.com/icza/gowut
 
 Discussion forum: https://groups.google.com/d/forum/gowebuitoolkit
 

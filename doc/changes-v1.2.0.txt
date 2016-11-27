@@ -2,6 +2,9 @@
 Changes and new features in v1.2.0:
 ----------------------------------
 
+-Renamed github.com/icza/gowut/examples to _examples, making it exclude from
+build tools by default. You can still run the examples using "go run".
+
 -Window list has been rewritten to use Gowut components.
 
 -Encoded form of AppPath is used when specifying Cookie paths.
