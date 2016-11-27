@@ -49,8 +49,8 @@ Also display an error icon if an ajax call fails, gather messages and list them 
 	-websocket?
 
 -Somehow save window state and reload. (serialization)
+	-Problem: how to save / reload event handlers (event handler registry?)
 
 -LIMITATIONS @ doc.go
 
 -More return actions for events: "redirect to a URL (e.g. another window)", "show an alert or confirm. dialog"
-
