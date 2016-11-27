@@ -264,7 +264,7 @@ https://github.com/icza/gowut/blob/master/examples/simple/simple_demo.go
 		// Create and build a window
 		win := gwu.NewWindow("main", "Test GUI Window")
 		win.Style().SetFullWidth()
-		win.SetHAlign(gwu.HaCenter)
+		win.SetHAlign(gwu.HACenter)
 		win.SetCellPadding(2)
 
 		// Button which changes window content
@@ -398,7 +398,7 @@ package gwu
 
 // Gowut version information.
 const (
-	GowutVersion       = "v1.1.2"         // Gowut version: "v"major.minor.maintenance[-dev]
+	GowutVersion       = "v1.2.0-dev"     // Gowut version: "v"major.minor.maintenance[-dev]
 	GowutReleaseDate   = "2016-09-06 CET" // Gowut release date
 	GowutRelDateLayout = "2006-01-02 MST" // Gowut release date layout (for time.Parse())
 )

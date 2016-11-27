@@ -23,6 +23,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
+	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -208,7 +210,8 @@ type serverImpl struct {
 	addr               string             // Server address
 	secure             bool               // Tells if the server is configured to run in secure (HTTPS) mode
 	appPath            string             // Application path
-	appUrl             string             // Application URL
+	appUrlString       string             // Application URL string
+	appURL             *url.URL           // Application URL, parsed
 	sessions           map[string]Session // Sessions
 	certFile, keyFile  string             // Certificate and key files for secure (HTTPS) mode
 	sessCreatorNames   map[string]string  // Session creator names
@@ -257,12 +260,16 @@ func newServerImpl(appName, addr, certFile, keyFile string) *serverImpl {
 
 	if certFile == "" || keyFile == "" {
 		s.secure = false
-		s.appUrl = "http://" + addr + s.appPath
+		s.appUrlString = "http://" + addr + s.appPath
 	} else {
 		s.secure = true
-		s.appUrl = "https://" + addr + s.appPath
+		s.appUrlString = "https://" + addr + s.appPath
 		s.certFile = certFile
 		s.keyFile = keyFile
+	}
+	var err error
+	if s.appURL, err = url.Parse(s.appUrlString); err != nil {
+		panic(fmt.Sprintf("Parse %q: %+v", s.appUrlString, err))
 	}
 
 	s.appRootHandlerFunc = s.renderWinList
@@ -275,7 +282,7 @@ func (s *serverImpl) Secure() bool {
 }
 
 func (s *serverImpl) AppUrl() string {
-	return s.appUrl
+	return s.appUrlString
 }
 
 func (s *serverImpl) AppPath() string {
@@ -359,8 +366,12 @@ func (s *serverImpl) addSessCookie(sess Session, w http.ResponseWriter) {
 	// HttpOnly: do not allow non-HTTP access to it (like javascript) to prevent stealing it...
 	// Secure: only send it over HTTPS
 	// MaxAge: to specify the max age of the cookie in seconds, else it's a session cookie and gets deleted after the browser is closed.
-	c := http.Cookie{Name: gwuSessidCookie, Value: sess.Id(), Path: s.appPath, HttpOnly: true, Secure: s.secure,
-		MaxAge: 72 * 60 * 60} // 72 hours max age
+	c := http.Cookie{
+		Name: gwuSessidCookie, Value: sess.Id(),
+		Path:     s.appURL.EscapedPath(),
+		HttpOnly: true, Secure: s.secure,
+		MaxAge: 72 * 60 * 60, // 72 hours max age
+	}
 	http.SetCookie(w, &c)
 
 	sess.clearNew()
@@ -643,53 +654,56 @@ func (s *serverImpl) serveHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// renderWinList renders the window list of a session as HTML document with clickable links.
+// renderWinList builds a temporary Window, adds links to the windows of
+// a session, and renders the Window.
 func (s *serverImpl) renderWinList(wr http.ResponseWriter, r *http.Request, sess Session) {
 	if s.logger != nil {
 		s.logger.Println("\tRendering windows list.")
 	}
-	wr.Header().Set("Content-Type", "text/html; charset=utf-8")
+	win := NewWindow("windowList", "Window list")
+	panel := NewNaturalPanel()
+	win.Add(panel)
 
-	w := NewWriter(wr)
-
-	w.Writes(`<html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>`)
-	w.Writees(s.text)
-	w.Writes(" - Window list</title>")
-	w.Writess(s.rootHeads...)
-	w.Writes("</head><body><h2>")
-	w.Writees(s.text)
-	w.Writes(" - Window list</h2>")
+	addLinks := func(title string, nameTexts [][2]string) {
+		if len(nameTexts) == 0 {
+			return
+		}
+		p := NewVerticalPanel()
+		panel.Add(p)
+		p.Add(NewLabel(title))
+		for _, nameText := range nameTexts {
+			p.Add(NewLink(nameText[1], path.Join(s.appPath, nameText[0])))
+		}
+	}
 
 	// Render both private and public session windows
 	sessions := make([]Session, 1, 2)
 	sessions[0] = sess
+	nameTexts := make([][2]string, 0, len(s.sessCreatorNames)+1)
 	if sess.Private() {
 		sessions = append(sessions, &s.sessionImpl)
-	} else {
+	} else if len(s.sessCreatorNames) > 0 {
 		// No private session yet, render session creators:
-		if len(s.sessCreatorNames) > 0 {
-			w.Writes("Session creators:<ul>") // TODO needs a better name
-			for name, text := range s.sessCreatorNames {
-				w.Writess(`<li><a href="`, s.appPath, name, `">`, text, "</a>")
-			}
-			w.Writes("</ul>")
+		nameTexts = nameTexts[:0]
+		for name, text := range s.sessCreatorNames {
+			nameTexts = append(nameTexts, [2]string{name, text})
 		}
+		addLinks("Session creators:", nameTexts)
 	}
 
 	for _, session := range sessions {
+		text := "Public windows:"
 		if session.Private() {
-			w.Writes("Authenticated windows:")
-		} else {
-			w.Writes("Public windows:")
+			text = "Authenticated windows:"
 		}
-		w.Writes("<ul>")
+		nameTexts = nameTexts[:0]
 		for _, win := range session.SortedWins() {
-			w.Writess(`<li><a href="`, s.appPath, win.Name(), `">`, win.Text(), "</a>")
+			nameTexts = append(nameTexts, [2]string{win.Name(), win.Text()})
 		}
-		w.Writes("</ul>")
+		addLinks(text, nameTexts)
 	}
 
-	w.Writes("</body></html>")
+	win.RenderWin(NewWriter(wr), s)
 }
 
 // renderComp renders just a component.

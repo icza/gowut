@@ -53,14 +53,15 @@ func (s *serverImpl) Start(openWins ...string) error {
 		s.serveStatic(w, r)
 	})
 
-	log.Println("Starting GUI server on:", s.appUrl)
+	appURL := s.AppUrl()
+	log.Println("Starting GUI server on:", appURL)
 	if s.logger != nil {
-		s.logger.Println("Starting GUI server on:", s.appUrl)
+		s.logger.Println("Starting GUI server on:", appURL)
 	}
 
 	for _, winName := range openWins {
-		if err := open(s.appUrl + winName); err != nil {
-			s.logger.Printf("Opening window '%s' err: %v\n", s.appUrl+winName, err)
+		if err := open(appURL + winName); err != nil {
+			s.logger.Printf("Opening window '%s' err: %v\n", appURL+winName, err)
 		}
 	}
 
