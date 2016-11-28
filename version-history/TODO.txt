@@ -12,8 +12,6 @@ This might require to add the icon as a separate component, and also register ev
 
 -New param when sending/receiving actions: start cycle to detect if server was restarted.
 
--Make Showcase app available live (on AppEngine)
-
 -Additional "internal" events:
 	-link activated (maybe this is already covered with ETYPE_ONCLICK? check it!)
 	-image loaded/failed
