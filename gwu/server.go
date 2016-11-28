@@ -660,19 +660,22 @@ func (s *serverImpl) renderWinList(wr http.ResponseWriter, r *http.Request, sess
 	if s.logger != nil {
 		s.logger.Println("\tRendering windows list.")
 	}
-	win := NewWindow("windowList", "Window list")
-	panel := NewNaturalPanel()
-	win.Add(panel)
+	win := NewWindow("windowList", s.text+" - Window List")
+
+	titleLabel := NewLabel(s.text + " - Window List")
+	titleLabel.Style().SetFontWeight(FontWeightBold).SetFontSize("1.3em")
+	win.Add(titleLabel)
 
 	addLinks := func(title string, nameTexts [][2]string) {
 		if len(nameTexts) == 0 {
 			return
 		}
-		p := NewVerticalPanel()
-		panel.Add(p)
-		p.Add(NewLabel(title))
+		win.AddVSpace(10)
+		win.Add(NewLabel(title))
 		for _, nameText := range nameTexts {
-			p.Add(NewLink(nameText[1], path.Join(s.appPath, nameText[0])))
+			link := NewLink(nameText[1], path.Join(s.appPath, nameText[0]))
+			link.Style().SetPaddingLeftPx(20)
+			win.Add(link)
 		}
 	}
 

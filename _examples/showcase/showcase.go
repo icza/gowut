@@ -22,9 +22,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/icza/gowut/examples/showcase/showcasecore"
 	"log"
 	"os"
+
+	"github.com/icza/gowut/_examples/showcase/showcasecore"
 )
 
 func main() {
