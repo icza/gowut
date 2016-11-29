@@ -9,3 +9,7 @@ build tools by default. You can still run the examples using "go run".
 
 -Encoded form of AppPath is used when specifying Cookie paths.
 For details, see https://github.com/icza/gowut/issues/27
+
+-Session creation and removal messages are now only logged with log.Println()
+if no logger is set at the Server.
+For details, see https://github.com/icza/gowut.dev/issues/7
