@@ -317,9 +317,10 @@ func (s *serverImpl) newSession(e *eventImpl) Session {
 	// Store new session
 	s.sessions[sess.Id()] = sess
 
-	log.Println("SESSION created:", sess.Id())
 	if s.logger != nil {
 		s.logger.Println("SESSION created:", sess.Id())
+	} else {
+		log.Println("SESSION created:", sess.Id())
 	}
 
 	// Notify session handlers
@@ -346,9 +347,10 @@ func (s *serverImpl) removeSess(e *eventImpl) {
 // public session is a no-op.
 func (s *serverImpl) removeSess2(sess Session) {
 	if sess.Private() {
-		log.Println("SESSION removed:", sess.Id())
 		if s.logger != nil {
 			s.logger.Println("SESSION removed:", sess.Id())
+		} else {
+			log.Println("SESSION removed:", sess.Id())
 		}
 
 		// Notify session handlers
