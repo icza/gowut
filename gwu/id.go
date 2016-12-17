@@ -23,19 +23,19 @@ import (
 )
 
 // ID is the type of the ids of the components.
-type ID int
+type ID uint64
 
 // Converts an ID to a string.
 func (id ID) String() string {
-	return strconv.Itoa(int(id))
+	return strconv.FormatUint(uint64(id), 16)
 }
 
 // AtoID converts a string to ID.
 func AtoID(s string) (ID, error) {
-	id, err := strconv.Atoi(s)
+	id, err := strconv.ParseUint(s, 16, 64)
 
 	if err != nil {
-		return ID(-1), err
+		return ID(0), err
 	}
 	return ID(id), nil
 }
@@ -43,9 +43,9 @@ func AtoID(s string) (ID, error) {
 // Component id generation and provider
 
 // Last used value for ID
-var lastId = new(int64)
+var lastId uint64
 
 // nextCompId returns a unique component id
 func nextCompId() ID {
-	return ID(atomic.AddInt64(lastId, 1))
+	return ID(atomic.AddUint64(&lastId, 1))
 }
