@@ -26,7 +26,7 @@ import (
 // interacting with the session.
 //
 // Default style classes: "gwu-SessMonitor", "gwu-SessMonitor-Expired",
-// ".gwu-SessMonitor-Error"
+// "gwu-SessMonitor-Error"
 type SessMonitor interface {
 	// SessMonitor is a Timer, but it does not generate Events!
 	Timer
