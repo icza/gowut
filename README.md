@@ -16,13 +16,16 @@ To quickly install (or update to) the **latest** version, type:
 
 ## Quick test ##
 
-To quickly test it and see it in action, run the following example applications (assuming you're in the root of your `GOPATH`):
+To quickly test it and see it in action, run the following example applications.
+Let's assume you're in the root of the Gowut project:
+
+    cd $GOPATH/src/github.com/icza/gowut
 
 **1. Showcase of Features.**
 
 This one auto-opens itself in your default browser.
 
-    go run src/github.com/icza/gowut/_examples/showcase/showcase.go
+    go run _examples/showcase/showcase.go
 
 The Showcase of Features is also available live: https://gowut-demo.appspot.com/show
 
@@ -30,13 +33,16 @@ The Showcase of Features is also available live: https://gowut-demo.appspot.com/
 
 This one auto-opens itself in your default browser.
 
-    go run src/github.com/icza/gowut/_examples/simple/simple_demo.go
+    go run _examples/simple/simple_demo.go
 
 **3. Login window example with session management.**
 
-    go run src/github.com/icza/gowut/_examples/login/login_demo.go
+Change directory so that the demo can read the test cert and key files:
 
-Open the page https://localhost:3434/guitest/ in your browser to see it.
+    cd _examples/login
+    go run login_demo.go
+
+Open the page `https://localhost:3434/guitest/` in your browser to see it.
 
 ## Godoc of Gowut ##
 
