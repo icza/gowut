@@ -45,7 +45,7 @@ The UI can be simply assembled hierarchically from containers
 and components. Components can generate events which are dispatched
 to event handlers - also written in pure Go.
 If there is no component for an HTML tag you wish to use, you can
-use the Html component to wrap your custom HTML code. Components also allow
+use the HTML component to wrap your custom HTML code. Components also allow
 you to specify custom HTML attributes that will be added for their
 (wrapper) HTML tags.
 
@@ -226,7 +226,7 @@ Input components to get data from users:
 
 Other components:
 	Button
-	Html
+	HTML
 	Image
 	Label
 	Link
@@ -397,6 +397,6 @@ package gwu
 // Gowut version information.
 const (
 	GowutVersion       = "v1.2.0-dev"     // Gowut version: "v"major.minor.maintenance[-dev]
-	GowutReleaseDate   = "2016-09-06 CET" // Gowut release date
+	GowutReleaseDate   = "2017-01-16 CET" // Gowut release date
 	GowutRelDateLayout = "2006-01-02 MST" // Gowut release date layout (for time.Parse())
 )

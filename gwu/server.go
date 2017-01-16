@@ -41,9 +41,9 @@ const (
 // Parameters passed between the browser and the server.
 const (
 	paramEventType     = "et"   // Event type parameter name
-	paramCompId        = "cid"  // Component id parameter name
+	paramCompID        = "cid"  // Component id parameter name
 	paramCompValue     = "cval" // Component value parameter name
-	paramFocusedCompId = "fcid" // Focused component id parameter name
+	paramFocusedCompID = "fcid" // Focused component id parameter name
 	paramMouseWX       = "mwx"  // Mouse x pixel coordinate (inside window)
 	paramMouseWY       = "mwy"  // Mouse y pixel coordinate (inside window)
 	paramMouseX        = "mx"   // Mouse x pixel coordinate (relative to source component)
@@ -98,8 +98,8 @@ type Server interface {
 	// in secure (HTTPS) mode or in HTTP mode.
 	Secure() bool
 
-	// AppUrl returns the application URL string.
-	AppUrl() string
+	// AppURL returns the application URL string.
+	AppURL() string
 
 	// AppPath returns the application path string.
 	AppPath() string
@@ -175,15 +175,15 @@ type Server interface {
 	// Logger returns the logger that is used to log incoming requests.
 	Logger() *log.Logger
 
-	// AddRootHeadHtml adds an HTML text which will be included
+	// AddRootHeadHTML adds an HTML text which will be included
 	// in the HTML <head> section of the window list page (the app root).
 	// Note that these will be ignored if you take over the app root
 	// (by calling SetAppRootHandler).
-	AddRootHeadHtml(html string)
+	AddRootHeadHTML(html string)
 
-	// RemoveRootHeadHtml removes an HTML head text
-	// that was previously added with AddRootHeadHtml().
-	RemoveRootHeadHtml(html string)
+	// RemoveRootHeadHTML removes an HTML head text
+	// that was previously added with AddRootHeadHTML().
+	RemoveRootHeadHTML(html string)
 
 	// SetAppRootHandler sets a function that is called when the app root is requested.
 	// The default function renders the window list, including authenticated windows
@@ -210,7 +210,7 @@ type serverImpl struct {
 	addr               string             // Server address
 	secure             bool               // Tells if the server is configured to run in secure (HTTPS) mode
 	appPath            string             // Application path
-	appUrlString       string             // Application URL string
+	appURLString       string             // Application URL string
 	appURL             *url.URL           // Application URL, parsed
 	sessions           map[string]Session // Sessions
 	certFile, keyFile  string             // Certificate and key files for secure (HTTPS) mode
@@ -260,16 +260,16 @@ func newServerImpl(appName, addr, certFile, keyFile string) *serverImpl {
 
 	if certFile == "" || keyFile == "" {
 		s.secure = false
-		s.appUrlString = "http://" + addr + s.appPath
+		s.appURLString = "http://" + addr + s.appPath
 	} else {
 		s.secure = true
-		s.appUrlString = "https://" + addr + s.appPath
+		s.appURLString = "https://" + addr + s.appPath
 		s.certFile = certFile
 		s.keyFile = keyFile
 	}
 	var err error
-	if s.appURL, err = url.Parse(s.appUrlString); err != nil {
-		panic(fmt.Sprintf("Parse %q: %+v", s.appUrlString, err))
+	if s.appURL, err = url.Parse(s.appURLString); err != nil {
+		panic(fmt.Sprintf("Parse %q: %+v", s.appURLString, err))
 	}
 
 	s.appRootHandlerFunc = s.renderWinList
@@ -281,8 +281,8 @@ func (s *serverImpl) Secure() bool {
 	return s.secure
 }
 
-func (s *serverImpl) AppUrl() string {
-	return s.appUrlString
+func (s *serverImpl) AppURL() string {
+	return s.appURLString
 }
 
 func (s *serverImpl) AppPath() string {
@@ -315,12 +315,12 @@ func (s *serverImpl) newSession(e *eventImpl) Session {
 		e.shared.session = sess
 	}
 	// Store new session
-	s.sessions[sess.Id()] = sess
+	s.sessions[sess.ID()] = sess
 
 	if s.logger != nil {
-		s.logger.Println("SESSION created:", sess.Id())
+		s.logger.Println("SESSION created:", sess.ID())
 	} else {
-		log.Println("SESSION created:", sess.Id())
+		log.Println("SESSION created:", sess.ID())
 	}
 
 	// Notify session handlers
@@ -348,16 +348,16 @@ func (s *serverImpl) removeSess(e *eventImpl) {
 func (s *serverImpl) removeSess2(sess Session) {
 	if sess.Private() {
 		if s.logger != nil {
-			s.logger.Println("SESSION removed:", sess.Id())
+			s.logger.Println("SESSION removed:", sess.ID())
 		} else {
-			log.Println("SESSION removed:", sess.Id())
+			log.Println("SESSION removed:", sess.ID())
 		}
 
 		// Notify session handlers
 		for _, handler := range s.sessionHandlers {
 			handler.Removed(sess)
 		}
-		delete(s.sessions, sess.Id())
+		delete(s.sessions, sess.ID())
 	}
 }
 
@@ -369,7 +369,7 @@ func (s *serverImpl) addSessCookie(sess Session, w http.ResponseWriter) {
 	// Secure: only send it over HTTPS
 	// MaxAge: to specify the max age of the cookie in seconds, else it's a session cookie and gets deleted after the browser is closed.
 	c := http.Cookie{
-		Name: gwuSessidCookie, Value: sess.Id(),
+		Name: gwuSessidCookie, Value: sess.ID(),
 		Path:     s.appURL.EscapedPath(),
 		HttpOnly: true, Secure: s.secure,
 		MaxAge: 72 * 60 * 60, // 72 hours max age
@@ -431,7 +431,7 @@ func (s *serverImpl) AddStaticDir(path, dir string) error {
 	}
 
 	if path == "" {
-		return errors.New("path cannot be empty string!")
+		return errors.New("path cannot be empty string")
 	}
 
 	if !strings.HasSuffix(path, "/") {
@@ -472,11 +472,11 @@ func (s *serverImpl) Logger() *log.Logger {
 	return s.logger
 }
 
-func (s *serverImpl) AddRootHeadHtml(html string) {
+func (s *serverImpl) AddRootHeadHTML(html string) {
 	s.rootHeads = append(s.rootHeads, html)
 }
 
-func (s *serverImpl) RemoveRootHeadHtml(html string) {
+func (s *serverImpl) RemoveRootHeadHTML(html string) {
 	for i, v := range s.rootHeads {
 		if v == html {
 			old := s.rootHeads
@@ -526,7 +526,7 @@ func (s *serverImpl) serveStatic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if strings.HasSuffix(res, ".css") {
-		cssCode := staticCss[res]
+		cssCode := staticCSS[res]
 		if cssCode != nil {
 			w.Header().Set("Expires", time.Now().UTC().Add(72*time.Hour).Format(http.TimeFormat)) // Set 72 hours caching
 			w.Header().Set("Content-Type", "text/css; charset=utf-8")
@@ -713,7 +713,7 @@ func (s *serverImpl) renderWinList(wr http.ResponseWriter, r *http.Request, sess
 
 // renderComp renders just a component.
 func (s *serverImpl) renderComp(win Window, w http.ResponseWriter, r *http.Request) {
-	id, err := AtoID(r.FormValue(paramCompId))
+	id, err := AtoID(r.FormValue(paramCompID))
 	if err != nil {
 		http.Error(w, "Invalid component id!", http.StatusBadRequest)
 		return
@@ -723,7 +723,7 @@ func (s *serverImpl) renderComp(win Window, w http.ResponseWriter, r *http.Reque
 		s.logger.Println("\tRendering comp:", id)
 	}
 
-	comp := win.ById(id)
+	comp := win.ByID(id)
 	if comp == nil {
 		http.Error(w, fmt.Sprint("Component not found: ", id), http.StatusBadRequest)
 		return
@@ -735,18 +735,18 @@ func (s *serverImpl) renderComp(win Window, w http.ResponseWriter, r *http.Reque
 
 // handleEvent handles the event dispatching.
 func (s *serverImpl) handleEvent(sess Session, win Window, wr http.ResponseWriter, r *http.Request) {
-	focCompId, err := AtoID(r.FormValue(paramFocusedCompId))
+	focCompID, err := AtoID(r.FormValue(paramFocusedCompID))
 	if err == nil {
-		win.SetFocusedCompId(focCompId)
+		win.SetFocusedCompID(focCompID)
 	}
 
-	id, err := AtoID(r.FormValue(paramCompId))
+	id, err := AtoID(r.FormValue(paramCompID))
 	if err != nil {
 		http.Error(wr, "Invalid component id!", http.StatusBadRequest)
 		return
 	}
 
-	comp := win.ById(id)
+	comp := win.ByID(id)
 	if comp == nil {
 		if s.logger != nil {
 			s.logger.Println("\tComp not found:", id)
@@ -813,9 +813,9 @@ func (s *serverImpl) handleEvent(sess Session, win Window, wr http.ResponseWrite
 			} else {
 				hasAction = true
 			}
-			w.Writevs(eraFocusComp, strComma, int(shared.focusedComp.Id()))
+			w.Writevs(eraFocusComp, strComma, int(shared.focusedComp.ID()))
 			// Also register focusable comp at window
-			win.SetFocusedCompId(shared.focusedComp.Id())
+			win.SetFocusedCompID(shared.focusedComp.ID())
 		}
 	}
 	if !hasAction {

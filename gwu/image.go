@@ -28,20 +28,20 @@ type Image interface {
 	HasText
 
 	// Image has URL string.
-	HasUrl
+	HasURL
 }
 
 // Image implementation
 type imageImpl struct {
 	compImpl    // Component implementation
 	hasTextImpl // Has text implementation
-	hasUrlImpl  // Has text implementation
+	hasURLImpl  // Has text implementation
 }
 
 // NewImage creates a new Image.
 // The text is used as the alternate text for the image.
 func NewImage(text, url string) Image {
-	c := &imageImpl{newCompImpl(nil), newHasTextImpl(text), newHasUrlImpl(url)}
+	c := &imageImpl{newCompImpl(nil), newHasTextImpl(text), newHasURLImpl(url)}
 	c.Style().AddClass("gwu-Image")
 	return c
 }
@@ -54,7 +54,7 @@ var (
 
 func (c *imageImpl) Render(w Writer) {
 	w.Write(strImgOp)
-	c.renderUrl("src", w)
+	c.renderURL("src", w)
 	c.renderAttrsAndStyle(w)
 	c.renderEHandlers(w)
 	w.Write(strAlt)

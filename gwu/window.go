@@ -39,16 +39,16 @@ type Window interface {
 	// SetName sets the name of the window.
 	SetName(name string)
 
-	// AddHeadHtml adds an HTML text which will be included
+	// AddHeadHTML adds an HTML text which will be included
 	// in the HTML <head> section.
-	AddHeadHtml(html string)
+	AddHeadHTML(html string)
 
-	// RemoveHeadHtml removes an HTML head text
+	// RemoveHeadHTML removes an HTML head text
 	// that was previously added with AddHeadHtml().
-	RemoveHeadHtml(html string)
+	RemoveHeadHTML(html string)
 
-	// SetFocusedCompId sets the id of the currently focused component.
-	SetFocusedCompId(id ID)
+	// SetFocusedCompID sets the ID of the currently focused component.
+	SetFocusedCompID(id ID)
 
 	// Theme returns the CSS theme of the window.
 	// If an empty string is returned, the server's theme will be used.
@@ -85,7 +85,7 @@ type windowImpl struct {
 
 	name          string   // Window name
 	heads         []string // Additional head HTML texts
-	focusedCompId ID       // Id of the last reported focused component
+	focusedCompID ID       // ID of the last reported focused component
 	theme         string   // CSS theme of the window
 }
 
@@ -105,11 +105,11 @@ func (w *windowImpl) SetName(name string) {
 	w.name = name
 }
 
-func (w *windowImpl) AddHeadHtml(html string) {
+func (w *windowImpl) AddHeadHTML(html string) {
 	w.heads = append(w.heads, html)
 }
 
-func (w *windowImpl) RemoveHeadHtml(html string) {
+func (w *windowImpl) RemoveHeadHTML(html string) {
 	for i, v := range w.heads {
 		if v == html {
 			old := w.heads
@@ -120,8 +120,8 @@ func (w *windowImpl) RemoveHeadHtml(html string) {
 	}
 }
 
-func (w *windowImpl) SetFocusedCompId(id ID) {
-	w.focusedCompId = id
+func (w *windowImpl) SetFocusedCompID(id ID) {
+	w.focusedCompID = id
 }
 
 func (w *windowImpl) Theme() string {
@@ -168,9 +168,9 @@ func (w *windowImpl) RenderWin(wr Writer, s Server) {
 	wr.Writees(w.text)
 	wr.Writess(`</title><link href="`, s.AppPath(), pathStatic)
 	if w.theme == "" {
-		wr.Writes(resNameStaticCss(s.Theme()))
+		wr.Writes(resNameStaticCSS(s.Theme()))
 	} else {
-		wr.Writes(resNameStaticCss(w.theme))
+		wr.Writes(resNameStaticCSS(w.theme))
 	}
 	wr.Writes(`" rel="stylesheet" type="text/css">`)
 	w.renderDynJs(wr, s)
@@ -191,6 +191,6 @@ func (w *windowImpl) renderDynJs(wr Writer, s Server) {
 	wr.Writess("var _pathWin='", s.AppPath(), w.name, "/';")
 	wr.Writess("var _pathEvent=_pathWin+'", pathEvent, "';")
 	wr.Writess("var _pathRenderComp=_pathWin+'", pathRenderComp, "';")
-	wr.Writess("var _focCompId='", w.focusedCompId.String(), "';")
+	wr.Writess("var _focCompId='", w.focusedCompID.String(), "';")
 	wr.Write(strScriptCl)
 }

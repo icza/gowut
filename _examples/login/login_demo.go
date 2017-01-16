@@ -283,7 +283,7 @@ func buildLoginWin(s gwu.Session) {
 	p.CellFmt(l).Style().SetHeightPx(200)
 
 	win.Add(p)
-	win.SetFocusedCompId(tb.Id())
+	win.SetFocusedCompID(tb.ID())
 
 	p = gwu.NewPanel()
 	p.SetLayout(gwu.LayoutHorizontal)
@@ -310,12 +310,12 @@ func buildLoginWin(s gwu.Session) {
 type sessHandler struct{}
 
 func (h sessHandler) Created(s gwu.Session) {
-	fmt.Println("SESSION created:", s.Id())
+	fmt.Println("SESSION created:", s.ID())
 	buildLoginWin(s)
 }
 
 func (h sessHandler) Removed(s gwu.Session) {
-	fmt.Println("SESSION removed:", s.Id())
+	fmt.Println("SESSION removed:", s.ID())
 }
 
 func main() {

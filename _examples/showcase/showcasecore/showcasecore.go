@@ -19,9 +19,10 @@ package showcasecore
 
 import (
 	"fmt"
-	"github.com/icza/gowut/gwu"
 	"log"
 	"time"
+
+	"github.com/icza/gowut/gwu"
 )
 
 // plural returns an empty string if i is equal to 1,
@@ -500,12 +501,12 @@ func buildButtonDemo(event gwu.Event) gwu.Comp {
 	return p
 }
 
-func buildHtmlDemo(event gwu.Event) gwu.Comp {
+func buildHTMLDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 
-	html := `<span onclick="alert('Hi from Html!');">Hi! I'm inserted as HTML. Click on me!</span>`
+	html := `<span onclick="alert('Hi from HTML!');">Hi! I'm inserted as HTML. Click on me!</span>`
 
-	p.Add(gwu.NewLabel("The following HTML code is inserted after the text box as an Html component:"))
+	p.Add(gwu.NewLabel("The following HTML code is inserted after the text box as an HTML component:"))
 	ta := gwu.NewTextBox(html)
 	ta.SetReadOnly(true)
 	ta.Style().SetWidthPx(500)
@@ -513,7 +514,7 @@ func buildHtmlDemo(event gwu.Event) gwu.Comp {
 	p.Add(ta)
 
 	p.AddVSpace(20)
-	h := gwu.NewHtml(html)
+	h := gwu.NewHTML(html)
 	p.Add(h)
 
 	return p
@@ -677,21 +678,21 @@ type demo struct {
 }
 type pdemo *demo
 
-var extraHeadHtmls []string
+var extraHeadHTMLs []string
 
 func buildShowcaseWin(sess gwu.Session) {
 	win := gwu.NewWindow("show", "Showcase of Features - Gowut")
-	for _, headHtml := range extraHeadHtmls {
-		win.AddHeadHtml(headHtml)
+	for _, headHTML := range extraHeadHTMLs {
+		win.AddHeadHTML(headHTML)
 	}
 
 	win.Style().SetFullSize()
 	win.AddEHandlerFunc(func(e gwu.Event) {
 		switch e.Type() {
 		case gwu.ETypeWinLoad:
-			log.Println("LOADING window:", e.Src().Id())
+			log.Println("LOADING window:", e.Src().ID())
 		case gwu.ETypeWinUnload:
-			log.Println("UNLOADING window:", e.Src().Id())
+			log.Println("UNLOADING window:", e.Src().ID())
 		}
 	}, gwu.ETypeWinLoad, gwu.ETypeWinUnload)
 
@@ -812,7 +813,7 @@ func buildShowcaseWin(sess gwu.Session) {
 	l.Style().SetFontWeight(gwu.FontWeightBold)
 	links.Add(l)
 	createDemo("Button", buildButtonDemo)
-	createDemo("Html", buildHtmlDemo)
+	createDemo("HTML", buildHTMLDemo)
 	createDemo("Image", buildImageDemo)
 	createDemo("Label", buildLabelDemo)
 	createDemo("Link", buildLinkDemo)
@@ -865,8 +866,8 @@ func (h sessHandler) Removed(s gwu.Session) {}
 func StartServer(appName string) {
 	// Create GUI server
 	server := gwu.NewServer(appName, "")
-	for _, headHtml := range extraHeadHtmls {
-		server.AddRootHeadHtml(headHtml)
+	for _, headHTML := range extraHeadHTMLs {
+		server.AddRootHeadHTML(headHTML)
 	}
 	server.AddStaticDir("/asdf", "w:/")
 	server.SetText("Gowut - Showcase of Features")

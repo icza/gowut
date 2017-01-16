@@ -17,39 +17,39 @@
 
 package gwu
 
-// Html interface defines a component which wraps an HTML text into a component.
+// HTML interface defines a component which wraps an HTML text into a component.
 //
-// Default style class: "gwu-Html"
-type Html interface {
-	// Html is a component.
+// Default style class: "gwu-HTML"
+type HTML interface {
+	// HTML is a component.
 	Comp
 
-	// Html returns the HTML text.
-	Html() string
+	// HTML returns the HTML text.
+	HTML() string
 
-	// SetHtml sets the HTML text.
-	SetHtml(html string)
+	// SetHTML sets the HTML text.
+	SetHTML(html string)
 }
 
-// Html implementation
+// HTML implementation
 type htmlImpl struct {
 	compImpl // Component implementation
 
 	html string // HTML text
 }
 
-// NewHtml creates a new Html.
-func NewHtml(html string) Html {
+// NewHTML creates a new HTML.
+func NewHTML(html string) HTML {
 	c := &htmlImpl{newCompImpl(nil), html}
 	c.Style().AddClass("gwu-Html")
 	return c
 }
 
-func (c *htmlImpl) Html() string {
+func (c *htmlImpl) HTML() string {
 	return c.html
 }
 
-func (c *htmlImpl) SetHtml(html string) {
+func (c *htmlImpl) SetHTML(html string) {
 	c.html = html
 }
 

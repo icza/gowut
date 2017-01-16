@@ -133,7 +133,7 @@ type stateButtonImpl struct {
 	state         bool       // State of the button
 	inputType     []byte     // Type of the underlying input tag
 	group         RadioGroup // Group of the button
-	inputId       ID         // distinct id for the rendered input tag
+	inputID       ID         // distinct ID for the rendered input tag
 	disabledClass string     // Disabled style class
 }
 
@@ -174,7 +174,7 @@ func NewSwitchButton() SwitchButton {
 	// We only want to switch the state if the opposite button is pressed
 	// (e.g. OFF is pressed when switch is ON and vice versa;
 	// if ON is pressed when switch is ON, do not switch to OFF):
-	valueProviderJs := []byte("sbtnVal(event,'" + onButton.Id().String() + "','" + offButton.Id().String() + "')")
+	valueProviderJs := []byte("sbtnVal(event,'" + onButton.ID().String() + "','" + offButton.ID().String() + "')")
 
 	c := &switchButtonImpl{newCompImpl(valueProviderJs), &onButton, &offButton, true} // Note the "true" state, so the following SetState(false) will be executed (different states)!
 	c.AddSyncOnETypes(ETypeClick)
@@ -195,7 +195,7 @@ func NewRadioButton(text string, group RadioGroup) RadioButton {
 
 // newStateButtonImpl creates a new stateButtonImpl.
 func newStateButtonImpl(text string, inputType []byte, group RadioGroup, disabledClass string) *stateButtonImpl {
-	c := &stateButtonImpl{newButtonImpl(strThisChecked, text), false, inputType, group, nextCompId(), disabledClass}
+	c := &stateButtonImpl{newButtonImpl(strThisChecked, text), false, inputType, group, nextCompID(), disabledClass}
 	// Use ETypeClick because IE fires onchange only when focus is lost...
 	c.AddSyncOnETypes(ETypeClick)
 	return c
@@ -291,7 +291,7 @@ func (c *stateButtonImpl) preprocessEvent(event Event, r *http.Request) {
 
 var (
 	strInput    = []byte(`<input type="`)      // `<input type="`
-	strId       = []byte(`" id="`)             // `" id="`
+	strID       = []byte(`" id="`)             // `" id="`
 	strName     = []byte(` name="`)            // ` name="`
 	strChecked  = []byte(` checked="checked"`) // ` checked="checked"`
 	strLabelFor = []byte(`><label for="`)      // `><label for="`
@@ -306,8 +306,8 @@ func (c *stateButtonImpl) Render(w Writer) {
 
 	w.Write(strInput)
 	w.Write(c.inputType)
-	w.Write(strId)
-	w.Writev(int(c.inputId))
+	w.Write(strID)
+	w.Writev(int(c.inputID))
 	w.Write(strQuote)
 	if c.group != nil {
 		w.Write(strName)
@@ -321,7 +321,7 @@ func (c *stateButtonImpl) Render(w Writer) {
 	c.renderEHandlers(w)
 
 	w.Write(strLabelFor)
-	w.Writev(int(c.inputId))
+	w.Writev(int(c.inputID))
 	w.Write(strQuote)
 	// TODO readding click handler here causes double event sending...
 	// But we might add mouseover and other handlers still...

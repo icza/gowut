@@ -23,17 +23,17 @@ const (
 	ThemeDebug   = "debug"   // Debug CSS theme, useful for developing/debugging purposes.
 )
 
-// resNameStaticCss returns the CSS resource name
+// resNameStaticCSS returns the CSS resource name
 // for the specified CSS theme.
-func resNameStaticCss(theme string) string {
+func resNameStaticCSS(theme string) string {
 	// E.g. "gowut-default-0.8.0.css"
 	return "gowut-" + theme + "-" + GowutVersion + ".css"
 }
 
-var staticCss map[string][]byte = make(map[string][]byte)
+var staticCSS = make(map[string][]byte)
 
 func init() {
-	staticCss[resNameStaticCss(ThemeDefault)] = []byte("" +
+	staticCSS[resNameStaticCSS(ThemeDefault)] = []byte("" +
 		`
 .gwuimg-collapsed {background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAATUlEQVQ4y83RsQkAMAhEURNc+iZw7KQNgnjGRlv5D0SRMQPgADjVbr3AuzCz1QJYKAUyiAYiqAx4aHe/p9XAn6C/IQ1kb9TfMATYcM5cL5cg3qDaS5UAAAAASUVORK5CYII=)}
 .gwuimg-expanded {background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAATElEQVQ4y2NgGGjACGNUVlb+J0Vje3s7IwMDAwMT1VxAiitgtlPfBcS4Atl22rgAnyvQbaedC7C5ApvtVHEBXlBZWfmfUKwwMQx5AADNQhjmAryM3wAAAABJRU5ErkJggg==)}
@@ -68,7 +68,7 @@ body {font-family:Arial}
 
 .gwu-PasswBox {}
 
-.gwu-Html {}
+.gwu-HTML {}
 
 .gwu-SwitchButton {}
 .gwu-SwitchButton-On-Active {background:#00a000; color:#d0ffd0}
@@ -96,7 +96,7 @@ body {font-family:Arial}
 .gwu-SessMonitor-Expired, .gwu-SessMonitor-Error {color:red}
 `)
 
-	staticCss[resNameStaticCss(ThemeDebug)] = []byte(string(staticCss[resNameStaticCss(ThemeDefault)]) +
+	staticCSS[resNameStaticCSS(ThemeDebug)] = []byte(string(staticCSS[resNameStaticCSS(ThemeDefault)]) +
 		`
 .gwu-Window td, .gwu-Table td, .gwu-Panel td, .gwu-TabPanel td {border:1px solid black}
 `)

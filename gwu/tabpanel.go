@@ -208,14 +208,14 @@ func (c *tabPanelImpl) Remove(c2 Comp) bool {
 	return true
 }
 
-func (c *tabPanelImpl) ById(id ID) Comp {
+func (c *tabPanelImpl) ByID(id ID) Comp {
 	// panelImpl.ById() also checks our own id first
-	c2 := c.panelImpl.ById(id)
+	c2 := c.panelImpl.ByID(id)
 	if c2 != nil {
 		return c2
 	}
 
-	c2 = c.tabBarImpl.ById(id)
+	c2 = c.tabBarImpl.ByID(id)
 	if c2 != nil {
 		return c2
 	}

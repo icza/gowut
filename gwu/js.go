@@ -32,9 +32,9 @@ func init() {
 	staticJs = []byte("" +
 		// Param consts
 		"var _pEventType='" + paramEventType +
-		"',_pCompId='" + paramCompId +
+		"',_pCompId='" + paramCompID +
 		"',_pCompValue='" + paramCompValue +
-		"',_pFocCompId='" + paramFocusedCompId +
+		"',_pFocCompId='" + paramFocusedCompID +
 		"',_pMouseWX='" + paramMouseWX +
 		"',_pMouseWY='" + paramMouseWY +
 		"',_pMouseX='" + paramMouseX +

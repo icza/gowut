@@ -130,7 +130,7 @@ func (c *tableImpl) Remove(c2 Comp) bool {
 	return true
 }
 
-func (c *tableImpl) ById(id ID) Comp {
+func (c *tableImpl) ByID(id ID) Comp {
 	if c.id == id {
 		return c
 	}
@@ -140,12 +140,12 @@ func (c *tableImpl) ById(id ID) Comp {
 			if c2 == nil {
 				continue
 			}
-			if c2.Id() == id {
+			if c2.ID() == id {
 				return c2
 			}
 
 			if c3, isContainer := c2.(Container); isContainer {
-				if c4 := c3.ById(id); c4 != nil {
+				if c4 := c3.ByID(id); c4 != nil {
 					return c4
 				}
 			}
@@ -392,8 +392,8 @@ func (c *tableImpl) Render(w Writer) {
 
 // renderRowTr renders the formatted HTML TR tag for the specified row.
 func (c *tableImpl) renderRowTr(row int, w Writer) {
-	var defha HAlign = c.halign // default halign of the table
-	var defva VAlign = c.valign // default valign of the table
+	var defha = c.halign // default halign of the table
+	var defva = c.valign // default valign of the table
 
 	if rf := c.rowFmts[row]; rf == nil {
 		c.renderTr(w)

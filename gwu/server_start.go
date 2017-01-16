@@ -53,7 +53,7 @@ func (s *serverImpl) Start(openWins ...string) error {
 		s.serveStatic(w, r)
 	})
 
-	appURL := s.AppUrl()
+	appURL := s.AppURL()
 	log.Println("Starting GUI server on:", appURL)
 	if s.logger != nil {
 		s.logger.Println("Starting GUI server on:", appURL)

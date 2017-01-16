@@ -20,7 +20,7 @@
 package showcasecore
 
 func init() {
-	extraHeadHtmls = []string{analyticsTrackingCode}
+	extraHeadHTMLs = []string{analyticsTrackingCode}
 	StartServer("")
 }
 

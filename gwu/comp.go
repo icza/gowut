@@ -38,10 +38,10 @@ type Container interface {
 	// Parent() method will return nil.
 	Remove(c Comp) bool
 
-	// ById finds a component (recursively) by its ID and returns it.
+	// ByID finds a component (recursively) by its ID and returns it.
 	// nil is returned if no child component is found (recursively)
 	// with the specified ID.
-	ById(id ID) Comp
+	ByID(id ID) Comp
 
 	// Clear clears the container, removes all child components.
 	Clear()
@@ -49,8 +49,8 @@ type Container interface {
 
 // Comp interface: the base of all UI components.
 type Comp interface {
-	// Id returns the unique id of the component
-	Id() ID
+	// ID returns the unique id of the component
+	ID() ID
 
 	// Equals tells if this component is equal to the specified another component.
 	Equals(c2 Comp) bool
@@ -141,16 +141,16 @@ type compImpl struct {
 // JavaScript code which when evaluated provides the component's
 // value. Pass an empty string if the component does not have a value.
 func newCompImpl(valueProviderJs []byte) compImpl {
-	id := nextCompId()
+	id := nextCompID()
 	return compImpl{id: id, attrs: map[string]string{"id": id.String()}, styleImpl: newStyleImpl(), valueProviderJs: valueProviderJs}
 }
 
-func (c *compImpl) Id() ID {
+func (c *compImpl) ID() ID {
 	return c.id
 }
 
 func (c *compImpl) Equals(c2 Comp) bool {
-	return c.id == c2.Id()
+	return c.id == c2.ID()
 }
 
 func (c *compImpl) Parent() Container {

@@ -165,7 +165,7 @@ func (c *panelImpl) Remove(c2 Comp) bool {
 
 	// Remove associated cell formatter
 	if c.cellFmts != nil {
-		delete(c.cellFmts, c2.Id())
+		delete(c.cellFmts, c2.ID())
 	}
 
 	c2.setParent(nil)
@@ -179,18 +179,18 @@ func (c *panelImpl) Remove(c2 Comp) bool {
 	return true
 }
 
-func (c *panelImpl) ById(id ID) Comp {
+func (c *panelImpl) ByID(id ID) Comp {
 	if c.id == id {
 		return c
 	}
 
 	for _, c2 := range c.comps {
-		if c2.Id() == id {
+		if c2.ID() == id {
 			return c2
 		}
 
 		if c3, isContainer := c2.(Container); isContainer {
-			if c4 := c3.ById(id); c4 != nil {
+			if c4 := c3.ByID(id); c4 != nil {
 				return c4
 			}
 		}
@@ -247,10 +247,10 @@ func (c *panelImpl) CellFmt(c2 Comp) CellFmt {
 		c.cellFmts = make(map[ID]*cellFmtImpl)
 	}
 
-	cf := c.cellFmts[c2.Id()]
+	cf := c.cellFmts[c2.ID()]
 	if cf == nil {
 		cf = newCellFmtImpl()
-		c.cellFmts[c2.Id()] = cf
+		c.cellFmts[c2.ID()] = cf
 	}
 	return cf
 }
@@ -382,7 +382,7 @@ func (c *panelImpl) layoutVertical(w Writer) {
 
 // renderTd renders the formatted HTML TD tag for the specified child component.
 func (c *panelImpl) renderTd(c2 Comp, w Writer) {
-	if cf := c.cellFmts[c2.Id()]; cf == nil {
+	if cf := c.cellFmts[c2.ID()]; cf == nil {
 		w.Write(strTD)
 	} else {
 		cf.render(strTDOp, w)

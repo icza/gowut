@@ -97,28 +97,28 @@ func (c *expanderImpl) Remove(c2 Comp) bool {
 	return false
 }
 
-func (c *expanderImpl) ById(id ID) Comp {
+func (c *expanderImpl) ByID(id ID) Comp {
 	if c.id == id {
 		return c
 	}
 
 	if c.header != nil {
-		if c.header.Id() == id {
+		if c.header.ID() == id {
 			return c.header
 		}
 		if c2, isContainer := c.header.(Container); isContainer {
-			if c3 := c2.ById(id); c3 != nil {
+			if c3 := c2.ByID(id); c3 != nil {
 				return c3
 			}
 		}
 	}
 
 	if c.content != nil {
-		if c.content.Id() == id {
+		if c.content.ID() == id {
 			return c.content
 		}
 		if c2, isContainer := c.content.(Container); isContainer {
-			if c3 := c2.ById(id); c3 != nil {
+			if c3 := c2.ByID(id); c3 != nil {
 				return c3
 			}
 		}

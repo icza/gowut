@@ -31,7 +31,7 @@ type Link interface {
 	HasText
 
 	// Link has URL string.
-	HasUrl
+	HasURL
 
 	// Target returns the target of the link.
 	Target() string
@@ -53,7 +53,7 @@ type Link interface {
 type linkImpl struct {
 	compImpl    // Component implementation
 	hasTextImpl // Has text implementation
-	hasUrlImpl  // Has text implementation
+	hasURLImpl  // Has text implementation
 
 	comp Comp // Optional child component
 }
@@ -62,7 +62,7 @@ type linkImpl struct {
 // By default links open in a new window (tab)
 // because their target is set to "_blank".
 func NewLink(text, url string) Link {
-	c := &linkImpl{newCompImpl(nil), newHasTextImpl(text), newHasUrlImpl(url), nil}
+	c := &linkImpl{newCompImpl(nil), newHasTextImpl(text), newHasURLImpl(url), nil}
 	c.SetTarget("_blank")
 	c.Style().AddClass("gwu-Link")
 	return c
@@ -79,17 +79,17 @@ func (c *linkImpl) Remove(c2 Comp) bool {
 	return true
 }
 
-func (c *linkImpl) ById(id ID) Comp {
+func (c *linkImpl) ByID(id ID) Comp {
 	if c.id == id {
 		return c
 	}
 
 	if c.comp != nil {
-		if c.comp.Id() == id {
+		if c.comp.ID() == id {
 			return c.comp
 		}
 		if c2, isContainer := c.comp.(Container); isContainer {
-			if c3 := c2.ById(id); c3 != nil {
+			if c3 := c2.ByID(id); c3 != nil {
 				return c3
 			}
 		}
@@ -128,12 +128,12 @@ func (c *linkImpl) SetComp(c2 Comp) {
 
 var (
 	strAOp = []byte("<a")   // "<a"
-	strACl = []byte("</a>") // "</a>"
+	strACL = []byte("</a>") // "</a>"
 )
 
 func (c *linkImpl) Render(w Writer) {
 	w.Write(strAOp)
-	c.renderUrl("href", w)
+	c.renderURL("href", w)
 	c.renderAttrsAndStyle(w)
 	c.renderEHandlers(w)
 	w.Write(strGT)
@@ -144,5 +144,5 @@ func (c *linkImpl) Render(w Writer) {
 		c.comp.Render(w)
 	}
 
-	w.Write(strACl)
+	w.Write(strACL)
 }

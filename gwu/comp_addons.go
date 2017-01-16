@@ -92,35 +92,35 @@ func (c *hasEnabledImpl) renderEnabled(w Writer) {
 	}
 }
 
-// HasUrl interface defines a URL string property.
-type HasUrl interface {
+// HasURL interface defines a URL string property.
+type HasURL interface {
 	// URL returns the URL string.
-	Url() string
+	URL() string
 
-	// SetUrl sets the URL string.
-	SetUrl(url string)
+	// SetURL sets the URL string.
+	SetURL(url string)
 }
 
-// newHasUrlImpl creates a new hasUrlImpl
-func newHasUrlImpl(url string) hasUrlImpl {
-	return hasUrlImpl{url}
+// newHasURLImpl creates a new hasUrlImpl
+func newHasURLImpl(url string) hasURLImpl {
+	return hasURLImpl{url}
 }
 
-// HasUrl implementation.
-type hasUrlImpl struct {
+// HasURL implementation.
+type hasURLImpl struct {
 	url string // The URL string
 }
 
-func (c *hasUrlImpl) Url() string {
+func (c *hasURLImpl) URL() string {
 	return c.url
 }
 
-func (c *hasUrlImpl) SetUrl(url string) {
+func (c *hasURLImpl) SetURL(url string) {
 	c.url = url
 }
 
-// renderUrl renders the URL string.
-func (c *hasUrlImpl) renderUrl(attr string, w Writer) {
+// renderURL renders the URL string.
+func (c *hasURLImpl) renderURL(attr string, w Writer) {
 	w.WriteAttr(attr, c.url)
 }
 

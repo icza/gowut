@@ -82,7 +82,7 @@ func (etype EventType) Category() EventCategory {
 }
 
 // Attribute names for the general event types; only for the general event types.
-var etypeAttrs map[EventType][]byte = map[EventType][]byte{
+var etypeAttrs = map[EventType][]byte{
 	ETypeClick:     []byte("onclick"),
 	ETypeDblClick:  []byte("ondblclick"),
 	ETypeMousedown: []byte("onmousedown"),
@@ -98,7 +98,7 @@ var etypeAttrs map[EventType][]byte = map[EventType][]byte{
 	ETypeFocus:     []byte("onfocus")}
 
 // Function names for window event types.
-var etypeFuncs map[EventType][]byte = map[EventType][]byte{
+var etypeFuncs = map[EventType][]byte{
 	ETypeWinLoad:   []byte("onload"),
 	ETypeWinUnload: []byte("onbeforeunload")} // Bind it to onbeforeunload (instead of onunload) for several reasons (onunload might cause trouble for AJAX; onunload is not called in IE if page is just refreshed...)
 
@@ -412,7 +412,7 @@ func (e *eventImpl) MarkDirty(comps ...Comp) {
 				}
 			}
 
-			shared.dirtyComps[comp.Id()] = comp
+			shared.dirtyComps[comp.ID()] = comp
 		}
 	}
 }
@@ -425,7 +425,7 @@ func (e *eventImpl) MarkDirty(comps ...Comp) {
 // its inherited dirty flag changes from true to false.
 func (s *sharedEvtData) dirty(c2 Comp) bool {
 	// First-class being dirty:
-	if _, found := s.dirtyComps[c2.Id()]; found {
+	if _, found := s.dirtyComps[c2.ID()]; found {
 		return true
 	}
 

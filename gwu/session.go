@@ -29,8 +29,8 @@ import (
 
 // Session interface defines the session to the GWU users (clients).
 type Session interface {
-	// Id returns the id of the session.
-	Id() string
+	// ID returns the ID of the session.
+	ID() string
 
 	// New tells if the session is new meaning the client
 	// does not (yet) know about it.
@@ -91,7 +91,7 @@ type Session interface {
 
 // Session implementation.
 type sessionImpl struct {
-	id       string                 // Id of the session
+	id       string                 // ID of the session
 	isNew    bool                   // Tells if the session is new
 	created  time.Time              // Creation time
 	accessed time.Time              // Last accessed time
@@ -106,9 +106,9 @@ type sessionImpl struct {
 // The default timeout is 30 minutes.
 func newSessionImpl(private bool) sessionImpl {
 	var id string
-	// The public session has an empty string id
+	// The public session has an empty string ID
 	if private {
-		id = genId()
+		id = genID()
 	}
 
 	now := time.Now()
@@ -118,7 +118,7 @@ func newSessionImpl(private bool) sessionImpl {
 		attrs: make(map[string]interface{}), timeout: 30 * time.Minute, rwMutexF: &sync.RWMutex{}}
 }
 
-// Valid characters (bytes) to be used in session ids
+// Valid characters (bytes) to be used in session IDs
 // Its length must be a power of 2.
 const idChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_"
 
@@ -129,11 +129,11 @@ func init() {
 	}
 }
 
-// Length of the session ids
+// Length of the session IDs
 const idLength = 22
 
-// genId generates a new session id.
-func genId() string {
+// genID generates a new session ID.
+func genID() string {
 	id := make([]byte, idLength)
 	if _, err := rand.Read(id); err != nil {
 		log.Printf("Failed to read from secure random: %v", err)
@@ -145,7 +145,7 @@ func genId() string {
 	return string(id)
 }
 
-func (s *sessionImpl) Id() string {
+func (s *sessionImpl) ID() string {
 	return s.id
 }
 
@@ -172,7 +172,7 @@ func (s *sessionImpl) AddWin(w Window) error {
 
 func (s *sessionImpl) RemoveWin(w Window) bool {
 	win := s.windows[w.Name()]
-	if win != nil && win.Id() == w.Id() {
+	if win != nil && win.ID() == w.ID() {
 		delete(s.windows, w.Name())
 		return true
 	}

@@ -2,6 +2,31 @@
 Changes and new features in v1.2.0:
 ----------------------------------
 
+-BREAKING CHANGES! Renamed several interfaces and methods to conform to Go
+naming conventions. Gometalinter now gives 0 warnings.
+Sorry. Better sooner than later. The changes are the following:
+    -Comp
+        -Id() => ID()
+    -Container
+        -ById() => ByID()
+    -HasUrl => HasURL
+        -Url() => URL()
+        -SetUrl() => SetURL()
+    -Html => HTML
+        -NewHtml() => NewHTML()
+        -Html() => HTML()
+        -SetHtml() => SetHTML()
+    -Server
+        -AppUrl() => AppURL()
+        -AddRootHeadHtml() => AddRootHeadHTML()
+        -RemoveRootHeadHtml() => RemoveRootHeadHTML()
+    -Session
+        -Id() => ID()
+    -Window
+        -AddHeadHtml() => AddHeadHTML()
+        -RemoveHeadHtml() => RemoveHeadHTML()
+        -SetFocusedCompId() => SetFocusedCompID()
+
 -Renamed github.com/icza/gowut/examples to _examples, making it excluded from
 build tools by default. You can still run the examples using "go run".
 

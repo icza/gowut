@@ -40,12 +40,12 @@ func AtoID(s string) (ID, error) {
 	return ID(id), nil
 }
 
-// Component id generation and provider
+// Component ID generation and provider
 
 // Last used value for ID
-var lastId = new(int64)
+var lastID = new(int64)
 
-// nextCompId returns a unique component id
-func nextCompId() ID {
-	return ID(atomic.AddInt64(lastId, 1))
+// nextCompID returns a unique component ID
+func nextCompID() ID {
+	return ID(atomic.AddInt64(lastID, 1))
 }
