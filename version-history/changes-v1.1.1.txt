@@ -1,11 +1,11 @@
 
 Changes and new features in v1.1.1:
-----------------------------------
+-----------------------------------
 
 -Improvement: HTTP request and response writers are now exposed with Events. See issue #19.
 Not directly, but they are available after a type assertion. See HasRequestResponse type.
 
--Fix: when something was selected in a ListBox, it was impossible to deselect everything from the UI. See issue #20. 
+-Fix: when something was selected in a ListBox, it was impossible to deselect everything from the UI. See issue #20.
 
 -Fix: open web page with xdg-open in linux
 

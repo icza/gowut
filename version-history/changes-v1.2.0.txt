@@ -1,6 +1,6 @@
 
 Changes and new features in v1.2.0:
-----------------------------------
+-----------------------------------
 
 -BREAKING CHANGES! Renamed several interfaces and methods to conform to Go
 naming conventions. Gometalinter now gives 0 warnings.
