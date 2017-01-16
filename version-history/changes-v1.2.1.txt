@@ -1,0 +1,10 @@
+
+Changes and new features in v1.2.1:
+-----------------------------------
+
+-Replaced home page with the Gowut Wiki:
+https://github.com/icza/gowut/wiki
+
+-Changed copyright year.
+
+-Other minor changes and improvements.

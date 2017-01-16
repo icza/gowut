@@ -230,7 +230,7 @@ type cellFmtImpl struct {
 	hasHVAlignImpl // Has horizontal and vertical alignment implementation
 
 	styleImpl *styleImpl        // Style builder. Lazily initialized.
-	attrs     map[string]string // Explicitly set HTML attributes for the cell. Lazily initalized.
+	attrs     map[string]string // Explicitly set HTML attributes for the cell. Lazily initialized.
 }
 
 // newCellFmtImpl creates a new cellFmtImpl.

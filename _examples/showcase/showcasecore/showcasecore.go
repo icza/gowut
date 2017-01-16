@@ -568,8 +568,8 @@ func buildLinkDemo(event gwu.Event) gwu.Comp {
 	p := gwu.NewPanel()
 	p.SetCellPadding(3)
 
-	p.Add(gwu.NewLink("Visit Gowut Home page", "https://sites.google.com/site/gowebuitoolkit/"))
-	p.Add(gwu.NewLink("Visit Gowut Project page", "https://github.com/icza/gowut"))
+	p.Add(gwu.NewLink("Visit the Gowut Wiki", "https://github.com/icza/gowut/wiki"))
+	p.Add(gwu.NewLink("Visit the Gowut Project page", "https://github.com/icza/gowut"))
 
 	row := gwu.NewHorizontalPanel()
 	row.SetCellPadding(3)
@@ -580,7 +580,11 @@ func buildLinkDemo(event gwu.Event) gwu.Comp {
 	row = gwu.NewHorizontalPanel()
 	row.SetCellPadding(3)
 	row.Add(gwu.NewLabel("Send e-mail to the Gowut author:"))
-	email := "iczaaa" + "@" + "gmail.com"
+	emailBytes := []byte("jd{bbbAhnbjm/dpn")
+	for i, v := range emailBytes {
+		emailBytes[i] = v - 1
+	}
+	email := string(emailBytes)
 	row.Add(gwu.NewLink("András Belicza <"+email+">", "mailto:"+email))
 	p.Add(row)
 
@@ -832,11 +836,11 @@ func buildShowcaseWin(sess gwu.Session) {
 	footer.Style().SetFullWidth().SetBorderTop2(2, gwu.BrdStyleSolid, "#cccccc")
 	footer.Add(hiddenPan)
 	footer.AddHConsumer()
-	l = gwu.NewLabel("Copyright © 2013-2016 András Belicza. All rights reserved.")
+	l = gwu.NewLabel("Copyright © 2013-2017 András Belicza. All rights reserved.")
 	l.Style().SetFontStyle(gwu.FontStyleItalic).SetFontSize("95%")
 	footer.Add(l)
 	footer.AddHSpace(10)
-	link := gwu.NewLink("Visit Gowut Home page", "https://sites.google.com/site/gowebuitoolkit/")
+	link := gwu.NewLink("Visit the Gowut Wiki", "https://github.com/icza/gowut/wiki")
 	link.Style().SetFontStyle(gwu.FontStyleItalic).SetFontSize("95%")
 	footer.Add(link)
 	setNoWrap(footer)
