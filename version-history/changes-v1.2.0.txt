@@ -2,7 +2,7 @@
 Changes and new features in v1.2.0:
 ----------------------------------
 
--Renamed github.com/icza/gowut/examples to _examples, making it exclude from
+-Renamed github.com/icza/gowut/examples to _examples, making it excluded from
 build tools by default. You can still run the examples using "go run".
 
 -Window list has been rewritten to use Gowut components.
@@ -13,3 +13,6 @@ For details, see https://github.com/icza/gowut/issues/27
 -Session creation and removal messages are now only logged with log.Println()
 if no logger is set at the Server.
 For details, see https://github.com/icza/gowut.dev/issues/7
+
+-Development of gowut has moved from gowut.dev project to the dev branch of
+the gowut project.
