@@ -18,8 +18,7 @@ Package gwu implements an easy to use, platform independent Web UI Toolkit
 in pure Go.
 
 
-For additional documentation, News and more please visit the Gowut Wiki:
-https://github.com/icza/gowut/wiki
+For documentation please visit the Gowut Wiki: https://github.com/icza/gowut/wiki
 
 
 Introduction
@@ -66,9 +65,9 @@ change (during event handling) without having to reload the whole page
 to see the changes.
 
 To quickly test it and see it in action, run the "Showcase of Features"
-application by typing: (assuming you're in the root of your GOPATH)
+application by typing:
 
-	go run src/github.com/icza/gowut/_examples/showcase/showcase.go
+	go run $GOPATH/src/github.com/icza/gowut/_examples/showcase/showcase.go
 
 
 Features of Gowut
@@ -135,6 +134,7 @@ windows. When such a window is requested and no private session associated
 with the client exists, a new session will be created. A registered
 SessionHandler can be used then to create the window prior to it being served.
 Here's an example how to do it:
+
 	// A SessionHandler implementation:
 	type sessHandler struct {}
 	func (h sessHandler) Created(s gwu.Session) {
@@ -154,7 +154,7 @@ from localhost), security is only guaranteed if you configure the server to run
 in secure (HTTPS) mode.
 
 
-Under the hood
+Under the Hood
 
 User interfaces are generated HTML documents which communicate with the server
 with AJAX calls. The GUI server is based on the web server integrated in Go.
@@ -206,7 +206,7 @@ definitions of the built-in style classes. For example you can define the
 Buttons will have red background without having to change their style individually.
 
 
-Component palette
+Component Palette
 
 Containers to group and lay out components:
 	Expander  - shows and hides a content comp when clicking on the header comp
@@ -234,7 +234,7 @@ Other components:
 	Timer
 
 
-Full application example
+Full App Example
 
 Let a full example follow here which is a complete application.
 It builds a simple window, adds components to it, registers event handlers which
@@ -396,7 +396,7 @@ package gwu
 
 // Gowut version information.
 const (
-	GowutVersion       = "v1.3.0-dev"     // Gowut version: "v"major.minor.maintenance[-dev]
+	GowutVersion       = "v1.2.1-dev"     // Gowut version: "v"major.minor.maintenance[-dev]
 	GowutReleaseDate   = "2017-01-16 CET" // Gowut release date
 	GowutRelDateLayout = "2006-01-02 MST" // Gowut release date layout (for time.Parse())
 )
