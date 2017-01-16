@@ -17,6 +17,7 @@ To quickly install (or update to) the **latest** version, type:
 ## Quick test ##
 
 To quickly test it and see it in action, run the following example applications.
+
 Let's assume you're in the root of the Gowut project:
 
     cd $GOPATH/src/github.com/icza/gowut
@@ -34,6 +35,10 @@ The Showcase of Features is also available live: https://gowut-demo.appspot.com/
 This one auto-opens itself in your default browser.
 
     go run _examples/simple/simple_demo.go
+
+And this is how it looks:
+
+[[[https://github.com/icza/gowut/raw/dev/_images/full_app_example.png|alt=Full App Screenshot]]](https://github.com/icza/gowut/wiki/Full-App-Example)
 
 **3. Login window example with session management.**
 
