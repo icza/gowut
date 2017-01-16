@@ -38,7 +38,7 @@ This one auto-opens itself in your default browser.
 
 And this is how it looks:
 
-[[[https://github.com/icza/gowut/raw/dev/_images/full_app_example.png|alt=Full App Screenshot]]](https://github.com/icza/gowut/wiki/Full-App-Example)
+[![Full App Screenshot](https://github.com/icza/gowut/raw/dev/_images/full_app_example.png)](https://github.com/icza/gowut/wiki/Full-App-Example)
 
 **3. Login window example with session management.**
 
