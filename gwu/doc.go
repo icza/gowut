@@ -18,8 +18,8 @@ Package gwu implements an easy to use, platform independent Web UI Toolkit
 in pure Go.
 
 
-For additional documentation, News and more please visit the home page:
-https://sites.google.com/site/gowebuitoolkit/
+For additional documentation, News and more please visit the Gowut Wiki:
+https://github.com/icza/gowut/wiki
 
 
 Introduction
@@ -382,7 +382,7 @@ Author: András Belicza
 
 Author email: gmail.com, user name: iczaaa
 
-Home page: https://sites.google.com/site/gowebuitoolkit/
+Gowut Wiki: https://github.com/icza/gowut/wiki
 
 Source code: https://github.com/icza/gowut
 

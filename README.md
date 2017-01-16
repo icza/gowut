@@ -4,11 +4,9 @@
 
 Gowut (Go Web UI Toolkit) is a full-featured, easy to use, platform independent Web UI Toolkit written in pure Go, no platform dependent native code is linked or called.
 
+For News, documentation and examples please visit the [**Gowut Wiki**](https://github.com/icza/gowut/wiki).
+
 Development takes place in the `dev` branch: https://github.com/icza/gowut/tree/dev
-
-For News, documentation and examples please visit the **Gowut Home Page** here:
-
-**https://sites.google.com/site/gowebuitoolkit/**
 
 ## Quick install ##
 
