@@ -21,6 +21,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -28,7 +29,14 @@ import (
 	"github.com/icza/gowut/_examples/showcase/showcasecore"
 )
 
+var (
+	addr     = flag.String("addr", "", "address to start the server on")
+	autoOpen = flag.Bool("autoOpen", true, "auto-open the demo in default browser")
+)
+
 func main() {
+	flag.Parse()
+
 	// Allow app control from command line (in co-operation with the starter script):
 	log.Println("Type 'r' to restart, 'e' to exit.")
 	go func() {
@@ -44,5 +52,5 @@ func main() {
 		}
 	}()
 
-	showcasecore.StartServer("showcase")
+	showcasecore.StartServer("showcase", *addr, *autoOpen)
 }

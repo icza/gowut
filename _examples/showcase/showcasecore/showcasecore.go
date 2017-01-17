@@ -867,9 +867,9 @@ func (h sessHandler) Created(s gwu.Session) {
 func (h sessHandler) Removed(s gwu.Session) {}
 
 // StartServer creates and starts the Gowut GUI server.
-func StartServer(appName string) {
+func StartServer(appName, addr string, autoOpen bool) {
 	// Create GUI server
-	server := gwu.NewServer(appName, "")
+	server := gwu.NewServer(appName, addr)
 	for _, headHTML := range extraHeadHTMLs {
 		server.AddRootHeadHTML(headHTML)
 	}
@@ -884,7 +884,11 @@ func StartServer(appName string) {
 	})
 
 	// Start GUI server
-	if err := server.Start("show"); err != nil {
+	var openWins []string
+	if autoOpen {
+		openWins = []string{"show"}
+	}
+	if err := server.Start(openWins...); err != nil {
 		log.Println("Error: Cound not start GUI server:", err)
 		return
 	}
