@@ -26,8 +26,8 @@ import (
 type ID int
 
 // Note: it is intentional that base 10 is used (and not e.q. 16),
-// because it is handled as a number at the clietn side (in JavaScript).
-// It has some benefit like no need to quote IDs.
+// because it is handled as a number at the client side (in JavaScript).
+// It has some benefit like no need to quote IDs, simpler code generation.
 
 // Converts an ID to a string.
 func (id ID) String() string {
