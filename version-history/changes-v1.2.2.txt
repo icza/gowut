@@ -4,7 +4,7 @@ Changes and new features in v1.2.2:
 
 -Moved the Showcase of Features live demo to: http://iczapp.com:3434/gowut-demo/show
 
--Added -addr and -autoOpen flags to the Showcase of Features demo.
+-Added -appName, -addr and -autoOpen flags to the Showcase of Features demo.
 
 -Added a missing check if a Server logger is set before using it.
 
