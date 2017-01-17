@@ -1,5 +1,5 @@
 
-Changes and new features in 1.0.0:
+Changes and new features in v1.0.0:
 ----------------------------------
 
 -Exported a new Writer which is used to render components.

@@ -1,5 +1,5 @@
 
-Changes and new features in 0.8.0:
+Changes and new features in v0.8.0:
 ----------------------------------
 
 -Significant event system improvements.

@@ -1,5 +1,5 @@
 
-Changes and new features in 0.7.0:
+Changes and new features in v0.7.0:
 ----------------------------------
 
 -A new example application: "Showcase of Features".

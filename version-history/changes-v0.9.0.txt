@@ -1,0 +1,10 @@
+
+Changes and new features in v0.9.0:
+----------------------------------
+
+-Migration from code.google.com to github.com. Changed/replaced all URLs to point to github.com.
+
+-Fixed issue #4.
+https://github.com/icza/gowut/issues/4
+
+-Optimization.

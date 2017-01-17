@@ -1,5 +1,5 @@
 
-Changes and new features in 1.1.0:
+Changes and new features in v1.1.0:
 ----------------------------------
 
 -A new SessMonitor component which can be used to monitor and display session timeout and network connectivity at the client side without interacting with the session.
