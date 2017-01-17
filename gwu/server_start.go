@@ -61,7 +61,9 @@ func (s *serverImpl) Start(openWins ...string) error {
 
 	for _, winName := range openWins {
 		if err := open(appURL + winName); err != nil {
-			s.logger.Printf("Opening window '%s' err: %v\n", appURL+winName, err)
+			if s.logger != nil {
+				s.logger.Printf("Opening window '%s' err: %v\n", appURL+winName, err)
+			}
 		}
 	}
 
