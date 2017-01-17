@@ -31,6 +31,7 @@ import (
 
 var (
 	addr     = flag.String("addr", "", "address to start the server on")
+	appName  = flag.String("appName", "showcase", "Gowut app name")
 	autoOpen = flag.Bool("autoOpen", true, "auto-open the demo in default browser")
 )
 
@@ -52,5 +53,5 @@ func main() {
 		}
 	}()
 
-	showcasecore.StartServer("showcase", *addr, *autoOpen)
+	showcasecore.StartServer(*appName, *addr, *autoOpen)
 }
