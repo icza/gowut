@@ -96,29 +96,40 @@ type Writer interface {
 	WriteAttr(name, value string) (n int, err error)
 }
 
+// stringWriter wraps a method used to write a string.
+type stringWriter interface {
+	WriteString(s string) (n int, err error)
+}
+
 // writerImpl is the implementation of our Writer.
 type writerImpl struct {
-	io.Writer // Writer implementation
+	io.Writer              // Writer implementation
+	sw        stringWriter // stringWriter if the writer implements it
 }
 
 // NewWriter returns a new Writer, wrapping the specified io.Writer.
 func NewWriter(w io.Writer) Writer {
-	return writerImpl{w}
+	wi := writerImpl{Writer: w}
+	// Check if writer has WriteString once:
+	if sw, ok := w.(stringWriter); ok {
+		wi.sw = sw
+	}
+	return wi
 }
 
 func (w writerImpl) Writev(v interface{}) (n int, err error) {
 	switch v2 := v.(type) {
 	case string:
-		return w.Write([]byte(v2))
+		return w.Writes(v2)
 	case int:
 		if v2 < cachedInts && v2 >= 0 {
 			return w.Write(strInts[v2])
 		}
-		return w.Write([]byte(strconv.Itoa(v2)))
+		return w.Writes(strconv.Itoa(v2))
 	case []byte:
 		return w.Write(v2)
 	case fmt.Stringer:
-		return w.Write([]byte(v2.String()))
+		return w.Writes(v2.String())
 	case bool:
 		return w.Write(strBools[v2])
 	}
@@ -140,13 +151,16 @@ func (w writerImpl) Writevs(v ...interface{}) (n int, err error) {
 }
 
 func (w writerImpl) Writes(s string) (n int, err error) {
+	if w.sw != nil {
+		return w.sw.WriteString(s)
+	}
 	return w.Write([]byte(s))
 }
 
 func (w writerImpl) Writess(ss ...string) (n int, err error) {
 	for _, s := range ss {
 		var m int
-		m, err = w.Write([]byte(s))
+		m, err = w.Writes(s)
 		n += m
 		if err != nil {
 			return
@@ -156,7 +170,7 @@ func (w writerImpl) Writess(ss ...string) (n int, err error) {
 }
 
 func (w writerImpl) Writees(s string) (n int, err error) {
-	return w.Write([]byte(html.EscapeString(s)))
+	return w.Writes(html.EscapeString(s))
 }
 
 func (w writerImpl) WriteAttr(name, value string) (n int, err error) {
