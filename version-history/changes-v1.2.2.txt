@@ -2,7 +2,7 @@
 Changes and new features in v1.2.2:
 -----------------------------------
 
--Moved the Showcase of Features live demo to: http://iczapp.com:3434/showcase/show
+-Moved the Showcase of Features live demo to: http://iczapp.com:3434/gowut-demo/show
 
 -Added -addr and -autoOpen flags to the Showcase of Features demo.
 

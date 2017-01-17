@@ -28,7 +28,7 @@ This one auto-opens itself in your default browser.
 
     go run _examples/showcase/showcase.go
 
-The Showcase of Features is also available live: https://gowut-demo.appspot.com/show
+The Showcase of Features is also available live: http://iczapp.com:3434/gowut-demo/show
 
 **2. A single window example.**
 
