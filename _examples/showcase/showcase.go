@@ -22,9 +22,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"log"
-	"os"
 
 	"github.com/icza/gowut/_examples/showcase/showcasecore"
 )
@@ -37,21 +34,6 @@ var (
 
 func main() {
 	flag.Parse()
-
-	// Allow app control from command line (in co-operation with the starter script):
-	log.Println("Type 'r' to restart, 'e' to exit.")
-	go func() {
-		var cmd string
-		for {
-			fmt.Scanf("%s", &cmd)
-			switch cmd {
-			case "r": // restart
-				os.Exit(1)
-			case "e": // exit
-				os.Exit(0)
-			}
-		}
-	}()
 
 	showcasecore.StartServer(*appName, *addr, *autoOpen)
 }
