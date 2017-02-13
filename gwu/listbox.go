@@ -180,6 +180,7 @@ func (c *listBoxImpl) ClearSelected() {
 }
 
 func (c *listBoxImpl) preprocessEvent(event Event, r *http.Request) {
+	c.ClearSelected()
 	value := r.FormValue(paramCompValue)
 	c.ClearSelected()
 	if len(value) == 0 {
