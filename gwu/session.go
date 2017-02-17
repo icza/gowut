@@ -159,7 +159,7 @@ func (s *sessionImpl) Private() bool {
 
 func (s *sessionImpl) AddWin(w Window) error {
 	if len(w.Name()) == 0 {
-		return errors.New("Window name cannot be empty string!")
+		return errors.New("Window name cannot be empty string")
 	}
 	if _, exists := s.windows[w.Name()]; exists {
 		return errors.New("A window with the same name has already been added: " + w.Name())
