@@ -36,6 +36,12 @@ type ListBox interface {
 	// ListBox can be enabled/disabled.
 	HasEnabled
 
+	// Values returns the values.
+	Values() []string
+
+	// SetValues sets the values. Also clears the selection.
+	SetValues(values []string)
+
 	// Multi tells if multiple selections are allowed.
 	Multi() bool
 
@@ -77,9 +83,6 @@ type ListBox interface {
 
 	// ClearSelected deselects all values.
 	ClearSelected()
-	
-	// SetContent(content []string)
-	SetContent(content []string)
 }
 
 // ListBox implementation.
@@ -105,9 +108,13 @@ func NewListBox(values []string) ListBox {
 	return c
 }
 
-func	(c *listBoxImpl)SetContent(newvalues [] string)	{
-	c.values=newvalues
-	c.selected=make([]bool,len(newvalues))
+func (c *listBoxImpl) Values() []string {
+	return c.values
+}
+
+func (c *listBoxImpl) SetValues(values []string) {
+	c.values = values
+	c.selected = make([]bool, len(values))
 }
 
 func (c *listBoxImpl) Multi() bool {
