@@ -77,6 +77,9 @@ type ListBox interface {
 
 	// ClearSelected deselects all values.
 	ClearSelected()
+	
+	// SetContent(content []string)
+	SetContent(content []string)
 }
 
 // ListBox implementation.
@@ -100,6 +103,11 @@ func NewListBox(values []string) ListBox {
 	c.AddSyncOnETypes(ETypeChange)
 	c.Style().AddClass("gwu-ListBox")
 	return c
+}
+
+func	(c *listBoxImpl)SetContent(newvalues [] string)	{
+	c.values=newvalues
+	c.selected=make([]bool,len(newvalues))
 }
 
 func (c *listBoxImpl) Multi() bool {
