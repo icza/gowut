@@ -214,6 +214,8 @@ func (s *sessionImpl) Created() time.Time {
 }
 
 func (s *sessionImpl) Accessed() time.Time {
+	s.rwMutexF.RLock()
+	defer s.rwMutexF.RUnlock()
 	return s.accessed
 }
 
@@ -227,9 +229,8 @@ func (s *sessionImpl) SetTimeout(timeout time.Duration) {
 
 func (s *sessionImpl) access() {
 	s.rwMutexF.Lock()
-	defer s.rwMutexF.Unlock()
-
 	s.accessed = time.Now()
+	s.rwMutexF.Unlock()
 }
 
 func (s *sessionImpl) clearNew() {
