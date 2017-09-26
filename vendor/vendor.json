@@ -1,7 +1,7 @@
 {
 	"rootPath": "github.com/icza/gowut",
 	"heroku": {
-		"install": "./_examples/showcase",
+		"install": "./_examples/showcase/...",
 		"sync": false
 	}
 }
