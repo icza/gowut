@@ -1,0 +1,10 @@
+
+Changes and new features in v1.3.0:
+-----------------------------------
+
+-Added ListBox.Values() and ListBox.SetValues() methods to read / change items
+of a ListBox.
+
+-Fixed a number of data race issues at server session handling.
+
+-Moved the Showcase of Features live demo to: https://gowut-demo.herokuapp.com/show

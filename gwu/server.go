@@ -27,6 +27,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -221,6 +222,8 @@ type serverImpl struct {
 	headers            http.Header        // Extra headers that will be added to all responses.
 	rootHeads          []string           // Additional head HTML texts of the window list page (app root)
 	appRootHandlerFunc AppRootHandlerFunc // App root handler function
+
+	sessMux sync.RWMutex // Mutex to protect state related to session handling
 }
 
 // NewServer creates a new GUI server in HTTP mode.
@@ -296,7 +299,9 @@ func (s *serverImpl) AddSessCreatorName(name, text string) {
 }
 
 func (s *serverImpl) AddSHandler(handler SessionHandler) {
+	s.sessMux.Lock()
 	s.sessionHandlers = append(s.sessionHandlers, handler)
+	s.sessMux.Unlock()
 }
 
 // newSession creates a new (private) Session.
@@ -315,6 +320,7 @@ func (s *serverImpl) newSession(e *eventImpl) Session {
 		e.shared.session = sess
 	}
 	// Store new session
+	s.sessMux.Lock()
 	s.sessions[sess.ID()] = sess
 
 	if s.logger != nil {
@@ -327,6 +333,7 @@ func (s *serverImpl) newSession(e *eventImpl) Session {
 	for _, handler := range s.sessionHandlers {
 		handler.Created(sess)
 	}
+	s.sessMux.Unlock()
 
 	return sess
 }
@@ -337,7 +344,9 @@ func (s *serverImpl) newSession(e *eventImpl) Session {
 // After this method Event.Session() will return the shared public session.
 func (s *serverImpl) removeSess(e *eventImpl) {
 	if e.shared.session.Private() {
+		s.sessMux.Lock()
 		s.removeSess2(e.shared.session)
+		s.sessMux.Unlock()
 		e.shared.session = &s.sessionImpl
 	}
 }
@@ -345,6 +354,7 @@ func (s *serverImpl) removeSess(e *eventImpl) {
 // removeSess2 removes (invalidates) the specified session.
 // Only private sessions can be removed, calling this with the
 // public session is a no-op.
+// serverImpl.mux must be locked when this is called.
 func (s *serverImpl) removeSess2(sess Session) {
 	if sess.Private() {
 		if s.logger != nil {
@@ -387,12 +397,13 @@ func (s *serverImpl) sessCleaner() {
 	for {
 		now := time.Now()
 
-		// TODO synchronization?
+		s.sessMux.Lock()
 		for _, sess := range s.sessions {
 			if now.Sub(sess.Accessed()) > sess.Timeout() {
 				s.removeSess2(sess)
 			}
 		}
+		s.sessMux.Unlock()
 
 		time.Sleep(sleep)
 	}
@@ -552,7 +563,9 @@ func (s *serverImpl) serveHTTP(w http.ResponseWriter, r *http.Request) {
 	var sess Session
 	c, err := r.Cookie(gwuSessidCookie)
 	if err == nil {
+		s.sessMux.RLock()
 		sess = s.sessions[c.Value]
+		s.sessMux.RUnlock()
 	}
 	if sess == nil {
 		sess = &s.sessionImpl
@@ -582,11 +595,9 @@ func (s *serverImpl) serveHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(parts) >= 1 && parts[0] == pathSessCheck {
-		// Session check. Must not call sess.acess()
+		// Session check. Must not call sess.access()
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		sess.rwMutex().RLock()
 		remaining := sess.Timeout() - time.Now().Sub(sess.Accessed())
-		sess.rwMutex().RUnlock()
 		fmt.Fprintf(w, "%f", remaining.Seconds())
 		return
 	}

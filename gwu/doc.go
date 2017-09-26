@@ -388,7 +388,7 @@ Source code: https://github.com/icza/gowut
 
 Discussion forum: https://groups.google.com/d/forum/gowebuitoolkit
 
-Live demo: http://iczapp.com:3434/gowut-demo/show
+Live demo: https://gowut-demo.herokuapp.com/show
 
 
 */
@@ -396,7 +396,7 @@ package gwu
 
 // Gowut version information.
 const (
-	GowutVersion       = "v1.2.2"         // Gowut version: "v"major.minor.maintenance[-dev]
+	GowutVersion       = "v1.3.0"         // Gowut version: "v"major.minor.maintenance[-dev]
 	GowutReleaseDate   = "2017-01-17 CET" // Gowut release date
 	GowutRelDateLayout = "2006-01-02 MST" // Gowut release date layout (for time.Parse())
 )

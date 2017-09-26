@@ -159,7 +159,7 @@ func (s *sessionImpl) Private() bool {
 
 func (s *sessionImpl) AddWin(w Window) error {
 	if len(w.Name()) == 0 {
-		return errors.New("Window name cannot be empty string!")
+		return errors.New("Window name cannot be empty string")
 	}
 	if _, exists := s.windows[w.Name()]; exists {
 		return errors.New("A window with the same name has already been added: " + w.Name())
@@ -214,6 +214,8 @@ func (s *sessionImpl) Created() time.Time {
 }
 
 func (s *sessionImpl) Accessed() time.Time {
+	s.rwMutexF.RLock()
+	defer s.rwMutexF.RUnlock()
 	return s.accessed
 }
 
@@ -227,9 +229,8 @@ func (s *sessionImpl) SetTimeout(timeout time.Duration) {
 
 func (s *sessionImpl) access() {
 	s.rwMutexF.Lock()
-	defer s.rwMutexF.Unlock()
-
 	s.accessed = time.Now()
+	s.rwMutexF.Unlock()
 }
 
 func (s *sessionImpl) clearNew() {

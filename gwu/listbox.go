@@ -36,6 +36,12 @@ type ListBox interface {
 	// ListBox can be enabled/disabled.
 	HasEnabled
 
+	// Values returns the values.
+	Values() []string
+
+	// SetValues sets the values. Also clears the selection.
+	SetValues(values []string)
+
 	// Multi tells if multiple selections are allowed.
 	Multi() bool
 
@@ -100,6 +106,15 @@ func NewListBox(values []string) ListBox {
 	c.AddSyncOnETypes(ETypeChange)
 	c.Style().AddClass("gwu-ListBox")
 	return c
+}
+
+func (c *listBoxImpl) Values() []string {
+	return c.values
+}
+
+func (c *listBoxImpl) SetValues(values []string) {
+	c.values = values
+	c.selected = make([]bool, len(values))
 }
 
 func (c *listBoxImpl) Multi() bool {
