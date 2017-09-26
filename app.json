@@ -1,8 +1,0 @@
-{
-	"name": "Gowut Showcase of Features Demo app",
-	"buildpacks": [
-		{
-			"url": "heroku/go"
-		}
-	]
-}

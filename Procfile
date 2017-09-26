@@ -1,1 +1,1 @@
-web: showcase -autoOpen=false -addr=":$PORT"
+web: showcase -autoOpen=false -addr=":$PORT" -appName=""
