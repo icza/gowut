@@ -1,1 +1,1 @@
-web: go run _examples/showcase/showcase.go
+web: showcase -autoOpen=false
