@@ -388,7 +388,7 @@ Source code: https://github.com/icza/gowut
 
 Discussion forum: https://groups.google.com/d/forum/gowebuitoolkit
 
-Live demo: http://iczapp.com:3434/gowut-demo/show
+Live demo: https://gowut-demo.herokuapp.com/show
 
 
 */
