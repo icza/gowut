@@ -1,3 +1,5 @@
 
 Changes and new features in v1.3.1:
 -----------------------------------
+
+-Added ETypeMouseDown constant, identical to ETypeMousedown.
