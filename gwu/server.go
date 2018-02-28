@@ -62,8 +62,8 @@ const (
 	eraFocusComp         // Focus a compnent
 )
 
-// GWU session id cookie name
-const gwuSessidCookie = "gwu-sessid"
+// Default GWU session id cookie name
+const defaultSessIDCookieName = "gwu-sessid"
 
 // SessionHandler interface defines a callback to get notified
 // for certain events related to session life-cycles.
@@ -192,6 +192,13 @@ type Server interface {
 	// By setting your own hander, you will completely take over the app root.
 	SetAppRootHandler(f AppRootHandlerFunc)
 
+	// SessIDCookieName returns the cookie name used to store the Gowut
+	// session ID.
+	SessIDCookieName() string
+
+	// session ID.
+	SetSessIDCookieName(name string)
+
 	// Start starts the GUI server and waits for incoming connections.
 	//
 	// Sessionless window names may be specified as optional parameters
@@ -222,6 +229,7 @@ type serverImpl struct {
 	headers            http.Header        // Extra headers that will be added to all responses.
 	rootHeads          []string           // Additional head HTML texts of the window list page (app root)
 	appRootHandlerFunc AppRootHandlerFunc // App root handler function
+	sessIDCookieName   string             // Session ID cookie name
 
 	sessMux sync.RWMutex // Mutex to protect state related to session handling
 }
@@ -252,8 +260,15 @@ func newServerImpl(appName, addr, certFile, keyFile string) *serverImpl {
 		addr = "localhost:3434"
 	}
 
-	s := &serverImpl{sessionImpl: newSessionImpl(false), appName: appName, addr: addr, sessions: make(map[string]Session),
-		sessCreatorNames: make(map[string]string), theme: ThemeDefault}
+	s := &serverImpl{
+		sessionImpl:      newSessionImpl(false),
+		appName:          appName,
+		addr:             addr,
+		sessions:         make(map[string]Session),
+		sessCreatorNames: make(map[string]string),
+		theme:            ThemeDefault,
+		sessIDCookieName: defaultSessIDCookieName,
+	}
 
 	if s.appName == "" {
 		s.appPath = "/"
@@ -379,10 +394,12 @@ func (s *serverImpl) addSessCookie(sess Session, w http.ResponseWriter) {
 	// Secure: only send it over HTTPS
 	// MaxAge: to specify the max age of the cookie in seconds, else it's a session cookie and gets deleted after the browser is closed.
 	c := http.Cookie{
-		Name: gwuSessidCookie, Value: sess.ID(),
+		Name:     s.sessIDCookieName,
+		Value:    sess.ID(),
 		Path:     s.appURL.EscapedPath(),
-		HttpOnly: true, Secure: s.secure,
-		MaxAge: 72 * 60 * 60, // 72 hours max age
+		HttpOnly: true,
+		Secure:   s.secure,
+		MaxAge:   72 * 60 * 60, // 72 hours max age
 	}
 	http.SetCookie(w, &c)
 
@@ -502,6 +519,14 @@ func (s *serverImpl) SetAppRootHandler(f AppRootHandlerFunc) {
 	s.appRootHandlerFunc = f
 }
 
+func (s *serverImpl) SessIDCookieName() string {
+	return s.sessIDCookieName
+}
+
+func (s *serverImpl) SetSessIDCookieName(name string) {
+	s.sessIDCookieName = name
+}
+
 // serveStatic handles the static contents of GWU.
 func (s *serverImpl) serveStatic(w http.ResponseWriter, r *http.Request) {
 	s.addHeaders(w)
@@ -561,7 +586,7 @@ func (s *serverImpl) serveHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Check session
 	var sess Session
-	c, err := r.Cookie(gwuSessidCookie)
+	c, err := r.Cookie(s.sessIDCookieName)
 	if err == nil {
 		s.sessMux.RLock()
 		sess = s.sessions[c.Value]
