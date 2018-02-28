@@ -1,5 +1,5 @@
 
-Changes and new features in v1.3.1:
+Changes and new features in v1.4.0:
 -----------------------------------
 
 -New SessIDCookieName() and SetSessIDCookieName() methods in Server to get / set
