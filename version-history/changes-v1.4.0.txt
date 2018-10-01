@@ -10,3 +10,6 @@ you can set different session ID cookie names so they won't collide (#42).
 -Added ETypeMouseDown constant, identical to ETypeMousedown.
 
 -Fixed an issue where Table.Clear() could panic if table contained nil components (#23).
+
+-Mouse coordinates in events did not take the body's scroll amount into account, this is fixed now.
+Event.Mouse() and Event.MouseWin() now return proper coordinates.

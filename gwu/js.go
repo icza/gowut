@@ -67,17 +67,17 @@ function createXmlHttp() {
 // Send event
 function se(event, etype, compId, compValue) {
 	var xhr = createXmlHttp();
-	
+
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && xhr.status == 200)
 			procEresp(xhr);
 	}
-	
+
 	xhr.open("POST", _pathEvent, true); // asynch call
 	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	
+
 	var data="";
-	
+
 	if (etype != null)
 		data += "&" + _pEventType + "=" + etype;
 	if (compId != null)
@@ -86,11 +86,19 @@ function se(event, etype, compId, compValue) {
 		data += "&" + _pCompValue + "=" + compValue;
 	if (document.activeElement.id != null)
 		data += "&" + _pFocCompId + "=" + document.activeElement.id;
-	
+
 	if (event != null) {
 		if (event.clientX != null) {
 			// Mouse data
 			var x = event.clientX, y = event.clientY;
+			// Account for the amount body is scrolled:
+			eventDoc = (event.target && event.target.ownerDocument) || document;
+			doc = eventDoc.documentElement;
+			body = eventDoc.body;
+			x += (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+				 (doc && doc.clientLeft || body && body.clientLeft || 0);
+			y += (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
+				 (doc && doc.clientTop  || body && body.clientTop  || 0 );
 			data += "&" + _pMouseWX + "=" + x;
 			data += "&" + _pMouseWY + "=" + y;
 			var parent = document.getElementById(compId);
@@ -102,7 +110,7 @@ function se(event, etype, compId, compValue) {
 			data += "&" + _pMouseY + "=" + y;
 			data += "&" + _pMouseBtn + "=" + (event.button < 4 ? event.button : 1); // IE8 and below uses 4 for middle btn
 		}
-		
+
 		var modKeys;
 		modKeys += event.altKey ? _modKeyAlt : 0;
 		modKeys += event.ctlrKey ? _modKeyCtlr : 0;
@@ -111,20 +119,20 @@ function se(event, etype, compId, compValue) {
 		data += "&" + _pModKeys + "=" + modKeys;
 		data += "&" + _pKeyCode + "=" + (event.which ? event.which : event.keyCode);
 	}
-	
+
 	xhr.send(data);
 }
 
 function procEresp(xhr) {
 	var actions = xhr.responseText.split(";");
-	
+
 	if (actions.length == 0) {
 		window.alert("No response received!");
 		return;
 	}
 	for (var i = 0; i < actions.length; i++) {
 		var n = actions[i].split(",");
-		
+
 		switch (parseInt(n[0])) {
 		case _eraDirtyComps:
 			for (var j = 1; j < n.length; j++)
@@ -153,16 +161,16 @@ function rerenderComp(compId) {
 	var e = document.getElementById(compId);
 	if (!e) // Component removed or not visible (e.g. on inactive tab of TabPanel)
 		return;
-	
+
 	var xhr = createXmlHttp();
-	
+
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			// Remember focused comp which might be replaced here:
 			var focusedCompId = document.activeElement.id;
 			e.outerHTML = xhr.responseText;
 			focusComp(focusedCompId);
-			
+
 			// Inserted JS code is not executed automatically, do it manually:
 			// Have to "re-get" element by compId!
 			var scripts = document.getElementById(compId).getElementsByTagName("script");
@@ -171,21 +179,21 @@ function rerenderComp(compId) {
 			}
 		}
 	}
-	
+
 	xhr.open("POST", _pathRenderComp, false); // synch call (if async, browser specific DOM rendering errors may arise)
 	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	
+
 	xhr.send(_pCompId + "=" + compId);
 }
 
 // Get selected indices (of an HTML select)
 function selIdxs(select) {
 	var selected = "";
-	
+
 	for (var i = 0; i < select.options.length; i++)
 		if(select.options[i].selected)
 			selected += i + ",";
-	
+
 	return selected;
 }
 
@@ -193,10 +201,10 @@ function selIdxs(select) {
 function sbtnVal(event, onBtnId, offBtnId) {
 	var onBtn = document.getElementById(onBtnId);
 	var offBtn = document.getElementById(offBtnId);
-	
+
 	if (onBtn == null)
 		return false;
-	
+
 	var value = onBtn == document.elementFromPoint(event.clientX, event.clientY);
 	if (value) {
 		onBtn.className = "gwu-SwitchButton-On-Active";
@@ -205,7 +213,7 @@ function sbtnVal(event, onBtnId, offBtnId) {
 		onBtn.className = "gwu-SwitchButton-On-Inactive";
 		offBtn.className = "gwu-SwitchButton-Off-Active";
 	}
-	
+
 	return value;
 }
 
@@ -247,7 +255,7 @@ var timers = new Object();
 
 function setupTimer(compId, js, timeout, repeat, active, reset) {
 	var timer = timers[compId];
-	
+
 	if (timer != null) {
 		var changed = timer.js != js || timer.timeout != timeout || timer.repeat != repeat || timer.reset != reset;
 		if (!active || changed) {
@@ -262,14 +270,14 @@ function setupTimer(compId, js, timeout, repeat, active, reset) {
 	}
 	if (!active)
 		return;
-	
+
 	// Create new timer
 	timers[compId] = timer = new Object();
 	timer.js = js;
 	timer.timeout = timeout;
 	timer.repeat = repeat;
 	timer.reset = reset;
-	
+
 	// Start the timer
 	if (timer.repeat)
 		timer.id = setInterval(js, timeout);
@@ -281,9 +289,9 @@ function checkSession(compId) {
 	var e = document.getElementById(compId);
 	if (!e) // Component removed or not visible (e.g. on inactive tab of TabPanel)
 		return;
-	
+
 	var xhr = createXmlHttp();
-	
+
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			var timeoutSec = parseFloat(xhr.responseText);
@@ -295,7 +303,7 @@ function checkSession(compId) {
 			e.children[0].innerText = typeof cnvtr === 'function' ? cnvtr(timeoutSec) : convertSessTimeout(timeoutSec);
 		}
 	}
-	
+
 	xhr.open("GET", _pathSessCheck, false); // synch call (else we can't catch connection error)
 	try {
 		xhr.send();
