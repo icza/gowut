@@ -396,7 +396,7 @@ package gwu
 
 // Gowut version information.
 const (
-	GowutVersion       = "v1.4.0"         // Gowut version: "v"major.minor.maintenance[-dev]
+	GowutVersion       = "v1.5.0-dev"     // Gowut version: "v"major.minor.maintenance[-dev]
 	GowutReleaseDate   = "2018-10-02 CET" // Gowut release date
 	GowutRelDateLayout = "2006-01-02 MST" // Gowut release date layout (for time.Parse())
 )
