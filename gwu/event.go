@@ -55,6 +55,11 @@ const (
 	ETypeStateChange // State change
 )
 
+const (
+	// ETypeMouseDown is identical to ETypeMousedown
+	ETypeMouseDown = ETypeMousedown
+)
+
 // EventCategory is the event type category.
 type EventCategory int
 

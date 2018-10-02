@@ -166,7 +166,9 @@ func (c *tableImpl) Clear() {
 
 	for _, rowComps := range c.comps {
 		for _, c2 := range rowComps {
-			c2.setParent(nil)
+			if c2 != nil {
+				c2.setParent(nil)
+			}
 		}
 	}
 	c.comps = nil
