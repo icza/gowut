@@ -116,8 +116,8 @@ func NewTextBox(text string) TextBox {
 	return &c
 }
 
-// NewFileTextBox creates a new TextBox that accept a file path.
-func NewFileTextBox(text string) TextBox {
+// NewFileInputBox creates a new TextBox that accept a file path.
+func NewFileInputBox(text string) TextBox {
 	c := newTextBoxImpl(strEncURIThisV, text, false, true)
 	c.Style().AddClass("gwu-TextBox")
 	return &c
