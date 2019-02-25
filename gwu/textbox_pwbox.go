@@ -101,6 +101,7 @@ type textBoxImpl struct {
 	hasEnabledImpl // Has enabled implementation
 
 	isPassw    bool // Tells if the text box is a password box
+	isFile    bool // Tells if the text box accepts a file path
 	rows, cols int  // Number of displayed rows and columns.
 }
 
@@ -110,21 +111,28 @@ var (
 
 // NewTextBox creates a new TextBox.
 func NewTextBox(text string) TextBox {
-	c := newTextBoxImpl(strEncURIThisV, text, false)
+	c := newTextBoxImpl(strEncURIThisV, text, false, false)
+	c.Style().AddClass("gwu-TextBox")
+	return &c
+}
+
+// NewFileTextBox creates a new TextBox that accept a file path.
+func NewFileTextBox(text string) TextBox {
+	c := newTextBoxImpl(strEncURIThisV, text, false, true)
 	c.Style().AddClass("gwu-TextBox")
 	return &c
 }
 
 // NewPasswBox creates a new PasswBox.
 func NewPasswBox(text string) TextBox {
-	c := newTextBoxImpl(strEncURIThisV, text, true)
+	c := newTextBoxImpl(strEncURIThisV, text, true, false)
 	c.Style().AddClass("gwu-PasswBox")
 	return &c
 }
 
 // newTextBoxImpl creates a new textBoxImpl.
-func newTextBoxImpl(valueProviderJs []byte, text string, isPassw bool) textBoxImpl {
-	c := textBoxImpl{newCompImpl(valueProviderJs), newHasTextImpl(text), newHasEnabledImpl(), isPassw, 1, 20}
+func newTextBoxImpl(valueProviderJs []byte, text string, isPassw, isFile bool) textBoxImpl {
+	c := textBoxImpl{newCompImpl(valueProviderJs), newHasTextImpl(text), newHasEnabledImpl(), isPassw, isFile, 1, 20}
 	c.AddSyncOnETypes(ETypeChange)
 	return c
 }
@@ -202,6 +210,7 @@ var (
 	strInputOp  = []byte(`<input type="`) // `<input type="`
 	strPassword = []byte("password")      // "password"
 	strText     = []byte("text")          // "text"
+	strFile     = []byte("file")          // "text"
 	strSize     = []byte(`" size="`)      // `" size="`
 	strValue    = []byte(` value="`)      // ` value="`
 	strInputCl  = []byte(`"/>`)           // `"/>`
@@ -212,6 +221,8 @@ func (c *textBoxImpl) renderInput(w Writer) {
 	w.Write(strInputOp)
 	if c.isPassw {
 		w.Write(strPassword)
+	} else if c.isFile{
+		w.Write(strFile)
 	} else {
 		w.Write(strText)
 	}
