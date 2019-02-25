@@ -210,7 +210,7 @@ var (
 	strInputOp  = []byte(`<input type="`) // `<input type="`
 	strPassword = []byte("password")      // "password"
 	strText     = []byte("text")          // "text"
-	strFile     = []byte("file")          // "text"
+	strFile     = []byte("file")          // "file"
 	strSize     = []byte(`" size="`)      // `" size="`
 	strValue    = []byte(` value="`)      // ` value="`
 	strInputCl  = []byte(`"/>`)           // `"/>`
