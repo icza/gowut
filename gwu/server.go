@@ -59,7 +59,7 @@ const (
 	eraNoAction   = iota // Event processing OK and no action required
 	eraReloadWin         // Window name to be reloaded
 	eraDirtyComps        // There are dirty components which needs to be refreshed
-	eraFocusComp         // Focus a compnent
+	eraFocusComp         // Focus a component
 )
 
 // Default GWU session id cookie name
