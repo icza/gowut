@@ -140,7 +140,7 @@ function procEresp(xhr) {
 			break;
 		case _eraFocusComp:
 			if (n.length > 1)
-				focusComp(parseInt(n[1]))
+				focusComp(parseInt(n[1]));
 			break;
 		case _eraNoAction:
 			break;
