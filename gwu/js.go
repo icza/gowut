@@ -218,7 +218,7 @@ function sbtnVal(event, onBtnId, offBtnId) {
 }
 
 function focusComp(compId) {
-	if (compId != null) {
+	if (compId != null && compId !== "") {
 		var e = document.getElementById(compId);
 		if (e) // Else component removed or not visible (e.g. on inactive tab of TabPanel)
 			e.focus();
