@@ -84,7 +84,7 @@ function se(event, etype, compId, compValue) {
 		data += "&" + _pCompId + "=" + compId;
 	if (compValue != null)
 		data += "&" + _pCompValue + "=" + compValue;
-	if (document.activeElement.id != null)
+	if (document.activeElement.id != null && document.activeElement.id !== "")
 		data += "&" + _pFocCompId + "=" + document.activeElement.id;
 
 	if (event != null) {
